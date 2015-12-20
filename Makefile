@@ -1,8 +1,4 @@
-
 .PHONY: schema
-
-test:
-	busted
 
 init_schema::
 	createdb -U postgres mtacommunity
