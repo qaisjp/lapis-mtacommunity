@@ -1,5 +1,13 @@
 lapis = require "lapis"
 
+Users = require "models.users"
+
 class extends lapis.Application
-  "/": =>
-    "Welcome to... Lapis #{require "lapis.version"}!"
+    @include "applications.users"
+    
+    [home: "/"]: =>
+        "Welcome to... Lapis #{require "lapis.version"}!"
+
+    
+
+

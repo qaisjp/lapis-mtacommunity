@@ -3,3 +3,4 @@ logs/
 nginx.conf.compiled
 .tup
 dev_backup
+bower_components
