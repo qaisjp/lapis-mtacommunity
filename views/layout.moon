@@ -38,13 +38,15 @@ class Layout extends Widget
 						span class: "icon-bar"
 						span class: "icon-bar"
 						span class: "icon-bar"
-			
+					a class: "navbar-brand", href: "/", "mta community"
+
 				div id:"navbar", class: "navbar-collapse collapse", ->
-					ul class: "nav navbar-nav", ->
+					ul class: "nav navbar-nav mta-navbar-links", ->
 						li -> a href: "https://mtasa.com", "home"
 						li -> a href: "https://forum.mtasa.com", "forum"
 						li -> a href: "https://wiki.mtasa.com", "wiki"
 						li -> a href: "https://bugs.mtasa.com", "bugs"
+						li -> a href: "/resources", "resources"
 					
 					div class: "navbar-right navbar-form navbar-text btn-group", ->
 						button type: "button", class: "btn btn-default btn-xs dropdown-toggle", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
@@ -59,11 +61,9 @@ class Layout extends Widget
 							li -> a href: "#", "pig latin (en-pl)"
 		
 					ul class: "nav navbar-nav navbar-right", ->
-						li -> a id: "login-btn", href: "#", "login"
+						li -> a id: "login-btn", "login"
 						li -> a id: "register-btn", href: "#", "register"
-		
-		
-			div class: "container", ->
+				
 				div class: "row", ->
 					div class: "col-md-3 col-md-offset-9", ->
 						div class: "panel panel-default panel-toplogin pull-right", -> form ->
@@ -83,10 +83,8 @@ class Layout extends Widget
 									div class: "input-group", ->
 										span class: "input-group-addon", -> input type: "checkbox", name: "remember"
 										button type: "submit", class: "form-control btn btn-default", "login"
-			
-				-- Example row of columns
-				-- » symbol = "&raquo;"
-				
+		
+			div class: "container", ->					
 				@content_for "inner"
 
 				hr!
