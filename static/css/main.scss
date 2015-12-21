@@ -1,8 +1,10 @@
 $background_color: cyan;
 
-// Move down content because we have a fixed navbar that is 50px tall
 body {
-    padding-top: 50px;
+	// Move down content because we have a fixed navbar that is 50px tall
+    padding-top: 80px;
+
+    // Offset the footer a bit off the bottom on long pages
     padding-bottom: 20px;
 
 }

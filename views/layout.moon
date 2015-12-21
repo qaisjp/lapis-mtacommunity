@@ -86,8 +86,8 @@ class Layout extends Widget
 			
 				-- Example row of columns
 				-- » symbol = "&raquo;"
-				div class: "row", ->
-					@content_for "inner"
+				
+				@content_for "inner"
 
 				hr!
 
