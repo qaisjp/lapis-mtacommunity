@@ -2,10 +2,10 @@ $background_color: cyan;
 
 body {
 	// Move down content because we have a fixed navbar that is 50px tall
-    padding-top: 80px;
+	padding-top: 80px;
 
-    // Offset the footer a bit off the bottom on long pages
-    padding-bottom: 20px;
+	// Offset the footer a bit off the bottom on long pages
+	padding-bottom: 20px;
 
 }
 
@@ -15,8 +15,8 @@ body {
 	
 	// Make it float over everything else, so it doesn't push stuff down
 	position: absolute;
-    // z-index: 1;
-    top: 2px;
+	// z-index: 1;
+	top: 2px;
 
 	// h1 {
 	// 	margin-top: 0;
@@ -46,8 +46,8 @@ footer {
 
 	&> [class='col-md-2'] {
 		ul {
-		    padding-left: 0;
-		    list-style-type: none;
+			padding-left: 0;
+			list-style-type: none;
 		}
 		border-left: 2px solid #ddd;
 	}
@@ -70,6 +70,6 @@ footer {
 
 // Source: https://scotch.io/bar-talk/bootstrap-3-tips-and-tricks-you-still-might-not-know#optionally-remove-the-gutter-padding-from-columns
 .no-gutter > [class*='col-'] {
-    padding-right:0;
-    padding-left:0;
+	padding-right:0;
+	padding-left:0;
 }
