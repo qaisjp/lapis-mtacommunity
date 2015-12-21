@@ -65,8 +65,7 @@ class Layout extends Widget
 		
 			div class: "container", ->
 				div class: "row", ->
-					div class: "col-md-9"
-					div class: "col-md-3", ->
+					div class: "col-md-3 col-md-offset-9", ->
 						div class: "panel panel-default panel-toplogin pull-right", -> form ->
 							div class: "input-group", ->
 								span class: "input-group-addon", -> i class: "fa fa-fw fa-user"
