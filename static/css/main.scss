@@ -1,6 +1,6 @@
 $background_color: cyan;
 
-/* Move down content because we have a fixed navbar that is 50px tall */
+// Move down content because we have a fixed navbar that is 50px tall
 body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -9,8 +9,12 @@ body {
 
 .panel-toplogin {
 	padding: 15px;
-	display:none;
+	display: none;
 	
+	// Make it float over everything else, so it doesn't push stuff down
+	position: absolute;
+    z-index: 1;
+
 	// h1 {
 	// 	margin-top: 0;
 	// 	text-transform: uppercase;
@@ -23,9 +27,10 @@ body {
 		padding-right: 0;
 	}
 
-	.input-group{
+	.input-group {
 		padding-bottom: 5px;
 	}
+	padding-bottom: 10px; // We do this because the above leaves 5px extra we don't want
 
 	input[type="checkbox"] {
 		margin-right: 5px;

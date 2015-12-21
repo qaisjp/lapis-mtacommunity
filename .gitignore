@@ -4,3 +4,4 @@ nginx.conf.compiled
 .tup
 dev_backup
 bower_components
+static/css/*.css
