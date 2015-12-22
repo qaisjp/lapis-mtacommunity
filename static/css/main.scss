@@ -6,7 +6,6 @@ body {
 
 	// Offset the footer a bit off the bottom on long pages
 	padding-bottom: 20px;
-
 }
 
 .panel-toplogin {
@@ -28,18 +27,6 @@ body {
 	.col-md-6 {
 		padding-left: 0;
 		padding-right: 0;
-	}
-}
-
-.mta-login-form {
-	.input-group {
-		padding-bottom: 5px;
-	}
-	padding-bottom: 10px; // We do this because the above leaves 5px extra we don't want
-
-	input[type="checkbox"] {
-		margin-right: 5px;
-		margin-top: 3px;
 	}
 }
 
@@ -65,9 +52,32 @@ footer {
 	text-align: center;
 }
 
+#mta-register-form, #mta-login-form {
+	.input-group {
+		padding-bottom: 5px;
+	}
+	padding-bottom: 10px; // We do this because the above leaves 5px extra we don't want
+
+	input[type="checkbox"] {
+		margin-top: 3px;
+	}
+}
+
+// Reference: https://stackoverflow.com/questions/27411581/centering-no-captcha-recaptcha
+#mta-register-form .g-recaptcha > div > div {
+	width: 50%;
+	margin: 0 auto;
+    display: block
+}
+
 // This is for the resource previews on the homepage
 .home-resource-previews {
 	margin-bottom: 15px;
+}
+
+.col-centre {
+	margin: 0 auto;
+	float: none;
 }
 
 // Source: https://scotch.io/bar-talk/bootstrap-3-tips-and-tricks-you-still-might-not-know#optionally-remove-the-gutter-padding-from-columns

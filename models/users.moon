@@ -5,6 +5,7 @@ bcrypt = require "bcrypt"
 config = require("lapis.config").get!
 db     = require "lapis.db"
 
+
 class Users extends Model
 	-- Has created_at and modified_at
 	@timestamp: true
@@ -14,7 +15,7 @@ class Users extends Model
 	-- @primary_key: "id"
 
 	-- Create a new user, given the following:
-	@create: (username, password, email) =>
+	@register: (username, password, email) =>
 		-- First check if the username is unique
 		if @check_unique_constraint "username", username 
 			return nil, "Username already exists"
@@ -49,13 +50,10 @@ class Users extends Model
 		password = bcrypt.digest password, config.bcrypt_log_rounds
 
 		-- And create the database row!
-		super\create { :username, :slug, :password, :email }
+		@create { :username, :slug, :password, :email }
 
 
 	@login: (username, password) =>
-		-- Generate the password to be checking
-		password = bcrypt.digest password, config.bcrypt_log_rounds
-
 		local user
 		with uname_l = username\lower!
 			user = Users\find [db.raw"lower(username)"]: uname_l
@@ -65,3 +63,6 @@ class Users extends Model
 			return nil, "Incorrect username or password."
 
 		user
+
+	write_to_session: (session) =>
+		session.user_id = @id

@@ -3,7 +3,7 @@ LoginForm = require "widgets.login_form"
 
 class AuthLogin extends Widget
 	content: => div class:"row", ->
-		div class: "col-md-6 col-md-offset-3", id: "mta-auth", ->
+		div class: "col-md-4 col-md-offset-4", id: "mta-auth", ->
 			h1 "Login"
 			if @errors
 				-- If we have an error, let's tell them the first error

@@ -6,7 +6,7 @@ import Widget from require "lapis.html"
 
 class LoginForm extends Widget
 	content: =>
-		form class: "mta-login-form", method: "POST", action: @url_for("auth.login"), ->
+		form id: "mta-login-form", method: "POST", action: @url_for("auth.login"), ->
 			-- csrf token to prevent cross-side-request-forgery (who would've guessed?)
 			input type: "hidden", name: "csrf_token", value: @csrf_token, ["aria-hidden"]: "true"
 

@@ -11,6 +11,9 @@ class Home extends Widget
 					raw " "
 					a class: "btn btn-primary", href: "/resources", role: "button", "browse resources"
 
+		div class: "row", ->
+			h2 "latest resources"
+
 		raw "<div class=row>"
 		for i=1, 9
 			div class: "col-md-4 home-resource-previews", -> div class: "media", ->

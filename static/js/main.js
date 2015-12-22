@@ -12,4 +12,10 @@
     });
   });
 
+  window.check_register_validity = function(input) {
+    var confirm;
+    confirm = $("#mta-register-form input[name='password_confirm']");
+    return confirm[0].setCustomValidity($("#mta-register-form input[name='password']").val() === confirm.val() ? "" : "Passwords must match");
+  };
+
 }).call(this);
