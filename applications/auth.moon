@@ -9,6 +9,8 @@ import
 from require "lapis.application"
 
 
+
+
 Users = require "models.users"
 
 class AuthApplication extends lapis.Application

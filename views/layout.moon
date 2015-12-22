@@ -92,7 +92,7 @@ class Layout extends Widget
 						li -> a href: "#", "pig latin (en-pl)"
 
 				ul class: "nav navbar-nav navbar-right", ->
-					li -> a id: "login-btn", "login"
+					li -> a id: "login-btn", href: @url_for("auth.login"), "login"
 					li -> a id: "register-btn", href: @url_for("auth.register"), "register"
 			
 			div class: "row", ->
