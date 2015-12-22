@@ -2,7 +2,6 @@ import Widget from require "lapis.html"
 
 class Home extends Widget
 	content: =>
-		
 		div class:"row", ->
 			div class: "jumbotron", ->
 				p "Multi Theft Auto is a multiplayer modification for Rockstar's Grand Theft Auto game series: a piece of software that adapts the game in such a way, you can play Grand Theft Auto with your friends online and develop your own gamemodes."

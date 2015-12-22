@@ -29,7 +29,9 @@ body {
 		padding-left: 0;
 		padding-right: 0;
 	}
+}
 
+.mta-login-form {
 	.input-group {
 		padding-bottom: 5px;
 	}
@@ -57,6 +59,10 @@ footer {
 .mta-navbar-links li:nth-last-child(1) {
 	border-left: 1px solid #404040;
 	height: 100%;
+}
+
+#mta-login {
+	text-align: center;
 }
 
 #login-btn {
