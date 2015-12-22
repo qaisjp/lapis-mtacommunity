@@ -21,7 +21,6 @@ class extends lapis.Application
 
     	-- Have we been told to set the cookie expiry date?
     	if expiry = @session.cookie_expiry
-    		print("=================OKAY WE NEED TO SET THAT SHIT UP YOUR ASS MAT")
     		base = "Expires=#{expiry}; {base}"
     	
     	base
