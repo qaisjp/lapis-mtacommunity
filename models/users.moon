@@ -4,12 +4,17 @@ import slugify from require "lapis.util"
 bcrypt = require "bcrypt"
 config = require("lapis.config").get!
 db     = require "lapis.db"
-
+Bans   = require "models.bans"
 
 class Users extends Model
 	-- Has created_at and modified_at
 	@timestamp: true
 	
+	@relations: {
+		{"bans", has_many: "Bans", key: "banned_user"}
+		{"active_bans", has_many: "Bans", key: "banned_user", where: active: true}
+	}
+
 	-- authentication levels
 	@levels: enum
 		guest: 1
@@ -67,7 +72,18 @@ class Users extends Model
 		unless user and bcrypt.verify password, user.password
 			return nil, "Incorrect username or password."
 
+		unless user.activated
+			return nil, "Your account has not been activated."
+
+		if user\is_banned!
+			return nil, "You are banned."
+
 		user
 
 	write_to_session: (session) =>
 		session.user_id = @id
+
+	is_banned: =>
+		Bans.refresh_bans @
+		#@get_active_bans! > 0
+		-- true

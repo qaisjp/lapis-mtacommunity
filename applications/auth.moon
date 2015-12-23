@@ -13,6 +13,11 @@ from require "lapis.application"
 
 Users = require "models.users"
 
+export log_me_out
+log_me_out = =>
+	@session.user_id = nil
+	redirect_to: @url_for "home"
+
 class AuthApplication extends lapis.Application
 	name: "auth."
 	
@@ -31,7 +36,6 @@ class AuthApplication extends lapis.Application
 				}
 
 				user = assert_error Users\login @params.username, @params.password
-				yield_error "Your account has not been activated." unless user.activated
 
 				@session.cookie_expiry = if @params.remember == "true" then date(true)\addmonths(1)\fmt "${http}" else 0
 				
@@ -79,9 +83,7 @@ class AuthApplication extends lapis.Application
 				render: true
 		}
 	
-	[logout: "/logout"]: =>
-		@session.user_id = nil
-		redirect_to: @url_for "home"
+	[logout: "/logout"]: log_me_out
 
 	[forgot: "/password_reset"]: respond_to
 		before: =>
@@ -95,4 +97,4 @@ class AuthApplication extends lapis.Application
 
 			=>
 				assert_csrf_token @
-		}	
+		}

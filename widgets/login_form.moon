@@ -1,14 +1,16 @@
 import Widget from require "lapis.html"
+import write_csrf_input from require "utils"
 
 -- This is the login form that is used throughout the website
 -- It can be used in the fixed position "popover" login as well as
--- in the dedicated /login page.
-
+-- in the dedicated /login page
 class LoginForm extends Widget
+	@include "widgets.utils"
+	
 	content: =>
 		form id: "mta-login-form", method: "POST", action: @url_for("auth.login"), ->
 			-- csrf token to prevent cross-side-request-forgery (who would've guessed?)
-			input type: "hidden", name: "csrf_token", value: @csrf_token, ["aria-hidden"]: "true"
+			@write_csrf_input!
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-user"

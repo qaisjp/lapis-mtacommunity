@@ -1,6 +1,9 @@
 import Widget from require "lapis.html"
+import write_csrf_input from require "utils"
 
 class AuthRegister extends Widget
+	@include "widgets.utils"
+	
 	content: =>
 		@content_for "post_body_script", ->
 			script src: 'https://www.google.com/recaptcha/api.js'
@@ -17,7 +20,7 @@ class AuthRegister extends Widget
 
 			form id: "mta-register-form", method: "POST", action: @url_for("auth.register"), ->
 				-- csrf token to prevent cross-side-request-forgery (who would've guessed?)
-				input type: "hidden", name: "csrf_token", value: @csrf_token, ["aria-hidden"]: "true"
+				@write_csrf_input!
 
 				div class: "input-group input-group-sm", ->
 					span class: "input-group-addon", -> i class: "fa fa-fw fa-user"

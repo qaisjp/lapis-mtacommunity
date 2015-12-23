@@ -11,7 +11,7 @@ class MTAAdminBans extends Widget
 					a {
 						href: @url_for "user_profile", username: user.username
 					}, user.username
-					text " - "
+					text " (#{user.id}) - "
 					a {
 						href: @url_for "admin.become", username: user.username
 					}, "become"

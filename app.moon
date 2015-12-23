@@ -10,8 +10,8 @@ Users = require "models.users"
 class MTAApp extends lapis.Application
 	layout: require "views.layout"
 
-	@include "applications.admin"
 	@include "applications.auth"
+	@include "applications.admin"
 	@include "applications.user"
 	
 	@before_filter =>
@@ -30,3 +30,5 @@ class MTAApp extends lapis.Application
 	[home: "/"]: =>
 		render: true
 		
+	["/get_s"]: =>
+		json: @session
