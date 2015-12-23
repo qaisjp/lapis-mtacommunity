@@ -1,5 +1,5 @@
 import Widget from require "lapis.html"
 
-class MTAAdminHome extends Widget
+class MTAAdminBans extends Widget
 	content: =>
-		h1 "Main Dash"
+		h1 "Users"

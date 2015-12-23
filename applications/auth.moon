@@ -14,7 +14,9 @@ from require "lapis.application"
 Users = require "models.users"
 
 class AuthApplication extends lapis.Application
-	["auth.login": "/login"]: respond_to
+	name: "auth."
+	
+	[login: "/login"]: respond_to
 		before: =>
 			@title = "Login"
 
@@ -40,7 +42,7 @@ class AuthApplication extends lapis.Application
 				redirect_to: @url_for "home"
 		}
 
-	["auth.register": "/register"]: respond_to
+	[register: "/register"]: respond_to
 		before: => 
 			@title = "Register"
 
@@ -77,11 +79,11 @@ class AuthApplication extends lapis.Application
 				render: true
 		}
 	
-	["auth.logout": "/logout"]: =>
+	[logout: "/logout"]: =>
 		@session.user_id = nil
 		redirect_to: @url_for "home"
 
-	["auth.forgot": "/password_reset"]: respond_to
+	[forgot: "/password_reset"]: respond_to
 		before: =>
 			@title = "Reset your password"
 

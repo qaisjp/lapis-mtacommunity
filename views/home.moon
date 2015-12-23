@@ -18,7 +18,7 @@ class Home extends Widget
 		for i=1, 9
 			div class: "col-md-4 home-resource-previews", -> div class: "media", ->
 				div class: "media-left media-top", ->
-					a href: "#", -> img class: "media-object", src: "...", alt: "..."
+					a href: "#", -> img class: "media-object", src: "#", alt: "..."
 	
 				div class: "media-body", ->
 					h4 class: "media-heading", "guieditor 3.23.2"
