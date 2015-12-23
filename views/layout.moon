@@ -13,7 +13,7 @@ class Layout extends Widget
 			link rel: "icon", href: @build_url "favicon.ico"
 			
 			if @title
-				title (@title .. " - Multi Theft Auto Community")
+				title (@title .. " - MTA Community")
 			else
 				title "Multi Theft Auto Community"
 
@@ -96,7 +96,7 @@ class Layout extends Widget
 					if @active_user
 						li -> a href: @url_for("user_profile", username: @active_user.username), @active_user.username
 						if @active_user.level == Users.levels.admin
-							li -> a href: @url_for("admin.home"), "admin"
+							li -> a href: @url_for("admin.dashboard"), "admin"
 						li -> a href: @url_for("auth.logout"), "logout"
 					else
 						li -> a id: "login-btn", href: @url_for("auth.login"), "login"

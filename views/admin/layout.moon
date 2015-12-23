@@ -3,11 +3,11 @@ import Widget from require "lapis.html"
 class MTAAdminLayout extends Widget
 	content: =>
 		div class:"row", -> div class: "col-md-4 col-md-offset-4", ->
-			h1 "Administrafdfdtion"
+			h1 "Administration"
 
 		div class:"row", ->
 			ul class: "nav nav-tabs", ->
-				for name in *{"Home", "Users", "Bans"}
+				for name in *{"Dashboard", "Users", "Bans"}
 					route_name = "admin." .. name\lower!
 					li {
 						role: "presentation",

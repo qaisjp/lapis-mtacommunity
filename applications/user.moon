@@ -10,6 +10,7 @@ from require "lapis.application"
 class UserApplication extends lapis.Application
 	[user_profile: "/user/:username"]: capture_errors {
 		on_error: =>
+			@title = "Oops"
 			render: "user_missing"
 
 		=>
