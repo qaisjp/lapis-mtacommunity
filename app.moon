@@ -7,23 +7,25 @@ math.randomseed os.time!
 
 Users = require "models.users"
 
-class extends lapis.Application
+class MTAApp extends lapis.Application
 	layout: require "views.layout"
 
+	@include "applications.admin"
 	@include "applications.auth"
+	@include "applications.user"
 	
 	@before_filter =>
 		@csrf_token = generate_csrf_token @
 		@active_user = Users\find @session.user_id if @session.user_id
 
 	cookie_attributes: (name, value) =>
-    	base = "Path=/; HttpOnly"
+		base = "Path=/; HttpOnly"
 
-    	-- Have we been told to set the cookie expiry date?
-    	if expiry = @session.cookie_expiry
-    		base = "Expires=#{expiry}; {base}"
-    	
-    	base
+		-- Have we been told to set the cookie expiry date?
+		if expiry = @session.cookie_expiry
+			base = "Expires=#{expiry}; {base}"
+		
+		base
 
 	[home: "/"]: =>
 		render: true

@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+Users = require "models.users"
 
 class Layout extends Widget
 	content: => html_5 ->
@@ -9,7 +10,7 @@ class Layout extends Widget
 			-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags 
 
 			meta name: "description", content: "The Multi Theft Auto Community Website"
-			link rel: "icon", href: "favicon.ico"
+			link rel: "icon", href: @build_url "favicon.ico"
 			
 			if @title
 				title (@title .. " - Multi Theft Auto Community")
@@ -93,6 +94,9 @@ class Layout extends Widget
 
 				ul class: "nav navbar-nav navbar-right", ->
 					if @active_user
+						li -> a href: @url_for("user_profile", username: @active_user.username), @active_user.username
+						if @active_user.level == Users.levels.admin
+							li -> a href: @url_for("admin.home"), "admin"
 						li -> a href: @url_for("auth.logout"), "logout"
 					else
 						li -> a id: "login-btn", href: @url_for("auth.login"), "login"

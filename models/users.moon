@@ -1,4 +1,4 @@
-import Model from require "lapis.db.model"
+import Model, enum from require "lapis.db.model"
 import slugify from require "lapis.util"
 
 bcrypt = require "bcrypt"
@@ -10,6 +10,11 @@ class Users extends Model
 	-- Has created_at and modified_at
 	@timestamp: true
 	
+	-- authentication levels
+	@levels: enum
+		guest: 1
+		admin: 2
+
 	-- Only primary key defined is "id"
 	-- excluded because ID is the default primary key
 	-- @primary_key: "id"
@@ -56,8 +61,8 @@ class Users extends Model
 	@login: (username, password) =>
 		local user
 		with uname_l = username\lower!
-			user = Users\find [db.raw"lower(username)"]: uname_l
-			user = Users\find [db.raw"lower(email)"]: uname_l unless user
+			user = Users\find [db.raw "lower(username)"]: uname_l
+			user = Users\find [db.raw "lower(email)"]: uname_l unless user
 
 		unless user and bcrypt.verify password, user.password
 			return nil, "Incorrect username or password."
