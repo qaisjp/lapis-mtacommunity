@@ -29,6 +29,7 @@ main = class MTAAdminBans extends Widget
 						td user.created_at
 						td -> form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
 							@write_csrf_input!
+							input type: "hidden", name: "user_id", value: user.id, ["aria-hidden"]: "true"
 							button type: "submit", class: "btn btn-default btn-xs", ->
 								i class: "fa fa-eye"
 								text " become"

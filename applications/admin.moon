@@ -64,8 +64,8 @@ class AdminApplication extends lapis.Application
 	}	
 	
 
-	[update_bans: "/bans/update"]: capture_errors respond_to
-		POST: =>
+	[update_bans: "/bans/update"]: respond_to
+		POST: capture_errors => 
 			Bans.refresh_bans!
 			redirect_to: @params.redirect_to or @url_for "admin.bans"
 
@@ -75,13 +75,16 @@ class AdminApplication extends lapis.Application
 	-- this doesn't work either
 	-- [become: "/become/:username"]: copied_log_me_out
 
-	[become: "/become/:username"]: capture_errors {
+	[become: "/become"]: capture_errors respond_to {
 		on_error: => @html -> p @errors[1]
-
-		=>
-			-- user = assert_error Users\find([db.raw "lower(username)"]: @params.username), "who?"
-			-- user\write_to_session @session
-			@session.user_id = false
+		GET: => status: 404
+		POST: =>
+			assert_valid @params, {
+				{"user_id", exists: true, is_integer: true}
+			}
+			user = assert_error Users\find @params.user_id
+			user\write_to_session @session
+			-- @session.user_id = false
 			redirect_to: @url_for "home"
 			-- @html ->
 				-- p "This shows the correct session: #{to_json(@session)}"

@@ -11,12 +11,9 @@ import
 	yield_error
 from require "lapis.application"
 
-Users = require "models.users"
-
-export log_me_out
-log_me_out = =>
-	@session.user_id = nil
-	redirect_to: @url_for "home"
+import
+	Users
+from require "models"
 
 class AuthApplication extends lapis.Application
 	name: "auth."
@@ -83,7 +80,9 @@ class AuthApplication extends lapis.Application
 				render: true
 		}
 	
-	[logout: "/logout"]: log_me_out
+	[logout: "/logout"]: =>
+		@session.user_id = nil
+		redirect_to: @url_for "home"
 
 	[forgot: "/password_reset"]: respond_to
 		before: =>
