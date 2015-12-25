@@ -16,3 +16,8 @@ window.check_register_validity = (input) ->
 		else
 			"Passwords must match"
 	)
+
+
+$(".table-href > tbody > tr").click ->
+	# todo: handle middle click & ctrl click
+	window.document.location = $(this).data "href"
