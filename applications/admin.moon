@@ -14,7 +14,7 @@ import
 	Users
 	Resources
 	Bans
-	Screenshots
+	ResourceScreenshots
 	UserFollowings
 from require "models"
 
@@ -36,7 +36,7 @@ class AdminApplication extends lapis.Application
 		@resource_count = Resources\count!
 		@ban_count = Bans\count!
 		@banned_users_count = Bans\count "active = true"
-		@gallery_count = Screenshots\count!
+		@gallery_count = ResourceScreenshots\count!
 		@follows_count = UserFollowings\count!
 		render: "admin.layout"
 	
