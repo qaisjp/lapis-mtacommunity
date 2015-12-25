@@ -1,12 +1,13 @@
 import Widget from require "lapis.html"
 
-class MTAAdminHome extends Widget
+breadcrumb = class extends Widget
+	content: =>
+		li class: "active", "Dashboard"
+
+main = class MTAAdminHome extends Widget
 	@include "widgets.utils"
 
 	content: =>
-		@content_for "breadcrumb", ->
-			li class: "active", "Dashboard"
-
 		p "Here are the statistics for the website"
 		ul ->
 			li "Total users: " .. (@user_count or "<error>")
@@ -24,3 +25,5 @@ class MTAAdminHome extends Widget
 				
 			li "Gallery photos uploaded: " .. (@gallery_count or "<error>")
 			li "Total users followed:  " .. (@follows_count or "<error>")
+
+{:main, :breadcrumb}

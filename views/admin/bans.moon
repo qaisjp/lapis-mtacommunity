@@ -2,7 +2,11 @@ import Widget from require "lapis.html"
 import Bans, Users from require "models"
 import to_json from require "lapis.util"
 
-class MTAAdminBans extends Widget
+breadcrumb = class extends Widget
+	content: =>
+		li class: "active", "Bans"
+
+main = class MTAAdminBans extends Widget
 	@include require "widgets.utils"
 	content: =>
 		paginated = Bans\paginated "order by created_at desc",
@@ -35,3 +39,5 @@ class MTAAdminBans extends Widget
 					-- li to_json(ban)
 
 		@write_pagination_nav "admin.bans", pages, @page
+
+{:breadcrumb, :main}

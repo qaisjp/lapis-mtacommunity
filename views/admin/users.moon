@@ -1,13 +1,13 @@
 import Widget from require "lapis.html"
 import Users from require "models"
 
-class MTAAdminBans extends Widget
+breadcrumb = class extends Widget
+	content: =>
+		li class: "active", "Users"
+
+main = class MTAAdminBans extends Widget
 	@include require "widgets.utils"
 	content: =>
-		@content_for "breadcrumb", ->
-			li class: "active", "Users"
-				
-
 		paginated = Users\paginated "order by created_at desc",
 			per_page: 2
 		
@@ -34,3 +34,5 @@ class MTAAdminBans extends Widget
 								text " become"
 
 		@write_pagination_nav "admin.users", pages, @page
+
+{:main, :breadcrumb}
