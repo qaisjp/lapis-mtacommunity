@@ -18,4 +18,8 @@
     return confirm[0].setCustomValidity($("#mta-register-form input[name='password']").val() === confirm.val() ? "" : "Passwords must match");
   };
 
+  $(".table-href > tbody > tr").click(function() {
+    return window.document.location = $(this).data("href");
+  });
+
 }).call(this);

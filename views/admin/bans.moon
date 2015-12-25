@@ -13,7 +13,7 @@ class MTAAdminBans extends Widget
 
 		pages = paginated\num_pages!
 		h2 "Bans - page #{@page} of #{pages}"
-		element "table", class: "table table-hover table-bordered table-condensed ", ->
+		element "table", class: "table table-hover table-bordered table-condensed table-href", ->
 			thead ->
 				tr ->
 					th "#"
@@ -24,19 +24,18 @@ class MTAAdminBans extends Widget
 					th "expiry date"
 			tbody ->
 				for ban in *paginated\get_page @page
-					tr ->
+					tr ["data-href"]: (@url_for "admin.view_ban", ban_id: ban.id), ->
 						th scope: "row", ban.id
-						td ban.banned_user.username
-						td ban.banner.username
+						td -> a href: (@url_for "user_profile", username: ban.banned_user.username), ban.banned_user.username
+						td -> a href: (@url_for "user_profile", username: ban.banner.username), ban.banner.username
 						td ban.reason
 						td ban.created_at
 						td ban.expires_at
 					-- li to_json(ban)
 
-		nav ->
-			ul class: "pagination", ->
-				li -> a href: "#", ["aria-label"]: "Previous", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
-				for page = 1, pages
-					li -> a href: @url_for("admin.bans", nil, page: page), page
-				li -> a href: "#", ["aria-label"]: "Next", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
+		nav -> ul class: "pagination", ->
+			li -> a href: "#", ["aria-label"]: "Previous", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
+			for page = 1, pages
+				li -> a href: @url_for("admin.bans", nil, page: page), page
+			li -> a href: "#", ["aria-label"]: "Next", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
       			
