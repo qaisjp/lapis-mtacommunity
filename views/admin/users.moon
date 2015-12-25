@@ -3,7 +3,7 @@ Users = require "models.users"
 
 class MTAAdminBans extends Widget
 	content: =>
-		h1 "Users"
+		h2 "Users"
 
 		ul ->
 			for user in *Users\select!

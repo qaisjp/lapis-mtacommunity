@@ -93,7 +93,7 @@ class AuthApplication extends lapis.Application
 
 		POST: capture_errors {
 			on_error: =>
-				render: "auth.forgot"
+				json: @errors
 
 			=>
 				assert_csrf_token @

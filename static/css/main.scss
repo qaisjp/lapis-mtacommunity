@@ -67,6 +67,14 @@ form.mta-inline-form {
 	}
 }
 
+
+
+.col-centre {
+	margin: 0 auto;
+	float: none;
+}
+
+
 // Reference: https://stackoverflow.com/questions/27411581/centering-no-captcha-recaptcha
 #mta-register-form .g-recaptcha > div > div {
 	width: 50%;
@@ -79,13 +87,14 @@ form.mta-inline-form {
 	margin-bottom: 15px;
 }
 
-.col-centre {
-	margin: 0 auto;
-	float: none;
-}
-
 // Source: https://scotch.io/bar-talk/bootstrap-3-tips-and-tricks-you-still-might-not-know#optionally-remove-the-gutter-padding-from-columns
 .no-gutter > [class*='col-'] {
 	padding-right:0;
 	padding-left:0;
+}
+
+// Fix the wigglewigglewiggle
+// Refrence: https://github.com/FortAwesome/Font-Awesome/issues/671#issuecomment-166481441
+.fa-refresh.fa-spin {
+	transform-origin: 49% 48.5%;
 }
