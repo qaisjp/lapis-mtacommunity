@@ -42,11 +42,12 @@ class AdminApplication extends lapis.Application
 	
 	[users: "/users"]: =>
 		@title = "Users - Admin"
+		@page = math.max 1, tonumber(@params.page) or 1
 		render: "admin.layout"
 
 	[bans: "/bans"]: =>
 		@title = "Bans - Admin"
-		@page = math.max 1, tonumber(@params.page) or 1		
+		@page = math.max 1, tonumber(@params.page) or 1
 		render: "admin.layout"
 
 	[view_ban: "/bans/:ban_id"]: capture_errors {

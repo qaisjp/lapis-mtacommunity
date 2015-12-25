@@ -3,6 +3,7 @@ import Bans, Users from require "models"
 import to_json from require "lapis.util"
 
 class MTAAdminBans extends Widget
+	@include require "widgets.utils"
 	content: =>
 		paginated = Bans\paginated "order by created_at desc",
 			per_page: 2
@@ -12,7 +13,7 @@ class MTAAdminBans extends Widget
 				bans
 
 		pages = paginated\num_pages!
-		h2 "Bans - page #{@page} of #{pages}"
+		p "page #{@page} of #{pages}"
 		element "table", class: "table table-hover table-bordered table-condensed table-href", ->
 			thead ->
 				tr ->
@@ -33,9 +34,4 @@ class MTAAdminBans extends Widget
 						td ban.expires_at
 					-- li to_json(ban)
 
-		nav -> ul class: "pagination", ->
-			li -> a href: "#", ["aria-label"]: "Previous", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
-			for page = 1, pages
-				li -> a href: @url_for("admin.bans", nil, page: page), page
-			li -> a href: "#", ["aria-label"]: "Next", -> span ["aria-hidden"]: "true", -> raw "&laquo;"
-      			
+		@write_pagination_nav "admin.bans", pages, @page

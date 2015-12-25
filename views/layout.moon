@@ -40,6 +40,7 @@ class Layout extends Widget
 		body ->
 			@render_navbar!
 		
+			@content_for "outer"
 			div class: "container", ->					
 				@content_for "inner"
 				hr!
