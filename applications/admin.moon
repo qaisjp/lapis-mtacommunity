@@ -26,9 +26,9 @@ class AdminApplication extends lapis.Application
 	path: "/admin"
 	name: "admin."
 
-	-- @before_filter =>
-		-- if (not @active_user) or (@active_user.level != Users.levels.admin)
-			-- @write redirect_to: @url_for "home"
+	@before_filter =>
+		unless @active_user and (@active_user.level == Users.levels.admin)
+			@write redirect_to: @url_for "home"
 
 	[dashboard: ""]: =>
 		@title = "Admin"
@@ -60,20 +60,16 @@ class AdminApplication extends lapis.Application
 			}
 
 			@ban = assert_error (Bans\find @params.ban_id), "ban does not exist"
+			Users\include_in {@ban}, "banned_user", as: "banned_user"
+			Users\include_in {@ban}, "banner", as: "banner"
+
 			render: "admin.layout"
-	}	
-	
+	}
 
 	[update_bans: "/bans/update"]: respond_to
-		POST: capture_errors => 
-			Bans.refresh_bans!
+		POST: capture_errors =>
+			Bans.refresh_bans tonumber(@params.id)
 			redirect_to: @params.redirect_to or @url_for "admin.bans"
-
-	-- this doesn't work
-	-- [become: "/become/:username"]: log_me_out
-
-	-- this doesn't work either
-	-- [become: "/become/:username"]: copied_log_me_out
 
 	[become: "/become"]: capture_errors respond_to {
 		on_error: => @html -> p @errors[1]
@@ -84,8 +80,5 @@ class AdminApplication extends lapis.Application
 			}
 			user = assert_error Users\find @params.user_id
 			user\write_to_session @session
-			-- @session.user_id = false
 			redirect_to: @url_for "home"
-			-- @html ->
-				-- p "This shows the correct session: #{to_json(@session)}"
 	}

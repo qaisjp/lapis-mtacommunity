@@ -10,9 +10,10 @@ Users = require "models.users"
 class MTAApp extends lapis.Application
 	layout: require "views.layout"
 
-	@include "applications.auth"
 	@include "applications.admin"
+	@include "applications.auth"
 	@include "applications.user"
+	@include "applications.resource"
 	
 	@before_filter =>
 		@csrf_token = generate_csrf_token @

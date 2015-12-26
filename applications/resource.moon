@@ -7,17 +7,17 @@ import
 	assert_error
 from require "lapis.application"
 
-class UserApplication extends lapis.Application
-	path: "/user"
-	
-	[user_profile: "/:username"]: capture_errors {
+class ResourceApplication extends lapis.Application
+	path: "/resources"
+
+	[resources: ""]: capture_errors {
 		on_error: =>
 			@title = "Oops"
 			render: "user_missing"
 
 		=>
 			-- try to find the user by username
-			@profile = assert_error Users\find [db.raw "lower(username)"]: @params.username\lower!
+			-- @profile = assert_error Users\find [db.raw "lower(username)"]: @params.username\lower!
 			render: true
 	}
 	
