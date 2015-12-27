@@ -4,7 +4,11 @@ import slugify from require "lapis.util"
 bcrypt = require "bcrypt"
 config = require("lapis.config").get!
 db     = require "lapis.db"
-Bans   = require "models.bans"
+
+import
+	Bans
+	UserData
+from require "models"
 
 class Users extends Model
 	-- Has created_at and modified_at
@@ -13,12 +17,14 @@ class Users extends Model
 	@relations: {
 		{"bans", has_many: "Bans", key: "banned_user"}
 		{"active_bans", has_many: "Bans", key: "banned_user", where: active: true}
+		{"userdata", has_one: "UserData"}
 	}
 
 	-- authentication levels
 	@levels: enum
 		guest: 1
-		admin: 2
+		QA:    2
+		admin: 3
 
 	-- Only primary key defined is "id"
 	-- excluded because ID is the default primary key
@@ -60,7 +66,9 @@ class Users extends Model
 		password = bcrypt.digest password, config.bcrypt_log_rounds
 
 		-- And create the database row!
-		@create { :username, :slug, :password, :email }
+		user = @create { :username, :slug, :password, :email }
+		user\create_userdata!
+		user
 
 
 	@login: (username, password) =>
@@ -87,3 +95,5 @@ class Users extends Model
 		Bans.refresh_bans @
 		#@get_active_bans! > 0
 		-- true
+
+	create_userdata: => UserData\create user_id: @id

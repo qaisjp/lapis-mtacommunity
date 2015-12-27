@@ -17,18 +17,15 @@ import
 	ResourceScreenshots
 	UserFollowings
 from require "models"
-
-copied_log_me_out = =>
-	@session.user_id = nil
-	redirect_to: @url_for "home"
+import error_404 from require "utils"
 
 class AdminApplication extends lapis.Application
 	path: "/admin"
 	name: "admin."
 
 	@before_filter =>
-		unless @active_user and (@active_user.level == Users.levels.admin)
-			@write redirect_to: @url_for "home"
+		unless @active_user and (@active_user.level >= Users.levels.QA)
+			@write error_404 @
 
 	[dashboard: ""]: =>
 		@title = "Admin"

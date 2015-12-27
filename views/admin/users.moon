@@ -18,9 +18,9 @@ main = class MTAAdminBans extends Widget
 			thead ->
 				tr ->
 					th "#"
-					th "username"
-					th "created_at"
-					th ""
+					th "Username"
+					th "Creation Date"
+					th "Tools"
 			tbody ->
 				for user in *paginated\get_page @page
 					tr ["date-href"]: (@url_for "user_profile", username: user.username), ->
