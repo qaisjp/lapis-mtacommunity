@@ -27,15 +27,18 @@ main = class MTAAdminBans extends Widget
 					th "reason"
 					th "date of ban"
 					th "expiry date"
+					th ""
 			tbody ->
 				for ban in *paginated\get_page @page
 					tr ["data-href"]: (@url_for "admin.view_ban", ban_id: ban.id), ->
 						th scope: "row", ban.id
-						td -> a href: (@url_for "user_profile", username: ban.banned_user.username), ban.banned_user.username
-						td -> a href: (@url_for "user_profile", username: ban.banner.username), ban.banner.username
+						td -> a href: (@url_for "user.profile", username: ban.banned_user.username), ban.banned_user.username
+						td -> a href: (@url_for "user.profile", username: ban.banner.username), ban.banner.username
 						td ban.reason
 						td ban.created_at
 						td ban.expires_at
+						td -> span class: "label label-#{ban.active and 'warning' or 'default'}", ->
+							text "#{ban.active and '' or 'in'}active"
 					-- li to_json(ban)
 
 		@write_pagination_nav "admin.bans", pages, @page

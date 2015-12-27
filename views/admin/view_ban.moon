@@ -14,17 +14,16 @@ main = class MTAAdminBan extends Widget
 		banner = @ban.banner
 		p ->
 			text "User "
-			a href: @url_for("user_profile", username: banned_user.username), banned_user.username
+			a href: @url_for("user.profile", username: banned_user.username), banned_user.username
 			text " was banned by "
-			a href: @url_for("user_profile", username: banner.username), banner.username
+			a href: @url_for("user.profile", username: banner.username), banner.username
 			p "This user was banned for this reason: #{@ban.reason}"
 			p "The ban was created at: #{@ban.created_at}" 
 			text "The ban is currently "
 				
 			if @ban.active
 				form class: "mta-inline-form", method: "POST", action: @url_for("admin.update_bans", {id: @ban.id}, redirect_to: ngx.var.request_uri), ->
-					span class: "label label-warning", ->
-						text "active"
+					span class: "label label-warning", "active"
 					text" "
 					@write_csrf_input!
 					button type: "submit", class: "btn btn-default btn-xs", ->

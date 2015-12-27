@@ -18,6 +18,8 @@ class Users extends Model
 		{"bans", has_many: "Bans", key: "banned_user"}
 		{"active_bans", has_many: "Bans", key: "banned_user", where: active: true}
 		{"userdata", has_one: "UserData"}
+		{"follows", has_many: "UserFollowings", key: "follower", order: "created_at desc"}
+		{"followed_by", has_many: "UserFollowings", key: "following", order: "created_at desc"}
 	}
 
 	-- authentication levels
@@ -97,3 +99,6 @@ class Users extends Model
 		-- true
 
 	create_userdata: => UserData\create user_id: @id
+
+	is_following: (other_user) =>
+		(db.select "EXISTS(SELECT 1 FROM user_followings WHERE follower = ? AND following = ?)", @id, other_user.id)[1].exists

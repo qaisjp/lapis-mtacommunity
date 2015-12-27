@@ -41,8 +41,11 @@ class Layout extends Widget
 			@render_navbar!
 		
 			@content_for "outer"
-			div class: "container", ->					
-				@content_for "inner"
+			if @has_content_for "inner"
+				div class: "container mta-content", ->					
+					@content_for "inner"
+			
+			div class: "container", ->
 				hr!
 				@render_footer!
 
@@ -95,7 +98,7 @@ class Layout extends Widget
 
 				ul class: "nav navbar-nav navbar-right", ->
 					if @active_user
-						li -> a href: @url_for("user_profile", username: @active_user.username), @active_user.username
+						li -> a href: @url_for("user.profile", username: @active_user.username), @active_user.username
 						if @active_user.level == Users.levels.admin
 							li -> a href: @url_for("admin.dashboard"), "admin"
 						li -> a href: @url_for("auth.logout"), "logout"

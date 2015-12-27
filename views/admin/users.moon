@@ -23,7 +23,7 @@ main = class MTAAdminBans extends Widget
 					th "Tools"
 			tbody ->
 				for user in *paginated\get_page @page
-					tr ["date-href"]: (@url_for "user_profile", username: user.username), ->
+					tr ["date-href"]: (@url_for "user.profile", username: user.username), ->
 						td scope: "row", user.id
 						td user.username
 						td user.created_at

@@ -56,6 +56,10 @@ form.mta-inline-form {
 	display: inline
 }
 
+.mta-content {
+	// margin-top: 40px;
+}
+
 #mta-register-form, #mta-login-form {
 	.input-group {
 		padding-bottom: 5px;
@@ -71,7 +75,9 @@ form.mta-inline-form {
 	cursor: pointer;
 }
 
-
+.mta-profile-btn {
+	display: inline;
+}
 
 .col-centre {
 	margin: 0 auto;
