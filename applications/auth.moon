@@ -40,7 +40,7 @@ class AuthApplication extends lapis.Application
 				user\write_to_session @session
 
 				-- We will always succeed, so let's redirect to the homepage
-				redirect_to: @url_for "home"
+				redirect_to: @params.return_to or @url_for "home"
 		}
 
 	[register: "/register"]: respond_to

@@ -12,6 +12,9 @@ class LoginForm extends Widget
 			-- csrf token to prevent cross-side-request-forgery (who would've guessed?)
 			@write_csrf_input!
 
+			if @params.return_to
+				input type: "hidden", name: "return_to", value: @params.return_to, ["aria-hidden"]: "true"
+
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-user"
 				input type: "text", class: "form-control", placeholder: "username", autocomplete: "on", name: "username", value: @params.username, required: true

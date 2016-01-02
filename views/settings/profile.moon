@@ -3,7 +3,7 @@ import Widget from require "lapis.html"
 class MTAUserProfile extends Widget
 	content: =>
 		div class: "page-header", ->
-			h1 "Resources"
+			h1 "Your Profile"
 
 		div class: "container", ->
 			div class: "row", ->

@@ -3,7 +3,7 @@ import get_gravatar_url from require "utils"
 import Users, UserFollowings from require "models"
 db = require "lapis.db"
 
-class MTAUserProfile extends Widget
+class MTAUserLayout extends Widget
 	@include require "widgets.utils"
 	content: =>
 		div class: "page-header", ->
@@ -11,9 +11,10 @@ class MTAUserProfile extends Widget
 				div class: "media-left", -> img class: "media-object", src: get_gravatar_url @user.email, 150
 				div class: "media-body", ->
 					h1 class: "media-heading", "#{@user.username}"
-					p ->
-						i class: "fa fa-fw fa-clock-o"
-						text "Joined on #{@user.created_at}"
+					if date = @registration_date
+						p ->
+							i class: "fa fa-fw fa-clock-o"
+							text "Registered #{@registration_date}"
 
 					if loc = @data.location
 						p ->
@@ -38,15 +39,14 @@ class MTAUserProfile extends Widget
 				div class: "media-right", ->
 					div class: "btn-group btn-group-sm", role: "group", ["aria-label"]: "Profile Buttons", ->
 						if @active_user
-							admin_mode = @active_user.level >= @user.level
+							admin_mode = @active_user\can_manage @user
 							self_mode  = @active_user.id == @user.id
+
 							if self_mode or admin_mode
 								url = if admin_mode and not self_mode
-										"adm"
-										-- @url_for "admin.view_user", @user.id
+										@url_for "admin.view_user", user: @user.id
 									else
-										"prof"
-										-- @url_for "settings.profile"
+										@url_for "settings.profile"
 
 								a href: url, class: "btn btn-default" , ->
 									i class: "fa fa-pencil"
@@ -63,6 +63,25 @@ class MTAUserProfile extends Widget
 									button type: "submit", class: "btn btn-default #{@isFollowing and '' or 'btn-success'}", ->
 										i class: "fa fa-bell"
 										text " " .. followtext
+	
 
-							h4 "#{@followers} followers"
-							h4 "#{@following} following"
+		div class: "container", ->
+			div class: "row", ->
+				div class: "col-md-10", -> --widget require "views." .. @route_name
+				div class: "col-md-2 ", ->
+					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
+						li role: "presentation", -> a href: "#", ->
+							text "Resources "
+							span class: "badge", @resource_count
+						li role: "presentation", -> a href: "#", ->
+							text "Followers "
+							span class:"badge", @followers
+						li role: "presentation", -> a href: "#", ->
+							text "Following "
+							span class: "badge", @following
+						li role: "presentation", -> a href: "#", ->
+							text "Screenshots "
+							span class: "badge", @screenshot_count
+						li role: "presentation", -> a href: "#", ->
+							text "Comments "
+							span class: "badge", @comment_count

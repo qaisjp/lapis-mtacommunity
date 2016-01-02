@@ -12,8 +12,9 @@ class MTAApp extends lapis.Application
 
 	@include "applications.admin"
 	@include "applications.auth"
-	@include "applications.user"
 	@include "applications.resource"
+	@include "applications.settings"
+	@include "applications.user"
 	
 	@before_filter =>
 		@csrf_token = generate_csrf_token @

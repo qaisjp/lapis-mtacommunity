@@ -1,6 +1,7 @@
 lapis = require "lapis"
 Users = require "models.users"
 db    = require "lapis.db"
+date  = require "date"
 import to_json from require "lapis.util"
 import
 	capture_errors
@@ -9,7 +10,13 @@ import
 from require "lapis.application"
 
 import error_404 from require "utils"
-import UserFollowings from require "models"
+import
+	UserFollowings
+	Resources
+	ResourceAdmins
+	ResourceScreenshots
+	Comments
+from require "models"
 
 class UserApplication extends lapis.Application
 	path: "/user"
@@ -33,6 +40,13 @@ class UserApplication extends lapis.Application
 
 			@followers = UserFollowings\count "following = ?", @user.id
 			@following = UserFollowings\count "follower  = ?", @user.id
+
+			registration_date = date @user.created_at
+			@registration_date = registration_date\fmt "%d %b %Y"
+
+			@resource_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
+			@screenshot_count = ResourceScreenshots\count "uploader = ?", @user.id
+			@comment_count = Comments\count "author = ?", @user.id
 			render: true
 	}
 

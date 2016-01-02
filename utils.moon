@@ -9,6 +9,10 @@ generate_csrf_token = =>
 assert_csrf_token = =>
 	assert_token @, @active_user and @active_user.id
 
+check_logged_in = =>
+	unless @active_user
+		@write redirect_to: @url_for "auth.login", nil, return_to: ngx.var.request_uri
+
 error_404 = (err) =>
 	@title = "Page not found"
 	status: 404, @html -> div class: "page-header", ->
@@ -19,4 +23,4 @@ get_gravatar_url = (email, size) ->
 	hash = ngx.md5 email\lower!
 	"https://www.gravatar.com/avatar/#{hash}?s=#{size}"
 
-{:generate_csrf_token, :assert_csrf_token, :error_404, :get_gravatar_url}
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :get_gravatar_url}
