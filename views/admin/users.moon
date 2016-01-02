@@ -23,16 +23,21 @@ main = class MTAAdminBans extends Widget
 					th "Tools"
 			tbody ->
 				for user in *paginated\get_page @page
-					tr ["date-href"]: (@url_for "user.profile", username: user.username), ->
+					tr ["data-href"]: (@url_for "user.profile", username: user.slug), ->
 						td scope: "row", user.id
 						td user.username
 						td user.created_at
-						td -> form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
-							@write_csrf_input!
-							input type: "hidden", name: "user_id", value: user.id, ["aria-hidden"]: "true"
-							button type: "submit", class: "btn btn-default btn-xs", ->
-								i class: "fa fa-eye"
-								text " become"
+						td ->
+							a href: @url_for("user.profile", username: user.slug), class: "btn btn-default btn-xs", ->
+								i class: "fa fa-user"
+								text " profile"
+							text" "
+							form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
+								@write_csrf_input!
+								input type: "hidden", name: "user_id", value: user.id, ["aria-hidden"]: "true"
+								button type: "submit", class: "btn btn-default btn-xs", ->
+									i class: "fa fa-eye"
+									text " become"
 
 		@write_pagination_nav "admin.users", pages, @page
 

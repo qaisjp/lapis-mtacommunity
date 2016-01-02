@@ -13,7 +13,7 @@ class Home extends Widget
 
 			div class: "container", ->
 				div class: "page-header", ->
-					h2 "latest resources"
+					h2 "Latest Resources"
 
 				raw "<div class=row>"
 				for i=1, 9

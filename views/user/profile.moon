@@ -44,7 +44,8 @@ class MTAUserLayout extends Widget
 
 							if self_mode or admin_mode
 								url = if admin_mode and not self_mode
-										@url_for "admin.view_user", user: @user.id
+										-- @url_for "admin.view_user", user: @user.id
+										"soon"
 									else
 										@url_for "settings.profile"
 
@@ -56,7 +57,7 @@ class MTAUserLayout extends Widget
 								-- We follow them
 								-- should use widget, cloned in follow.moon
 								followtext = @isFollowing and 'Unfollow' or 'Follow'
-								form class: "mta-inline-form", method: "POST", action: @url_for("user.follow", username: @user.username), ->
+								form class: "mta-inline-form", method: "POST", action: @url_for("user.follow", username: @user.slug), ->
 									input type: "hidden", name: "intent", value: followtext\lower!, ["aria-hidden"]: "true"
 
 									@write_csrf_input!

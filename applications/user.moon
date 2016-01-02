@@ -24,7 +24,7 @@ class UserApplication extends lapis.Application
 
 	@before_filter =>
 		-- try to find the user by username
-		@user = Users\find [db.raw "lower(username)"]: @params.username\lower!
+		@user = Users\find [db.raw "lower(slug)"]: @params.username\lower!
 		unless @user
 			return @write error_404 @
 
@@ -68,4 +68,4 @@ class UserApplication extends lapis.Application
 					return @write status:400, "<h1>You are not following this person</h1>"
 				uf = UserFollowings\find {follower: @active_user.id, following: @user.id}
 				uf\delete! if uf
-			redirect_to: @url_for "user.profile", username: @user.username
+			redirect_to: @url_for "user.profile", username: @user.slug

@@ -98,7 +98,7 @@ class Layout extends Widget
 
 				ul class: "nav navbar-nav navbar-right", ->
 					if @active_user
-						li -> a href: @url_for("user.profile", username: @active_user.username), @active_user.username
+						li -> a href: @url_for("user.profile", username: @active_user.username), @active_user.slug
 						if @active_user.level == Users.levels.admin
 							li -> a href: @url_for("admin.dashboard"), "admin"
 						li -> a href: @url_for("auth.logout"), "logout"
@@ -122,7 +122,7 @@ class Layout extends Widget
 				li -> a href: "#", "Nightlies"
 				li -> a href: "#", "GitHub"
 				li -> a href: "#", "Wiki"
-				li -> a href: "#", "Mantis"
+				li -> a href: "#", "Bug Tracker"
 		
 		div class: "col-md-2", ->
 			ul ->
