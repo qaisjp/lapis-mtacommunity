@@ -2,62 +2,46 @@ import Widget from require "lapis.html"
 
 class MTAUserProfile extends Widget
 	content: =>
-		div class: "page-header", ->
-			h1 "Your Profile"
+		div class: "page-header noborder"
+		div class: "col-md-2", ->
+			div class: "panel panel-default", ->
+				div class: "panel-heading", "Settings"
+				div class: "panel-body", ->
+					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
+						li role: "presentation", -> a href: "#", ->
+							text "Account"
+						li role: "presentation", -> a href: "#", ->
+							text "Profile "
 
-		div class: "container", ->
-			div class: "row", ->
-				div class: "panel panel-default mta-resources-search", ->
-					div class: "panel-heading", "Search"
-					div class: "panel-body", -> "Search Contents"
+		div class: "col-md-10", -> --widget require "views." .. @route_name
+			div class: "panel panel-default", ->
+				div class: "panel-heading", "Change password"
+				div class: "panel-body", ->
+					element "table", class: "table table-bordered mta-resources-table", ->
+						thead -> tr ->
+							th "Name"
+							th "Description"
+							th "Downloads"
+							th "T"
+						tbody ->
+							tr ->
+								td "longname (shortname)"
+								td "description"
+								td "downloads"
+								td "s"
 
-			div class: "row", ->
-				div class: "panel panel-default", ->
-					div class: "panel-heading", "Most Downloaded"
-					div class: "panel-body", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
-							thead -> tr ->
-								th "Name"
-								th "Description"
-								th "Downloads"
-								th "T"
-							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "description"
-									td "downloads"
-									td "s"
-
-			div class: "row", ->
-				div class: "panel panel-default", ->
-					div class: "panel-heading", "Best Resources"
-					div class: "panel-body", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
-							thead -> tr ->
-								th "Name"
-								th "Description"
-								th "Downloads"
-								th "T"
-							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "description"
-									td "downloads"
-									td "s"
-
-			div class: "row", ->
-				div class: "panel panel-default", ->
-					div class: "panel-heading", "Recently Uploaded"
-					div class: "panel-body", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
-							thead -> tr ->
-								th "Name"
-								th "Version"
-								th "Date Updated"
-								th "T"
-							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "version"
-									td "timestamp"
-									td "s"
+			div class: "panel panel-default panel-danger", ->
+				div class: "panel-heading", "Delete account"
+				div class: "panel-body", ->
+					element "table", class: "table table-bordered mta-resources-table", ->
+						thead -> tr ->
+							th "Name"
+							th "Description"
+							th "Downloads"
+							th "T"
+						tbody ->
+							tr ->
+								td "longname (shortname)"
+								td "description"
+								td "downloads"
+								td "s"

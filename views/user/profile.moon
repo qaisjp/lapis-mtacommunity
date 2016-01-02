@@ -67,7 +67,6 @@ class MTAUserLayout extends Widget
 
 		div class: "container", ->
 			div class: "row", ->
-				div class: "col-md-10", -> --widget require "views." .. @route_name
 				div class: "col-md-2 ", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
 						li role: "presentation", -> a href: "#", ->
@@ -85,3 +84,4 @@ class MTAUserLayout extends Widget
 						li role: "presentation", -> a href: "#", ->
 							text "Comments "
 							span class: "badge", @comment_count
+				div class: "col-md-10", -> --widget require "views." .. @route_name

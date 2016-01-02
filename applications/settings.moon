@@ -18,7 +18,7 @@ class SettingsApplications extends lapis.Application
 	@before_filter => check_logged_in @
 
 
-	["main": ""]: => redirect_to: @url_for "settings.profile"
+	[main: ""]: => redirect_to: @url_for "settings.profile"
 		
 	[profile: "/profile"]: assert_error =>
 		render: true
