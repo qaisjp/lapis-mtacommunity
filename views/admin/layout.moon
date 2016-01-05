@@ -21,10 +21,11 @@ class MTAAdminLayout extends Widget
 				ul class: "nav nav-pills nav-stacked", ->
 					for name in *{"Dashboard", "Users", "Bans"}
 						route_name = "admin." .. name\lower!
-						li {
-							role: "presentation",
-							class: if route_name == @route_name then "active" else ""
-						}, -> a href: @url_for(route_name), name
+						li role: "presentation", class: "nav-item", ->
+							a {
+								class: "nav-link" .. (if route_name == @route_name then " active" else "")
+								href: @url_for(route_name)
+							}, name
 
 			div class: "col-md-10", ->
 				widget main
