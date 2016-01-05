@@ -103,7 +103,7 @@ class Layout extends Widget
 			
 			div class: "row", ->
 				div class: "col-md-3 col-md-offset-9", ->					
-					div class: "card panel-toplogin pull-right", ->
+					div class: "card card-toplogin pull-right", ->
 						-- let's output the form for the login in here
 						widget require "widgets.login_form"
 
