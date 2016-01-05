@@ -117,6 +117,7 @@ class Layout extends Widget
 		div class: "col-md-8", ->
 			p class: "tagline", -> em "[ stop playing with yourself ]"
 			p -> raw "&copy; Qais Patankar 2015"
+			p -> raw "running lapis " .. require "lapis.version"
 
 		div class: "col-md-2", ->
 			ul ->
