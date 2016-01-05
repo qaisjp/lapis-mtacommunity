@@ -47,8 +47,8 @@ footer {
 	border: none;
 }
 
-.mta-navbar-links li:nth-last-child(1) {
-	border-left: 1px solid #404040;
+.mta-navbar-links .mta-separated-nav-item {
+	border-left: 1px solid #454545; //was 404040
 	height: 100%;
 }
 

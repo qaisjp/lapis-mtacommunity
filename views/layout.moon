@@ -68,44 +68,38 @@ class Layout extends Widget
 	--/html
 
 	render_navbar: =>
-		nav class: "navbar navbar-inverse navbar-fixed-top", -> div class: "container", ->
-			div class: "navbar-header", ->
-				button type: "button", class: "navbar-toggle collapsed", ["data-toggle"]: "collapse", ["data-target"]: "#navbar", ["aria-expanded"]: "false", ["aria-controls"]: "navbar", ->
-					span class: "sr-only", "Toggle navigation"
-					span class: "icon-bar"
-					span class: "icon-bar"
-					span class: "icon-bar"
-				a class: "navbar-brand", href: "/", "mta community"
+		nav class: "navbar navbar-dark bg-inverse navbar-fixed-top", -> div class: "container", ->
+			a class: "navbar-brand", href: "/", "mta community"
 
-			div id:"navbar", class: "navbar-collapse collapse", ->
-				ul class: "nav navbar-nav mta-navbar-links", ->
-					li -> a href: "https://mtasa.com", "home"
-					li -> a href: "https://forum.mtasa.com", "forum"
-					li -> a href: "https://wiki.mtasa.com", "wiki"
-					li -> a href: "https://bugs.mtasa.com", "bugs"
-					li -> a href: "/resources", "resources"
+			
+			ul class: "nav navbar-nav mta-navbar-links", ->
+				li class: "nav-item", -> a class: "nav-link", href: "https://mtasa.com", "home"
+				li class: "nav-item", -> a class: "nav-link", href: "https://forum.mtasa.com", "forum"
+				li class: "nav-item", -> a class: "nav-link", href: "https://wiki.mtasa.com", "wiki"
+				li class: "nav-item", -> a class: "nav-link", href: "https://bugs.mtasa.com", "bugs"
+				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: "/resources", "resources"
 				
-				div class: "navbar-right navbar-form navbar-text btn-group", ->
-					button type: "button", class: "btn btn-default btn-xs dropdown-toggle", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
-						raw "en-gb "
-						span class: "caret"
-					
-					ul class: "dropdown-menu", ->
-						li -> a "languages"
-						li role: "separator", class: "divider"
-						li class: "active", -> a href: "#", "english (en-gb)"
-						li -> a href: "#", "pirate (en-arr)"
-						li -> a href: "#", "pig latin (en-pl)"
+			div class: "form-inline btn-group pull-xs-right", ->
+				button type: "button", class: "btn btn-secondary dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
+					raw "en-gb "
+					span class: "caret"
+				
+				div class: "dropdown-menu", ->
+					a class: "dropdown-item", "languages"
+					div class: "dropdown-divider"
+					a class: "dropdown-item active", href: "#", "english (en-gb)"
+					a class: "dropdown-item", href: "#", "pirate (en-arr)"
+					a class: "dropdown-item", href: "#", "pig latin (en-pl)"
 
-				ul class: "nav navbar-nav navbar-right", ->
-					if @active_user
-						li -> a href: @url_for("user.profile", username: @active_user.username), @active_user.slug
-						if @active_user.level == Users.levels.admin
-							li -> a href: @url_for("admin.dashboard"), "admin"
-						li -> a href: @url_for("auth.logout"), "logout"
-					else
-						li -> a id: "login-btn", href: @url_for("auth.login"), "login"
-						li -> a href: @url_for("auth.register"), "register"
+			ul class: "nav navbar-nav pull-xs-right", ->
+				if @active_user
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("user.profile", username: @active_user.username), @active_user.slug
+					if @active_user.level == Users.levels.admin
+						li class: "nav-item", -> a class: "nav-link", href: @url_for("admin.dashboard"), "admin"
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), "logout"
+				else
+					li class: "nav-item", -> a class: "nav-link", id: "login-btn", href: @url_for("auth.login"), "login"
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.register"), "register"
 			
 			div class: "row", ->
 				div class: "col-md-3 col-md-offset-9", ->					

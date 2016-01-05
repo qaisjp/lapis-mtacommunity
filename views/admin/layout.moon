@@ -27,6 +27,4 @@ class MTAAdminLayout extends Widget
 						}, -> a href: @url_for(route_name), name
 
 			div class: "col-md-10", ->
-				-- div class: "panel panel-default", ->
-				-- 	div class: "panel-body", ->
 				widget main

@@ -4,19 +4,19 @@ class MTAUserProfile extends Widget
 	content: =>
 		div class: "page-header noborder"
 		div class: "col-md-2", ->
-			div class: "panel panel-default", ->
-				div class: "panel-heading", "Settings"
-				div class: "panel-body", ->
+			div class: "card", ->
+				div class: "card-header", "Settings"
+				div class: "card-body", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						li role: "presentation", -> a href: "#", ->
+						li class: "nav-item", role: "presentation", -> a class: "nav-link active", href: "#", ->
 							text "Account"
-						li role: "presentation", -> a href: "#", ->
+						li class: "nav-item", role: "presentation", -> a class: "nav-link", href: "#", ->
 							text "Profile "
 
-		div class: "col-md-10", -> --widget require "views." .. @route_name
-			div class: "panel panel-default", ->
-				div class: "panel-heading", "Change password"
-				div class: "panel-body", ->
+		div class: "col-md-10", ->
+			div class: "card", ->
+				div class: "card-header", "Change password"
+				div class: "card-body", ->
 					element "table", class: "table table-bordered mta-resources-table", ->
 						thead -> tr ->
 							th "Name"
@@ -30,9 +30,9 @@ class MTAUserProfile extends Widget
 								td "downloads"
 								td "s"
 
-			div class: "panel panel-default panel-danger", ->
-				div class: "panel-heading", "Delete account"
-				div class: "panel-body", ->
+			div class: "card", ->
+				div class: "card-header card-danger", "Delete account"
+				div class: "card-body", ->
 					element "table", class: "table table-bordered mta-resources-table", ->
 						thead -> tr ->
 							th "Name"
