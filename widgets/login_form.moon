@@ -25,9 +25,9 @@ class LoginForm extends Widget
 			
 			row class: "no-gutter", ->
 				div class: "col-md-4", ->
-					button type: "button", class: "btn btn-default pull-left", -> i class: "fa fa-fw fa-question"
+					button type: "button", class: "btn btn-secondary pull-left", -> i class: "fa fa-fw fa-question"
 				
 				div class: "col-md-8", ->
 					div class: "input-group", ->
 						span class: "input-group-addon", -> input type: "checkbox", name: "remember", value: "true"
-						button type: "submit", class: "form-control btn btn-default", "login"
+						button type: "submit", class: "form-control btn btn-secondary", "login"

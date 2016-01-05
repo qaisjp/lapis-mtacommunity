@@ -49,7 +49,7 @@ class MTAUserLayout extends Widget
 									else
 										@url_for "settings.profile"
 
-								a href: url, class: "btn btn-default" , ->
+								a href: url, class: "btn btn-secondary" , ->
 									i class: "fa fa-pencil"
 									text " Edit profile"
 
@@ -61,7 +61,7 @@ class MTAUserLayout extends Widget
 									input type: "hidden", name: "intent", value: followtext\lower!, ["aria-hidden"]: "true"
 
 									@write_csrf_input!
-									button type: "submit", class: "btn btn-default #{@isFollowing and '' or 'btn-success'}", ->
+									button type: "submit", class: "btn btn-secondary #{@isFollowing and '' or 'btn-success'}", ->
 										i class: "fa fa-bell"
 										text " " .. followtext
 	

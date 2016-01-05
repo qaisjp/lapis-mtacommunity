@@ -20,6 +20,6 @@ class MTAUserFollow extends Widget
 				input type: "hidden", name: "intent", value: followtext\lower!, ["aria-hidden"]: "true"
 
 				@write_csrf_input!
-				button type: "submit", class: "btn btn-default #{@isFollowing and '' or 'btn-success'}", ->
+				button type: "submit", class: "btn btn-secondary #{@isFollowing and '' or 'btn-success'}", ->
 					i class: "fa fa-pencil"
 					text " " .. followtext

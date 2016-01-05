@@ -19,7 +19,7 @@ main = class MTAAdminHome extends Widget
 				text " "
 				form class: "mta-inline-form", method: "POST", action: @url_for("admin.update_bans", nil, redirect_to: ngx.var.request_uri), ->
 					@write_csrf_input!
-					button type: "submit", class: "btn btn-default btn-xs", ->
+					button type: "submit", class: "btn btn-secondary btn-xs", ->
 						i class: "fa fa-refresh fa-spin"
 						text " update"
 				

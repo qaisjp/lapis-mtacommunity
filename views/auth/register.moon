@@ -45,4 +45,4 @@ class AuthRegister extends Widget
 				-- div class: "row", -> div class: "g-recaptcha", ["data-sitekey"]: "6LeurhMTAAAAAPwfyNazLGDYL-sqi6e2_b1aaC0Y"
 
 				div class: "row", -> div class: "col-md-4 col-md-offset-4", ->
-					button type: "submit", class: "form-control btn btn-default", "register"
+					button type: "submit", class: "form-control btn btn-secondary", "register"

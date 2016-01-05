@@ -28,14 +28,14 @@ main = class MTAAdminBans extends Widget
 						td user.username
 						td user.created_at
 						td ->
-							a href: @url_for("user.profile", username: user.slug), class: "btn btn-default btn-xs", ->
+							a href: @url_for("user.profile", username: user.slug), class: "btn btn-secondary btn-xs", ->
 								i class: "fa fa-user"
 								text " profile"
 							text" "
 							form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
 								@write_csrf_input!
 								input type: "hidden", name: "user_id", value: user.id, ["aria-hidden"]: "true"
-								button type: "submit", class: "btn btn-default btn-xs", ->
+								button type: "submit", class: "btn btn-secondary btn-xs", ->
 									i class: "fa fa-eye"
 									text " become"
 

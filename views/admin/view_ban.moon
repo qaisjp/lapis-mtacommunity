@@ -26,7 +26,7 @@ main = class MTAAdminBan extends Widget
 					span class: "label label-warning", "active"
 					text" "
 					@write_csrf_input!
-					button type: "submit", class: "btn btn-default btn-xs", ->
+					button type: "submit", class: "btn btn-secondary btn-xs", ->
 						i class: "fa fa-refresh fa-spin"
 						text " update"
 			else
