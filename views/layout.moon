@@ -1,6 +1,7 @@
 import Widget from require "lapis.html"
 Users = require "models.users"
 
+
 class Layout extends Widget
 	content: => html_5 ->
 		head ->
@@ -116,7 +117,7 @@ class Layout extends Widget
 		div class: "col-md-8", ->
 			p class: "tagline", -> em "[ stop playing with yourself ]"
 			p -> raw "&copy; Qais Patankar 2015"
-		
+
 		div class: "col-md-2", ->
 			ul ->
 				li -> a href: "#", "Nightlies"

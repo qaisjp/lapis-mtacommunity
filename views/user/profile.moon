@@ -69,20 +69,30 @@ class MTAUserLayout extends Widget
 		div class: "container", ->
 			div class: "row", ->
 				div class: "col-md-2 ", ->
-					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						li role: "presentation", -> a href: "#", ->
+					ul class: "nav nav-pills nav-stacked mta-resources-tabs", role: "tablist", ->
+						li role: "presentation", class: "active", -> a href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
 							text "Resources "
 							span class: "badge", @resource_count
-						li role: "presentation", -> a href: "#", ->
+						li role: "presentation", -> a href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
 							text "Followers "
 							span class:"badge", @followers
-						li role: "presentation", -> a href: "#", ->
+						li role: "presentation", -> a href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
 							text "Following "
 							span class: "badge", @following
-						li role: "presentation", -> a href: "#", ->
+						li role: "presentation", -> a href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
 							text "Screenshots "
 							span class: "badge", @screenshot_count
-						li role: "presentation", -> a href: "#", ->
+						li role: "presentation", -> a href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
 							text "Comments "
 							span class: "badge", @comment_count
-				div class: "col-md-10", -> --widget require "views." .. @route_name
+				div class: "col-md-10", ->
+					div class: "tab-content", ->
+						div role: "tabpanel", class: "tab-pane fade in active", id: "resources", "res"
+						div role: "tabpanel", class: "tab-pane fade", id: "followers", "fol"
+						div role: "tabpanel", class: "tab-pane fade", id: "following", "folin"
+						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", "scren"
+						div role: "tabpanel", class: "tab-pane fade", id: "comments", "com"
+
+
+		@content_for "post_body_script", ->
+			script type: "text/javascript", -> raw "check_user_page_tab()"

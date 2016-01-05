@@ -3,12 +3,19 @@
 
   $(window).load(function() {
     console.log("loaded");
-    return $("#login-btn").click(function(e) {
+    $("#login-btn").click(function(e) {
       var loginForm;
       loginForm = $(".panel-toplogin");
       loginForm.stop();
       loginForm.slideToggle(800);
       return e.preventDefault();
+    });
+    return $('.mta-resources-tabs li a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+      if (history.pushState) {
+        return history.pushState(null, null, e.target.hash);
+      } else {
+        return window.location.hash = e.target.hash;
+      }
     });
   });
 
@@ -21,5 +28,11 @@
   $(".table-href > tbody > tr").click(function() {
     return window.document.location = $(this).data("href");
   });
+
+  window.check_user_page_tab = function() {
+    if (window.location.hash) {
+      return $('.mta-resources-tabs li a[href=' + window.location.hash + ']').tab('show');
+    }
+  };
 
 }).call(this);
