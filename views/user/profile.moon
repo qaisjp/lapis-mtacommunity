@@ -37,7 +37,7 @@ class MTAUserLayout extends Widget
 							text: "Birthday: #{birthday}"
 
 				div class: "media-right", ->
-					div class: "btn-group btn-group-sm", role: "group", ["aria-label"]: "Profile Buttons", ->
+					div class: "btn-group-vertical", role: "group", ["aria-label"]: "Profile Buttons", ->
 						if @active_user
 							admin_mode = @active_user\can_manage @user
 							self_mode  = @active_user.id == @user.id
@@ -72,19 +72,19 @@ class MTAUserLayout extends Widget
 					ul class: "nav nav-pills nav-stacked mta-resources-tabs", role: "tablist", ->
 						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
 							text "Resources "
-							span class: "badge", @resource_count
+							span class: "label label-pill label-default", @resource_count
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
 							text "Followers "
-							span class:"badge", @followers
+							span class:"label label-pill label-default", @followers
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
 							text "Following "
-							span class: "badge", @following
+							span class: "label label-pill label-default", @following
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
 							text "Screenshots "
-							span class: "badge", @screenshot_count
+							span class: "label label-pill label-default", @screenshot_count
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
 							text "Comments "
-							span class: "badge", @comment_count
+							span class: "label label-pill label-default", @comment_count
 				div class: "col-md-10", ->
 					div class: "tab-content", ->
 						div role: "tabpanel", class: "tab-pane fade in active", id: "resources", "res"

@@ -70,7 +70,6 @@ class Layout extends Widget
 	render_navbar: =>
 		nav class: "navbar navbar-dark bg-inverse navbar-fixed-top", -> div class: "container", ->
 			a class: "navbar-brand", href: "/", "mta community"
-
 			
 			ul class: "nav navbar-nav mta-navbar-links", ->
 				li class: "nav-item", -> a class: "nav-link", href: "https://mtasa.com", "home"
@@ -80,7 +79,7 @@ class Layout extends Widget
 				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: "/resources", "resources"
 				
 			div class: "form-inline btn-group pull-xs-right", ->
-				button type: "button", class: "btn btn-secondary dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
+				button type: "button", class: "btn btn-secondary btn-sm dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
 					raw "en-gb "
 					span class: "caret"
 				
