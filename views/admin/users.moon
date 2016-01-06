@@ -5,7 +5,7 @@ breadcrumb = class extends Widget
 	content: =>
 		li class: "active", "Users"
 
-main = class MTAAdminBans extends Widget
+main = class MTAAdminUsers extends Widget
 	@include require "widgets.utils"
 	content: =>
 		paginated = Users\paginated "order by created_at desc",
