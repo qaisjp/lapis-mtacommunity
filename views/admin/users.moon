@@ -14,7 +14,7 @@ main = class MTAAdminBans extends Widget
 		pages = paginated\num_pages!
 		p "page #{@page} of #{pages}"
 
-		element "table", class: "table table-hover table-bordered table-condensed table-href", ->
+		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->
 				tr ->
 					th "#"
