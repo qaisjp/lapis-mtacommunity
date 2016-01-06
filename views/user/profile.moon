@@ -70,19 +70,19 @@ class MTAUserLayout extends Widget
 			div class: "row", ->
 				div class: "col-md-2 ", ->
 					ul class: "nav nav-pills nav-stacked mta-resources-tabs", role: "tablist", ->
-						li role: "presentation", class: "active", -> a href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
 							text "Resources "
 							span class: "badge", @resource_count
-						li role: "presentation", -> a href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
 							text "Followers "
 							span class:"badge", @followers
-						li role: "presentation", -> a href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
 							text "Following "
 							span class: "badge", @following
-						li role: "presentation", -> a href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
 							text "Screenshots "
 							span class: "badge", @screenshot_count
-						li role: "presentation", -> a href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
 							text "Comments "
 							span class: "badge", @comment_count
 				div class: "col-md-10", ->

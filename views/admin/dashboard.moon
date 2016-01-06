@@ -17,7 +17,7 @@ main = class MTAAdminHome extends Widget
 				text "Currently banned users: "
 				text @banned_users_count or "<error>"
 				text " "
-				form class: "form-inline", method: "POST", action: @url_for("admin.update_bans", nil, redirect_to: ngx.var.request_uri), ->
+				form class: "form-inline mta-inline-form", method: "POST", action: @url_for("admin.update_bans", nil, redirect_to: ngx.var.request_uri), ->
 					@write_csrf_input!
 					button type: "submit", class: "form-control btn btn-secondary btn-sm", ->
 						i class: "fa fa-refresh fa-spin"
