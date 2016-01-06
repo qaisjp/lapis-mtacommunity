@@ -5,7 +5,7 @@
     console.log("loaded");
     $("#login-btn").click(function(e) {
       var loginForm;
-      loginForm = $(".panel-toplogin");
+      loginForm = $(".card-toplogin");
       loginForm.stop();
       loginForm.slideToggle(800);
       return e.preventDefault();
