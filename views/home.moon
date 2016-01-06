@@ -23,7 +23,7 @@ class Home extends Widget
 			
 						div class: "media-body", ->
 							h4 class: "media-heading", "guieditor 3.23.2"
-							text "Bested thing ever!"
+							text "Bestest thing ever!"
 							p -> a class: "btn btn-secondary btn-sm", href: "#", role: "button", "View details »" -- » symbol = "&raquo;"
 
 					-- This makes a new row every three previews
