@@ -20,14 +20,14 @@ class MTAApp extends lapis.Application
 		@csrf_token = generate_csrf_token @
 		@active_user = Users\find @session.user_id if @session.user_id
 
-	cookie_attributes: (name, value) =>
-		base = "Path=/; HttpOnly"
+	-- cookie_attributes: (name, value) =>
+	-- 	base = "Path=/; HttpOnly"
 
-		-- Have we been told to set the cookie expiry date?
-		if expiry = @session.cookie_expiry
-			base = "Expires=#{expiry}; {base}"
+	-- 	-- Have we been told to set the cookie expiry date?
+	-- 	if expiry = @session.cookie_expiry
+	-- 		base = "Expires=#{expiry}; {base}"
 		
-		base
+	-- 	base
 
 	[home: "/"]: =>
 		render: true
