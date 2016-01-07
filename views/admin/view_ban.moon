@@ -10,13 +10,13 @@ breadcrumb = class extends Widget
 main = class MTAAdminBan extends Widget
 	@include require "widgets.utils"
 	content: =>
-		banned_user = @ban.banned_user
-		banner = @ban.banner
+		banned_user = @ban\get_banned_user()
+		banner = @ban\get_banner()
 		p ->
 			text "User "
-			a href: @url_for("user.profile", username: banned_user.username), banned_user.username
+			a href: @url_for("user.profile", username: banned_user.slug), banned_user.username
 			text " was banned by "
-			a href: @url_for("user.profile", username: banner.username), banner.username
+			a href: @url_for("user.profile", username: banner.slug), banner.username
 			p "This user was banned for this reason: #{@ban.reason}"
 			p "The ban was created at: #{@ban.created_at}" 
 			text "The ban is currently "
