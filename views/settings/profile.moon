@@ -30,8 +30,8 @@ class MTAUserProfile extends Widget
 								td "downloads"
 								td "s"
 
-			div class: "card card-danger card-inverse", ->
-				div class: "card-header", "Delete account"
+			div class: "card", ->
+				div class: "card-header bg-danger", "Delete account"
 				div class: "card-block", ->
 					element "table", class: "table table-bordered mta-resources-table", ->
 						thead -> tr ->

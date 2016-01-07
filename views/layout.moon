@@ -76,19 +76,7 @@ class Layout extends Widget
 				li class: "nav-item", -> a class: "nav-link", href: "https://forum.mtasa.com", "forum"
 				li class: "nav-item", -> a class: "nav-link", href: "https://wiki.mtasa.com", "wiki"
 				li class: "nav-item", -> a class: "nav-link", href: "https://bugs.mtasa.com", "bugs"
-				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: "/resources", "resources"
-				
-			div class: "form-inline btn-group pull-xs-right", ->
-				button type: "button", class: "btn btn-secondary btn-sm dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
-					raw "en-gb "
-					span class: "caret"
-				
-				div class: "dropdown-menu", ->
-					a class: "dropdown-item", "languages"
-					div class: "dropdown-divider"
-					a class: "dropdown-item active", href: "#", "english (en-gb)"
-					a class: "dropdown-item", href: "#", "pirate (en-arr)"
-					a class: "dropdown-item", href: "#", "pig latin (en-pl)"
+				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: "/resources", "resources"				
 
 			ul class: "nav navbar-nav pull-xs-right", ->
 				if @active_user
@@ -99,6 +87,19 @@ class Layout extends Widget
 				else
 					li class: "nav-item", -> a class: "nav-link", id: "login-btn", href: @url_for("auth.login"), "login"
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.register"), "register"
+
+				-- languages!
+				li class: "nav-item form-inline btn-group", ->
+					button type: "button", class: "btn btn-secondary btn-sm dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
+						raw "en-gb "
+						span class: "caret"
+					
+					div class: "dropdown-menu", ->
+						a class: "dropdown-item", "languages"
+						div class: "dropdown-divider"
+						a class: "dropdown-item active", href: "#", "english (en-gb)"
+						a class: "dropdown-item", href: "#", "pirate (en-arr)"
+						a class: "dropdown-item", href: "#", "pig latin (en-pl)"
 			
 			div class: "row", ->
 				div class: "col-md-3 col-md-offset-9", ->					
