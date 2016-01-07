@@ -99,7 +99,6 @@ class Layout extends Widget
 						div class: "dropdown-divider"
 						a class: "dropdown-item active", href: "#", "english (en-gb)"
 						a class: "dropdown-item", href: "#", "pirate (en-pi)"
-						a class: "dropdown-item", href: "#", "pig latin (x-pig-latin)"
 			
 			div class: "row", ->
 				div class: "col-md-3 col-md-offset-9", ->					
