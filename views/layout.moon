@@ -80,7 +80,7 @@ class Layout extends Widget
 
 			ul class: "nav navbar-nav pull-xs-right", ->
 				if @active_user
-					li class: "nav-item", -> a class: "nav-link", href: @url_for("user.profile", username: @active_user.username), @active_user.slug
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("user.profile", username: @active_user.slug), @active_user.username
 					if @active_user.level == Users.levels.admin
 						li class: "nav-item", -> a class: "nav-link", href: @url_for("admin.dashboard"), "admin"
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), "logout"
