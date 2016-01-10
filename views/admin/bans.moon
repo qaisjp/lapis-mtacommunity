@@ -8,6 +8,8 @@ breadcrumb = class extends Widget
 
 main = class MTAAdminBans extends Widget
 	@include require "widgets.utils"
+
+	category: "Bans"
 	content: =>
 		paginated = Bans\paginated "order by created_at desc",
 			per_page: 2

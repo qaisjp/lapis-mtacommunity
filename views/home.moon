@@ -11,22 +11,21 @@ class Home extends Widget
 					raw " "
 					a class: "btn btn-primary", href: "/resources", role: "button", "browse resources"
 
-			div class: "container", ->
-				div class: "page-header", ->
-					h2 "Latest Resources"
-
-				raw "<div class=row>"
-				for i=1, 9
-					div class: "col-md-4 home-resource-previews", -> div class: "media", ->
-						div class: "media-left media-top", ->
-							a href: "#", -> img class: "media-object", src: "#", alt: "..."
 			
-						div class: "media-body", ->
-							h4 class: "media-heading", "guieditor 3.23.2"
-							text "Bestest thing ever!"
-							p -> a class: "btn btn-secondary btn-sm", href: "#", role: "button", "View details »" -- » symbol = "&raquo;"
+			div class: "container", ->
+				h2 "Latest Resources"
+				div class: "row", ->				
+					for i = 0, 5
+						if i%2 == 0
+							raw '<div class="col-md-4">'
 
-					-- This makes a new row every three previews
-					if i % 3 == 0
-						raw "</div><div class=row>"
-				raw "</div>"
+						div class: "card", ->
+							div class: "card-header", ->
+								text "guieditor 1.2.3.4"
+								
+							img  ["data-src"]: "/static/favicon.ico", alt: "Card image cap"
+							div class: "card-img-overlay", "helloddddddddddddddddddddddddddddddddd"
+							div class: "card-footer", -> small class: "text-muted", " Last updated 3 mins ago"
+						
+						if i%2 == 1
+							raw '</div>'

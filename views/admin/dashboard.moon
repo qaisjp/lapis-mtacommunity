@@ -7,6 +7,7 @@ breadcrumb = class extends Widget
 main = class MTAAdminHome extends Widget
 	@include "widgets.utils"
 
+	category: "Dashboard"
 	content: =>
 		p "Here are the statistics for the website"
 		ul ->

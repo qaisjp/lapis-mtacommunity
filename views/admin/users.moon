@@ -7,6 +7,8 @@ breadcrumb = class extends Widget
 
 main = class MTAAdminUsers extends Widget
 	@include require "widgets.utils"
+
+	category: "Users"
 	content: =>
 		paginated = Users\paginated "order by created_at desc",
 			per_page: 2
