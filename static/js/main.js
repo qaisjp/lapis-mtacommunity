@@ -8,6 +8,7 @@
       loginForm = $(".card-toplogin");
       loginForm.stop();
       loginForm.slideToggle(800);
+      $("#mta-widget-login-username").focus();
       return e.preventDefault();
     });
     return $('.mta-resources-tabs li a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
