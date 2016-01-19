@@ -109,7 +109,7 @@ class Layout extends Widget
 	render_footer: => footer class: "row", ->
 		div class: "col-md-8", ->
 			p class: "tagline", -> em "[ stop playing with yourself ]"
-			p -> raw "&copy; Qais Patankar 2015"
+			p -> raw "&copy; Qais Patankar 2015 - 2016"
 			p -> raw "running lapis " .. require "lapis.version"
 
 		div class: "col-md-2", ->
