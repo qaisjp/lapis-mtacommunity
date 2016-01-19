@@ -6,6 +6,7 @@ $(window).load ->
 		loginForm = $(".card-toplogin")
 		loginForm.stop()
 		loginForm.slideToggle 800
+		$("#mta-widget-login-username").focus()
 		e.preventDefault()
 
 	$('.mta-resources-tabs li a[data-toggle="pill"]').on 'shown.bs.tab', (e) ->
