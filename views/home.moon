@@ -24,7 +24,7 @@ class Home extends Widget
 								text "guieditor 1.2.3.4"
 								
 							img  ["data-src"]: "/static/favicon.ico", alt: "Card image cap"
-							div class: "card-img-overlay", "helloddddddddddddddddddddddddddddddddd"
+							div class: "card-img-overlay", "A description couold be put here. Because I am never gonna give you up. Never gonna let you down."
 							div class: "card-footer", -> small class: "text-muted", " Last updated 3 mins ago"
 						
 						if i%2 == 1
