@@ -33,15 +33,5 @@ class MTAUserProfile extends Widget
 			div class: "card", ->
 				div class: "card-header bg-danger", "Delete account"
 				div class: "card-block", ->
-					element "table", class: "table table-bordered mta-resources-table", ->
-						thead -> tr ->
-							th "Name"
-							th "Description"
-							th "Downloads"
-							th "T"
-						tbody ->
-							tr ->
-								td "longname (shortname)"
-								td "description"
-								td "downloads"
-								td "s"
+					p "Deleting your account removes all resources, names from your comments, and screenshots. The username also becomes available for other people to register."
+					
