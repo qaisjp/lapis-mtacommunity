@@ -17,7 +17,7 @@ class LoginForm extends Widget
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-user"
-				input type: "text", class: "form-control", placeholder: "username", autocomplete: "on", name: "username", value: @params.username, required: true
+				input type: "text", id: "mta-widget-login-username", class: "form-control", placeholder: "username", autocomplete: "on", name: "username", value: @params.username, required: true
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-key"
