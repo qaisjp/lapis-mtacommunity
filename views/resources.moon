@@ -12,11 +12,13 @@ class MTAUserProfile extends Widget
 						a class: "btn btn-secondary btn-sm", role: "button", ["data-toggle"]: "collapse", href: "#advancedSearch", ["aria-expanded"]:"false", ["aria-controls"]: "advancedSearch", ->
 							i class: "fa fa-cogs"
 						text " Search"
-
-						form class: "form-inline", ->
+						text " "
+						form class: "mta-inline-form form-inline", ->
 							div class: "form-group", ->
-								label class: "sr-onlya", ["for"]: "searchGreedyName", "Name"
-								input type: "text", class: "form-control", id: "searchGreedyName", placeholder: "short or long"
+								label class: "sr-only", ["for"]: "searchGreedyName", "Name"
+								text " "
+								input type: "text", class: "form-control", id: "searchGreedyName", placeholder: "short or long name"
+							text " "
 							div class: "form-group", ->
 								element "select", class: "c-select", ->
 									option selected: true, "any type"
@@ -24,7 +26,7 @@ class MTAUserProfile extends Widget
 									option "map"
 									option "gamemode"
 									option "misc"
-							button type: "submit" class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
+							button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
 					div class: "card-block collapse", id: "advancedSearch", -> "Search Contents"
 
 			div class: "row", ->
