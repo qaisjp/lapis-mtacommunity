@@ -1,5 +1,4 @@
 import Widget from require "lapis.html"
-import write_csrf_input from require "utils"
 
 -- This is the login form that is used throughout the website
 -- It can be used in the fixed position "popover" login as well as

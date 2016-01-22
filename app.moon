@@ -31,6 +31,5 @@ class MTAApp extends lapis.Application
 
 	[home: "/"]: =>
 		render: true
-		
-	["/get_s"]: =>
-		json: @session
+
+	[search: "/search"]: => render: true
