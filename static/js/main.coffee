@@ -32,3 +32,4 @@ $(".table-href > tbody > tr").click ->
 window.check_user_page_tab = ->
 	if window.location.hash
 		$('.mta-resources-tabs li a[href='+ window.location.hash+']').tab('show')
+

@@ -14,6 +14,7 @@ class MTAApp extends lapis.Application
 	@include "applications.auth"
 	@include "applications.resource"
 	@include "applications.settings"
+	@include "applications.search"
 	@include "applications.user"
 	
 	@before_filter =>
@@ -31,5 +32,3 @@ class MTAApp extends lapis.Application
 
 	[home: "/"]: =>
 		render: true
-
-	[search: "/search"]: => render: true

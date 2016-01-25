@@ -8,22 +8,57 @@ class SearchCard extends Widget
 	content: =>
 		div class: "card mta-resources-search", ->
 			div class: "card-header", ->
-				a class: "btn btn-secondary btn-sm", role: "button", ["data-toggle"]: "collapse", href: "#advancedSearch", ["aria-expanded"]:"false", ["aria-controls"]: "advancedSearch", ->
-					i class: "fa fa-cogs"
 				text " Search"
 				text " "
-				form action: @url_for("search"), type: "GET", class: "mta-inline-form form-inline", ->
-					div class: "form-group", ->
-						label class: "sr-only", ["for"]: "searchGreedyName", "Name"
-						text " "
-						input type: "text", class: "form-control", name: "greedyName", id: "searchGreedyName", placeholder: "short or long name"
+				form action: @url_for("search"), method: "POST", class: "mta-inline-form form-inline mta-search-form", ->
+					@form_group_name!
 					text " "
-					div class: "form-group", ->
-						element "select", name: "type", class: "c-select", ->
-							option selected: true, "any type"
-							option "script"
-							option "map"
-							option "gamemode"
-							option "misc"
+					@form_group_type!
+					a {
+						class: "btn btn-secondary btn-sm pull-xs-right", role: "button",
+						["data-toggle"]: "collapse", href: "#advancedSearch",
+						["aria-expanded"]: "false", ["aria-controls"]: "advancedSearch"
+					}, -> i class: "fa fa-cogs"
 					button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
-			div class: "card-block collapse", id: "advancedSearch", -> "Search Contents"
+
+			div class: "card-block collapse", id: "advancedSearch", ->
+				form action: @url_for("search"), method: "POST", class: "form-inline form-control-sm mta-search-form", ->
+					div class: "row", ->
+						@form_group_name true
+						text " "
+						@form_group_type true
+						text " "
+						div class: "form-group", ->
+								label class: "sr-only", ["for"]: "searchDescription", "Description"
+								input type: "text", class: "form-control", name: "description", id: "searchDescription", placeholder: "description"
+
+					div class: "row", ->
+						div class: "form-group", ->
+							label class: "sr-only", ["for"]: "searchAuthor", "Author"
+							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "author"
+						text " "
+						div class: "form-group", ->
+							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
+							input type: "text", class: "form-control", name: "showAmount", id: "searchShowAmount", placeholder: "show (1 - 100)"
+
+						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
+							i class: "fa fa-search"
+							text " Search"
+
+	-- Snippet for creating the "name" form group
+	form_group_name: (advancedMode) =>
+		div class: "form-group", ->
+			label class: "sr-only", ["for"]: "searchGreedyName", "Name"
+			text " " if advancedMode
+			input type: "text", class: {"form-control", ["form-control-sm"]: not advancedMode}, name: "greedyName", id: "searchGreedyName", placeholder: "short or long name", required: not advancedMode
+
+	-- Snippet for creating the "type" form group
+	form_group_type: (advancedMode) =>
+		div class: "form-group", ->
+			label class: "sr-only", ["for"]: "searchType", "Type"
+			element "select", name: "type", class: {"form-control", ["form-control-sm"]: not advancedMode, "c-select"}, ->
+				option value: "", selected: true, "any type"
+				option "script"
+				option "map"
+				option "gamemode"
+				option "misc"

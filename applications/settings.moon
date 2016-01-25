@@ -11,7 +11,7 @@ import
 	check_logged_in
 from require "utils"
 
-class SettingsApplications extends lapis.Application
+class SettingsApplication extends lapis.Application
 	path: "/settings"
 	name: "settings."
 

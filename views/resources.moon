@@ -1,4 +1,7 @@
 import Widget from require "lapis.html"
+import Resources, ResourcePackages from require "models"
+import time_ago, time_ago_in_words from require "lapis.util"
+date = require "date"
 
 class MTAUserProfile extends Widget
 	content: =>
@@ -7,7 +10,7 @@ class MTAUserProfile extends Widget
 
 		div class: "container", ->
 			div class: "row", ->
-				widget require "widgets.search"				
+				widget require "widgets.search"
 
 			div class: "row", ->
 				div class: "card", ->
@@ -18,13 +21,16 @@ class MTAUserProfile extends Widget
 								th "Name"
 								th "Description"
 								th "Downloads"
-								th "T"
 							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "description"
-									td "downloads"
-									td "s"
+								-- Get the top 15 downloaded resource instances
+								resourceList = Resources\select "ORDER BY downloads DESC LIMIT 15"
+								for resource in *resourceList
+									tr ->
+										td ->
+											text "#{resource.longname} (#{resource.name}) "
+											span class: "label label-info", Resources.types\to_name resource.type
+										td resource.description
+										td resource.downloads
 
 			div class: "row", ->
 				div class: "card", ->
@@ -35,13 +41,16 @@ class MTAUserProfile extends Widget
 								th "Name"
 								th "Description"
 								th "Downloads"
-								th "T"
 							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "description"
-									td "downloads"
-									td "s"
+								-- Get the top 15 rated resource instances
+								resourceList = Resources\select "ORDER BY rating DESC LIMIT 15"
+								for resource in *resourceList
+									tr ->
+										td ->
+											text "#{resource.longname} (#{resource.name}) "
+											span class: "label label-info", Resources.types\to_name resource.type
+										td resource.description
+										td resource.downloads
 
 			div class: "row", ->
 				div class: "card", ->
@@ -52,10 +61,16 @@ class MTAUserProfile extends Widget
 								th "Name"
 								th "Version"
 								th "Date Updated"
-								th "T"
 							tbody ->
-								tr ->
-									td "longname (shortname)"
-									td "version"
-									td "timestamp"
-									td "s"
+								-- Get the top 15 rated resource instances
+								packageList = ResourcePackages\select "ORDER BY created_at DESC LIMIT 15"
+								Resources\include_in packageList, "resource", as: "resource"
+
+								for package in *packageList
+									resource = package.resource
+									tr ->
+										td ->
+											text "#{resource.longname} (#{resource.name}) "
+											span class: "label label-info", Resources.types\to_name resource.type
+										td package.version
+										td time_ago_in_words package.created_at, 2
