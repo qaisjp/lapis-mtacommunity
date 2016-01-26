@@ -25,9 +25,8 @@ class SearchApplication extends lapis.Application
 		hasSearchArguments = false
 		argChecker = -> hasSearchArguments = true
 		@errors = validate @params, {
-			{ "name", "You must enter a name", exists: true, on_exist: argChecker }
-			{ "type", one_of: {"script", "map", "gamemode", "misc", "any"} }
-			{ "description", on_exist: argChecker }
+			{ "name", on_exist: argChecker }
+			{ "type", optional: true, one_of: {"script", "map", "gamemode", "misc", "any"} }
 			{ "author", on_exist: argChecker }
 			{ "showAmount", exists: true, is_integer: true, between: {1, 100} }
 		}, keys: true
@@ -37,37 +36,55 @@ class SearchApplication extends lapis.Application
 				@params.showAmount = DEFAULT_SHOW_AMOUNT
 				@errors.showAmount = nil
 
-			hasErrors = not hasSearchArguments
-			for _ in pairs @errors
+			local hasErrors
+			if hasSearchArguments
+				for _ in pairs @errors
+					hasErrors = true
+					break
+			else
 				hasErrors = true
-				break
+				@errors = nil
+				@not_searched = true
 
 		return render: true if hasErrors
 
-		-- Selecting similarity of name
-		-- todo do long name similarity
-		query = db.interpolate_query "*, similarity(name, ?) as nameSimilarity", @params.name
+		searchingDescription = (@params.description == "true") and true or false
+		@params.description = searchingDescription
 
-		-- Selecting similarity of description
-		if desc = @params.description
-			query..= db.interpolate_query ", similarity(description, ?) as descrSimilarity", desc
+		similarityMode = searchingDescription and "description" or "name"
 
-		-- Where names similar
-		query..= db.interpolate_query " WHERE name % ?", @params.name
+		-- We might not have either param.
+		unless @params[similarityMode]
+			@not_searched = true
+			return render: true
 
+
+		fields, query = "*", "WHERE 1=1"
 		-- Where same type
 		if type = @params.type
-			query..= db.interpolate_query " AND type = ?", Resources.types[type] unless type == "any"
+			query..= db.interpolate_query " AND (type = ?)", Resources.types[type] unless type == "any"
 
-		-- Order by similarity
-		similarity = "(nameSimilarity" -- note opening bracket here
-		similarity..= " + descrSimilarity" if @params.description
-		query..= " ORDER BY #{similarity}) DESC"
+		if not searchingDescription -- WHEN SEARCHING INSIDE NAMES
+			-- Selecting similarity of name
+			fields..= db.interpolate_query ", similarity(name, ?) as nameSimilarity, similarity(longname, ?) as longSimilarity", @params.name, @params.name
+		
+			-- Where names similar
+			query ..= db.interpolate_query " AND ((name % ?) or (longname % ?))", @params.name, @params.name
+
+			-- Order by similarity
+			query ..= " ORDER BY nameSimilarity DESC"
+		else
+			fields..= db.interpolate_query ", similarity(description, ?)", @params.name
+			query ..= db.interpolate_query " AND (description LIKE ?)", @params.name
+
+			-- Order by similarity
+			-- query ..= " ORDER BY similarity DESC"
 
 		-- Limit the number of results returned
 		limit = tonumber(@params.showAmount) or DEFAULT_SHOW_AMOUNT
 		query..= " LIMIT " .. limit
 
+		@query = fields.." | "..query
 
-		@resourceList = Resources\select query
+		@resourceList = Resources\select query, :fields
 		render: true			

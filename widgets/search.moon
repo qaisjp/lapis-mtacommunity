@@ -29,9 +29,8 @@ class SearchCard extends Widget
 						text " "
 						@form_group_type true
 						text " "
-						div class: "form-group", ->
-								label class: "sr-only", ["for"]: "searchDescription", "Description"
-								input type: "text", class: "form-control", name: "description", id: "searchDescription", placeholder: "description", value: @params.description
+						div class: "checkbox", ->
+    						label -> input type: "checkbox", name: "description", value: "true", checked: @params.checked, "Search in description"
 
 					div class: "row", ->
 						div class: "form-group", ->
