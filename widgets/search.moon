@@ -6,9 +6,7 @@ class SearchCard extends Widget
 	@include "widgets.utils"
 
 	content: =>
-		onSearchPage = @route_name == "search"
-
-		div class: "card mta-resources-search", ->
+		div class: "card", id: "mta-search-widget", ->
 			div class: "card-header", ->
 				text " Search"
 				unless onSearchPage
