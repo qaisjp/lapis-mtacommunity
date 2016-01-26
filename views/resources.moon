@@ -28,7 +28,7 @@ class MTAUserProfile extends Widget
 									tr ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
-											span class: "label label-info", Resources.types\to_name resource.type
+											span class: "label label-info", Resources.types[resource.type]
 										td resource.description
 										td resource.downloads
 
@@ -48,7 +48,7 @@ class MTAUserProfile extends Widget
 									tr ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
-											span class: "label label-info", Resources.types\to_name resource.type
+											span class: "label label-info", Resources.types[resource.type]
 										td resource.description
 										td resource.downloads
 
@@ -71,6 +71,6 @@ class MTAUserProfile extends Widget
 									tr ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
-											span class: "label label-info", Resources.types\to_name resource.type
+											span class: "label label-info", Resources.types[resource.type]
 										td package.version
 										td time_ago_in_words package.created_at, 2

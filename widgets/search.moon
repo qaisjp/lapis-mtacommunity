@@ -9,7 +9,7 @@ class SearchCard extends Widget
 		div class: "card", id: "mta-search-widget", ->
 			div class: "card-header", ->
 				text " Search"
-				unless onSearchPage
+				unless @onSearchPage
 					text " "
 					form action: @url_for("search"), method: "POST", class: "mta-inline-form form-inline mta-search-form", ->
 						@form_group_name!
@@ -22,7 +22,7 @@ class SearchCard extends Widget
 						}, -> i class: "fa fa-cogs"
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
 
-			div class: {"card-block", ["collapse"]: not onSearchPage}, id: "advancedSearch", ->
+			div class: {"card-block", ["collapse"]: not @onSearchPage}, id: "advancedSearch", ->
 				form action: @url_for("search"), method: "POST", class: "form-inline form-control-sm mta-search-form", ->
 					div class: "row", ->
 						@form_group_name true
@@ -40,7 +40,7 @@ class SearchCard extends Widget
 						text " "
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
-							input type: "text", class: "form-control", name: "showAmount", id: "searchShowAmount", placeholder: "show (1 - 100)", value: @params.showAmount
+							input type: "number", class: "form-control", name: "showAmount", id: "searchShowAmount", min: "1", max: "100", placeholder: "show (1 - 100)", value: @params.showAmount
 
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
@@ -65,6 +65,6 @@ class SearchCard extends Widget
 		div class: "form-group", ->
 			label class: "sr-only", ["for"]: "searchType", "Type"
 			element "select", name: "type", class: {"form-control", ["form-control-sm"]: not advancedMode, "c-select"}, ->
-				option value: "", selected: not @params.type, "any type"
+				option value: "any", selected: not @params.type, "any type"
 				for opt in *{"script", "map", "gamemode", "misc"}
 					option selected: @params.type == opt, opt

@@ -11,16 +11,23 @@ class Search extends Widget
 				text "Search Results"
 				a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
 			div class: "card-block", ->
-				element "table", class: "table table-bordered mta-resources-table", ->
-					thead -> tr ->
-						th "Name"
-						th "Description"
-						th "Rating"
-					tbody ->
-						for resource in *@resourceList
-							tr ->
-								td ->
-									text "#{resource.longname} (#{resource.name}) "
-									span class: "label label-info", Resources.types\to_name resource.type
-								td resource.description
-								td resource.rating
+				if @resourceList
+					element "table", class: "table table-bordered mta-resources-table", ->
+						thead -> tr ->
+							th "Name"
+							th "Description"
+							th "Rating"
+						tbody ->
+							for resource in *@resourceList
+								tr ->
+									td ->
+										text "#{resource.longname} (#{resource.name}) "
+										span class: "label label-info", Resources.types\to_name resource.type
+									td resource.description
+									td resource.rating
+				else
+					if errors = @errors
+						for k, err in pairs errors
+							p tostring(k)..":"..err
+					else
+						small "No resources match your search query"
