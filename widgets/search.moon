@@ -6,22 +6,25 @@ class SearchCard extends Widget
 	@include "widgets.utils"
 
 	content: =>
+		onSearchPage = @route_name == "search"
+
 		div class: "card mta-resources-search", ->
 			div class: "card-header", ->
 				text " Search"
-				text " "
-				form action: @url_for("search"), method: "POST", class: "mta-inline-form form-inline mta-search-form", ->
-					@form_group_name!
+				unless onSearchPage
 					text " "
-					@form_group_type!
-					a {
-						class: "btn btn-secondary btn-sm pull-xs-right", role: "button",
-						["data-toggle"]: "collapse", href: "#advancedSearch",
-						["aria-expanded"]: "false", ["aria-controls"]: "advancedSearch"
-					}, -> i class: "fa fa-cogs"
-					button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
+					form action: @url_for("search"), method: "POST", class: "mta-inline-form form-inline mta-search-form", ->
+						@form_group_name!
+						text " "
+						@form_group_type!
+						a {
+							class: "btn btn-secondary btn-sm pull-xs-right", role: "button",
+							["data-toggle"]: "collapse", href: "#advancedSearch",
+							["aria-expanded"]: "false", ["aria-controls"]: "advancedSearch"
+						}, -> i class: "fa fa-cogs"
+						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
 
-			div class: "card-block collapse", id: "advancedSearch", ->
+			div class: {"card-block", ["collapse"]: not onSearchPage}, id: "advancedSearch", ->
 				form action: @url_for("search"), method: "POST", class: "form-inline form-control-sm mta-search-form", ->
 					div class: "row", ->
 						@form_group_name true
@@ -30,16 +33,16 @@ class SearchCard extends Widget
 						text " "
 						div class: "form-group", ->
 								label class: "sr-only", ["for"]: "searchDescription", "Description"
-								input type: "text", class: "form-control", name: "description", id: "searchDescription", placeholder: "description"
+								input type: "text", class: "form-control", name: "description", id: "searchDescription", placeholder: "description", value: @params.description
 
 					div class: "row", ->
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchAuthor", "Author"
-							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "author"
+							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "author", value: @params.author
 						text " "
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
-							input type: "text", class: "form-control", name: "showAmount", id: "searchShowAmount", placeholder: "show (1 - 100)"
+							input type: "text", class: "form-control", name: "showAmount", id: "searchShowAmount", placeholder: "show (1 - 100)", value: @params.showAmount
 
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
@@ -50,15 +53,20 @@ class SearchCard extends Widget
 		div class: "form-group", ->
 			label class: "sr-only", ["for"]: "searchGreedyName", "Name"
 			text " " if advancedMode
-			input type: "text", class: {"form-control", ["form-control-sm"]: not advancedMode}, name: "greedyName", id: "searchGreedyName", placeholder: "short or long name", required: not advancedMode
+			input 
+				type: "text"
+				class: {"form-control", ["form-control-sm"]: not advancedMode}
+				name: "name"
+				id: "searchGreedyName"
+				placeholder: "short or long name"
+				required: not advancedMode
+				value: @params.name
 
 	-- Snippet for creating the "type" form group
 	form_group_type: (advancedMode) =>
 		div class: "form-group", ->
 			label class: "sr-only", ["for"]: "searchType", "Type"
 			element "select", name: "type", class: {"form-control", ["form-control-sm"]: not advancedMode, "c-select"}, ->
-				option value: "", selected: true, "any type"
-				option "script"
-				option "map"
-				option "gamemode"
-				option "misc"
+				option value: "", selected: not @params.type, "any type"
+				for opt in *{"script", "map", "gamemode", "misc"}
+					option selected: @params.type == opt, opt
