@@ -24,9 +24,6 @@ class Layout extends Widget
 			-- Bootstrap core CSS
 			link href: "/bower_components/bootstrap/dist/css/bootstrap.css", rel: "stylesheet"
 
-			-- Bootstrap theme CSS
-			link href: "/bower_components/bootstrap/dist/css/bootstrap-theme.css", rel: "stylesheet"
-
 			-- Custom styles
 			link href: "/static/css/main.css", rel: "stylesheet"
 
