@@ -80,7 +80,5 @@ class SearchApplication extends lapis.Application
 		limit = tonumber(@params.showAmount) or DEFAULT_SHOW_AMOUNT
 		query..= " LIMIT " .. limit
 
-		@query = fields.." | "..query
-
 		@resourceList = Resources\select query, :fields
 		render: true			

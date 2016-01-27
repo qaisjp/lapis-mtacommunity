@@ -5,7 +5,7 @@ SearchWidget = require("widgets.search")
 class Search extends Widget
 	content: =>
 		widget SearchWidget onSearchPage: true
-		p @query
+
 		unless @not_searched
 			div class: "card", ->
 				div class: "card-header", ->
