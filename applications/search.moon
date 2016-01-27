@@ -59,10 +59,14 @@ class SearchApplication extends lapis.Application
 			return render: true
 
 
-		fields, query = "*", "WHERE 1=1"
+		fields, query = "resources.*", " WHERE 1=1"
 		-- Where same type
 		if type = @params.type
 			query..= db.interpolate_query " AND (type = ?)", Resources.types[type] unless type == "any"
+
+		if author = @params.author
+			query = ", users" .. query
+			query..= db.interpolate_query " AND (resources.creator = users.id) AND (users.username = ?)", author
 
 		if not searchingDescription -- WHEN SEARCHING INSIDE NAMES
 			-- Selecting similarity of name
