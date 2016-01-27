@@ -30,7 +30,7 @@ class SearchCard extends Widget
 						@form_group_type true
 						text " "
 						div class: "checkbox", ->
-    						label -> input type: "checkbox", name: "description", value: "true", checked: @params.checked, "Search in description"
+    						label -> input type: "checkbox", name: "description", value: "true", checked: @params.description, "Search in description"
 
 					div class: "row", ->
 						div class: "form-group", ->

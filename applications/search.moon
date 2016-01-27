@@ -25,7 +25,7 @@ class SearchApplication extends lapis.Application
 		hasSearchArguments = false
 		argChecker = -> hasSearchArguments = true
 		@errors = validate @params, {
-			{ "name", on_exist: argChecker }
+			{ "name", exists: true, on_exist: argChecker }
 			{ "type", optional: true, one_of: {"script", "map", "gamemode", "misc", "any"} }
 			{ "author", on_exist: argChecker }
 			{ "showAmount", exists: true, is_integer: true, between: {1, 100} }
@@ -66,23 +66,22 @@ class SearchApplication extends lapis.Application
 
 		if author = @params.author
 			query = ", users" .. query
-			query..= db.interpolate_query " AND (resources.creator = users.id) AND (users.username = ?)", author
+			query..= db.interpolate_query " AND (resources.creator = users.id) AND (users.username % ?)", author
 
 		if not searchingDescription -- WHEN SEARCHING INSIDE NAMES
-			-- Selecting similarity of name
-			fields..= db.interpolate_query ", similarity(name, ?) as nameSimilarity, similarity(longname, ?) as longSimilarity", @params.name, @params.name
+			-- Get the total similarity of both names (0 to 2 value)
+			fields..= db.interpolate_query ", (similarity(name, ?) + similarity(longname, ?)) as similarity", @params.name, @params.name
 		
 			-- Where names similar
 			query ..= db.interpolate_query " AND ((name % ?) or (longname % ?))", @params.name, @params.name
-
-			-- Order by similarity
-			query ..= " ORDER BY nameSimilarity DESC"
 		else
+			-- Get the similarity of just the description
 			fields..= db.interpolate_query ", similarity(description, ?)", @params.name
-			query ..= db.interpolate_query " AND (description LIKE ?)", @params.name
+			-- Find where given description is inside the description 
+			-- query ..= db.interpolate_query " AND (description LIKE ?)", @params.name
 
-			-- Order by similarity
-			-- query ..= " ORDER BY similarity DESC"
+		-- Order by similarity
+		query ..= " ORDER BY similarity DESC"
 
 		-- Limit the number of results returned
 		limit = tonumber(@params.showAmount) or DEFAULT_SHOW_AMOUNT
