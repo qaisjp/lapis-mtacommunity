@@ -16,7 +16,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Most Downloaded"
 					div class: "card-block", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -36,7 +36,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Best Resources"
 					div class: "card-block", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -56,7 +56,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Recently Uploaded"
 					div class: "card-block", ->
-						element "table", class: "table table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Version"

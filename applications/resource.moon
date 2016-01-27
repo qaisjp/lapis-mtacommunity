@@ -9,8 +9,11 @@ from require "lapis.application"
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
+	name: "resources."
 
-	[resources: ""]: capture_errors {
+	[overview: ""]: => render: true
+	
+	[view: "/:resource_id"]: capture_errors {
 		on_error: =>
 			@title = "Oops"
 			render: "user_missing"
@@ -20,4 +23,3 @@ class ResourceApplication extends lapis.Application
 			-- @profile = assert_error Users\find [db.raw "lower(username)"]: @params.username\lower!
 			render: true
 	}
-	

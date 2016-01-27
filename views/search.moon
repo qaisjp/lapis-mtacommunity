@@ -13,14 +13,14 @@ class Search extends Widget
 					a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
 				div class: "card-block", ->
 					if @resourceList
-						element "table", class: "table table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-bordered table-href mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
 								th "Rating"
 							tbody ->
 								for resource in *@resourceList
-									tr ->
+									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.id), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types\to_name resource.type

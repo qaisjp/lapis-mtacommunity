@@ -106,3 +106,5 @@ class Users extends Model
 	is_guest: => @level <= 1
 	can_manage: (user) =>
 		(not @is_guest!) and (@level >= user.level)
+	can_open_admin_panel: =>
+		@level >= Users.levels.QA

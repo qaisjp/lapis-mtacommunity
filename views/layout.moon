@@ -69,16 +69,16 @@ class Layout extends Widget
 			a class: "navbar-brand", href: "/", "mta community"
 			
 			ul class: "nav navbar-nav mta-navbar-links", ->
-				li class: "nav-item", -> a class: "nav-link", href: "https://mtasa.com", "home"
+				li class: "nav-item", -> a class: "nav-link", href: "https://mtasa.com", "get"
 				li class: "nav-item", -> a class: "nav-link", href: "https://forum.mtasa.com", "forum"
 				li class: "nav-item", -> a class: "nav-link", href: "https://wiki.mtasa.com", "wiki"
 				li class: "nav-item", -> a class: "nav-link", href: "https://bugs.mtasa.com", "bugs"
-				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: "/resources", "resources"				
+				li class: "nav-item mta-separated-nav-item", -> a class: "nav-link", href: @url_for("resources.overview"), "resources"				
 
 			ul class: "nav navbar-nav pull-xs-right", ->
 				if @active_user
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("user.profile", username: @active_user.slug), @active_user.username
-					if @active_user.level == Users.levels.admin
+					if @active_user\can_open_admin_panel!
 						li class: "nav-item", -> a class: "nav-link", href: @url_for("admin.dashboard"), "admin"
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), "logout"
 				else
