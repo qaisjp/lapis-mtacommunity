@@ -3,10 +3,9 @@ import Resources, ResourcePackages from require "models"
 import time_ago, time_ago_in_words from require "lapis.util"
 date = require "date"
 
-class MTAUserProfile extends Widget
+class MTAResourcesOverview extends Widget
 	content: =>
-		div class: "page-header", ->
-			h1 "Resources"
+		h1 "Resources"
 
 		div class: "container", ->
 			div class: "row", ->
@@ -16,7 +15,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Most Downloaded"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -25,7 +24,7 @@ class MTAUserProfile extends Widget
 								-- Get the top 15 downloaded resource instances
 								resourceList = Resources\select "ORDER BY downloads DESC LIMIT 15"
 								for resource in *resourceList
-									tr ->
+									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]
@@ -36,7 +35,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Best Resources"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -45,7 +44,7 @@ class MTAUserProfile extends Widget
 								-- Get the top 15 rated resource instances
 								resourceList = Resources\select "ORDER BY rating DESC LIMIT 15"
 								for resource in *resourceList
-									tr ->
+									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]
@@ -56,7 +55,7 @@ class MTAUserProfile extends Widget
 				div class: "card", ->
 					div class: "card-header", "Recently Uploaded"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Version"
@@ -68,7 +67,7 @@ class MTAUserProfile extends Widget
 
 								for package in *packageList
 									resource = package.resource
-									tr ->
+									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]

@@ -20,7 +20,7 @@ class Search extends Widget
 								th "Rating"
 							tbody ->
 								for resource in *@resourceList
-									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.id), ->
+									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types\to_name resource.type
