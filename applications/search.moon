@@ -49,7 +49,7 @@ class SearchApplication extends lapis.Application
 		return render: true if hasErrors
 
 		searchingDescription = (@params.description == "true") and true or false
-		@params.description = searchingDescription
+		@params.description = searchingDescription and "true" or nil
 
 		similarityMode = searchingDescription and "description" or "name"
 

@@ -10,7 +10,7 @@ class Search extends Widget
 			div class: "card", ->
 				div class: "card-header", ->
 					text "Search Results"
-					-- a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
+					a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
 				div class: "card-block", ->
 					if @resourceList
 						element "table", class: "table table-bordered mta-resources-table", ->
