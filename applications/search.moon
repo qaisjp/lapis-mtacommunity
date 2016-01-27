@@ -6,12 +6,6 @@ import validate, validate_functions from require "lapis.validate"
 
 DEFAULT_SHOW_AMOUNT = 15
 
--- This validator will call whatever function passed
--- if the function exists... using closures!
-validate_functions.on_exist = (input, fn) ->
-	fn() if input and input != ""
-	true
-
 validate_functions.between = (input, lower, upper) ->
 	input = tonumber(input)
 	if not input
@@ -23,11 +17,10 @@ class SearchApplication extends lapis.Application
 		trim_filter @params
 		
 		hasSearchArguments = false
-		argChecker = -> hasSearchArguments = true
 		@errors = validate @params, {
-			{ "name", exists: true, on_exist: argChecker }
+			{ "name", exists: true }
 			{ "type", optional: true, one_of: {"script", "map", "gamemode", "misc", "any"} }
-			{ "author", on_exist: argChecker }
+			-- { "author", optional: true }
 			{ "showAmount", exists: true, is_integer: true, between: {1, 100} }
 		}, keys: true
 
@@ -37,16 +30,15 @@ class SearchApplication extends lapis.Application
 				@errors.showAmount = nil
 
 			local hasErrors
-			if hasSearchArguments
-				for _ in pairs @errors
-					hasErrors = true
-					break
-			else
+			if @errors.name
 				hasErrors = true
 				@errors = nil
 				@not_searched = true
-
-		return render: true if hasErrors
+			else
+				for _ in pairs @errors
+					hasErrors = true
+					break
+			return render: true if hasErrors
 
 		searchingDescription = (@params.description == "true") and true or false
 		@params.description = searchingDescription and "true" or nil
@@ -77,8 +69,9 @@ class SearchApplication extends lapis.Application
 		else
 			-- Get the similarity of just the description
 			fields..= db.interpolate_query ", similarity(description, ?)", @params.name
-			-- Find where given description is inside the description 
-			-- query ..= db.interpolate_query " AND (description LIKE ?)", @params.name
+			
+			-- Find where given description is similarish
+			query ..= db.interpolate_query " AND (description <-> ?) < 0.9", @params.name
 
 		-- Order by similarity
 		query ..= " ORDER BY similarity DESC"
