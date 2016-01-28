@@ -57,8 +57,22 @@ class SearchApplication extends lapis.Application
 			query..= db.interpolate_query " AND (type = ?)", Resources.types[type] unless type == "any"
 
 		if author = @params.author
-			query = ", users" .. query
-			query..= db.interpolate_query " AND (resources.creator = users.id) AND (users.username % ?)", author
+			query = ", users, resource_admins" .. query
+			
+			-- beginning of user check query
+			query ..= " AND ( "
+
+			-- check for creator
+			query ..= db.interpolate_query "(resources.creator = users.id)"
+
+			-- check for resource_admins
+			query ..= db.interpolate_query " OR (resource_admins.user_confirmed AND resource_admins.user = users.id AND resource_admins.resource = resources.id)"
+
+			-- end of user check query
+			query ..= " )"
+
+			-- add the username check
+			query ..= db.interpolate_query " AND (users.username % ?)", author
 
 		if not searchingDescription -- WHEN SEARCHING INSIDE NAMES
 			-- Get the total similarity of both names (0 to 2 value)
@@ -72,6 +86,9 @@ class SearchApplication extends lapis.Application
 			
 			-- Find where given description is similarish
 			query ..= db.interpolate_query " AND (description <-> ?) < 0.9", @params.name
+
+		-- Prevent duplicates
+		query ..= " GROUP BY resources.id"
 
 		-- Order by similarity
 		query ..= " ORDER BY similarity DESC"
