@@ -34,8 +34,8 @@ class SearchCard extends Widget
 
 					div class: "row", ->
 						div class: "form-group", ->
-							label class: "sr-only", ["for"]: "searchAuthor", "Filter by Creator"
-							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "filter by creator", value: @params.author
+							label class: "sr-only", ["for"]: "searchAuthor", "Author"
+							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "author", value: @params.author
 						text " "
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
