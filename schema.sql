@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -81,7 +95,8 @@ CREATE TABLE bans (
     reason text NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     expires_at timestamp without time zone NOT NULL,
-    active boolean DEFAULT true NOT NULL
+    active boolean DEFAULT true NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -260,7 +275,8 @@ CREATE TABLE resource_packages (
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     description text NOT NULL,
     download_count integer DEFAULT 0 NOT NULL,
-    version character varying(10) NOT NULL
+    version character varying(10) NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -311,7 +327,8 @@ CREATE TABLE resource_screenshots (
     description text NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     file text NOT NULL,
-    uploader integer NOT NULL
+    uploader integer NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -346,12 +363,14 @@ CREATE TABLE resources (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     longname character varying(255) NOT NULL,
-    rating integer DEFAULT 0 NOT NULL,
+    rating real DEFAULT 0 NOT NULL,
     description text DEFAULT ''::text NOT NULL,
     creator integer NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     downloads integer DEFAULT 0 NOT NULL,
-    type integer NOT NULL
+    type integer NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    slug character varying(255) NOT NULL
 );
 
 
@@ -377,6 +396,23 @@ ALTER TABLE resources_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE resources_id_seq OWNED BY resources.id;
 
+
+--
+-- Name: user_data; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE user_data (
+    user_id integer NOT NULL,
+    location character varying(255),
+    gang character varying(255),
+    website character varying(255),
+    about text,
+    privacy_mode integer DEFAULT 1 NOT NULL,
+    birthday date
+);
+
+
+ALTER TABLE user_data OWNER TO postgres;
 
 --
 -- Name: user_followings; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -418,9 +454,9 @@ CREATE TABLE users (
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
     activated boolean DEFAULT false NOT NULL,
-    following_count integer DEFAULT 0 NOT NULL,
     banned boolean DEFAULT false NOT NULL,
-    slug character varying(255) NOT NULL
+    slug character varying(255) NOT NULL,
+    level integer DEFAULT 1 NOT NULL
 );
 
 
@@ -584,6 +620,14 @@ ALTER TABLE ONLY resources
 
 
 --
+-- Name: user_data_id_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY user_data
+    ADD CONSTRAINT user_data_id_pkey PRIMARY KEY (user_id);
+
+
+--
 -- Name: user_followings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -677,6 +721,13 @@ CREATE INDEX fki_resource_screenshots_uploader_fkey ON resource_screenshots USIN
 --
 
 CREATE INDEX fki_resources_creator_fkey ON resources USING btree (creator);
+
+
+--
+-- Name: fki_user_data_id_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fki_user_data_id_fkey ON user_data USING btree (user_id);
 
 
 --
@@ -781,6 +832,14 @@ ALTER TABLE ONLY resource_screenshots
 
 ALTER TABLE ONLY resources
     ADD CONSTRAINT resources_creator_fkey FOREIGN KEY (creator) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: user_data_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_data
+    ADD CONSTRAINT user_data_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

@@ -62,10 +62,10 @@ class SearchApplication extends lapis.Application
 			-- beginning of user check query
 			query ..= " AND ( "
 
-			-- check for creator
+			-- check creator
 			query ..= db.interpolate_query "(resources.creator = users.id)"
 
-			-- check for resource_admins
+			-- check inside resource_admins
 			query ..= db.interpolate_query " OR (resource_admins.user_confirmed AND resource_admins.user = users.id AND resource_admins.resource = resources.id)"
 
 			-- end of user check query
