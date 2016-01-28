@@ -5,8 +5,9 @@ date = require "date"
 
 class MTAResourcePage extends Widget
 	content: =>
-		h1 "Resource: "
-
-		div class: "container", ->
-			div class: "row", ->
-				p "Row content"
+		div class: "row", ->
+			div class: "card", ->
+				div class: "card-header", ->
+					h2 "#{@resource.longname} (#{@resource.name})"
+				div class: "card-block", ->
+					p "Body of card"
