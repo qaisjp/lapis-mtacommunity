@@ -24,7 +24,7 @@ class MTAResourcesOverview extends Widget
 								-- Get the top 15 downloaded resource instances
 								resourceList = Resources\select "ORDER BY downloads DESC LIMIT 15"
 								for resource in *resourceList
-									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
+									tr ["data-href"]: (@url_for "resources.view", resource_name: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]
@@ -44,7 +44,7 @@ class MTAResourcesOverview extends Widget
 								-- Get the top 15 rated resource instances
 								resourceList = Resources\select "ORDER BY rating DESC LIMIT 15"
 								for resource in *resourceList
-									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
+									tr ["data-href"]: (@url_for "resources.view", resource_name: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]
@@ -67,7 +67,7 @@ class MTAResourcesOverview extends Widget
 
 								for package in *packageList
 									resource = package.resource
-									tr ["data-href"]: (@url_for "resources.view", resource_id: resource.slug), ->
+									tr ["data-href"]: (@url_for "resources.view", resource_name: resource.slug), ->
 										td ->
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]

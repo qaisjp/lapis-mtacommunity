@@ -1,7 +1,10 @@
 lapis = require "lapis"
-Users = require "models.users"
 db    = require "lapis.db"
 
+import
+	Resources
+from require "models"
+import error_404 from require "utils"
 import
 	capture_errors
 	assert_error
@@ -13,13 +16,16 @@ class ResourceApplication extends lapis.Application
 
 	[overview: ""]: => render: true
 	
-	[view: "/:resource_id"]: capture_errors {
+	[view: "/:resource_name"]: capture_errors {
 		on_error: =>
 			@title = "Oops"
-			render: "user_missing"
+			@write "Something went wrong."
 
 		=>
-			-- try to find the user by username
-			-- @profile = assert_error Users\find [db.raw "lower(username)"]: @params.username\lower!
+			-- try to find the resource by slugname
+			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_name\lower!
+
+			-- no resource? 404 it.
+			return @write error_404 @ unless @resource
 			render: true
 	}

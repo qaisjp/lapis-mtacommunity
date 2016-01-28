@@ -50,13 +50,17 @@ class SearchApplication extends lapis.Application
 			@not_searched = true
 			return render: true
 
-
-		fields, query = "resources.*", " WHERE 1=1"
-		-- Where same type
+		-- create our fields and query objects
+		query, fields = " WHERE 1=1", "resources.*"
+		
+		-- checking the resource type
 		if type = @params.type
+			-- where it is the same type, and type is not "any"
 			query..= db.interpolate_query " AND (type = ?)", Resources.types[type] unless type == "any"
 
+		-- checking the resource author
 		if author = @params.author
+			-- we need to access these tables
 			query = ", users, resource_admins" .. query
 			
 			-- beginning of user check query
@@ -71,16 +75,16 @@ class SearchApplication extends lapis.Application
 			-- end of user check query
 			query ..= " )"
 
-			-- add the username check
+			-- add the actual username check
 			query ..= db.interpolate_query " AND (users.username % ?)", author
 
-		if not searchingDescription -- WHEN SEARCHING INSIDE NAMES
+		unless searchingDescription -- WHEN SEARCHING INSIDE NAMES
 			-- Get the total similarity of both names (0 to 2 value)
 			fields..= db.interpolate_query ", (similarity(name, ?) + similarity(longname, ?)) as similarity", @params.name, @params.name
 		
 			-- Where names similar
 			query ..= db.interpolate_query " AND ((name % ?) or (longname % ?))", @params.name, @params.name
-		else
+		else -- WHEN SEARCHING INSIDE DESCRIPTION
 			-- Get the similarity of just the description
 			fields..= db.interpolate_query ", similarity(description, ?)", @params.name
 			
@@ -94,8 +98,10 @@ class SearchApplication extends lapis.Application
 		query ..= " ORDER BY similarity DESC"
 
 		-- Limit the number of results returned
-		limit = tonumber(@params.showAmount) or DEFAULT_SHOW_AMOUNT
-		query..= " LIMIT " .. limit
+		query..= " LIMIT " .. tonumber(@params.showAmount) or DEFAULT_SHOW_AMOUNT
 
+		-- pull the list with our query and fields
 		@resourceList = Resources\select query, :fields
+
+		-- let's get rendering!
 		render: true			
