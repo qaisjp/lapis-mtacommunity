@@ -11,7 +11,7 @@
       $("#mta-widget-login-username").focus();
       return e.preventDefault();
     });
-    return $('.mta-resources-tabs li a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
+    return $('.mta-tablinks li a[data-toggle="pill"]').on('shown.bs.tab', function(e) {
       if (history.pushState) {
         return history.pushState(null, null, e.target.hash);
       } else {
@@ -30,9 +30,9 @@
     return window.document.location = $(this).data("href");
   });
 
-  window.check_user_page_tab = function() {
+  window.check_tablinks = function() {
     if (window.location.hash) {
-      return $('.mta-resources-tabs li a[href=' + window.location.hash + ']').tab('show');
+      return $('.mta-tablinks li a[href="' + window.location.hash + '"]').tab('show');
     }
   };
 

@@ -9,7 +9,11 @@ import
 	respond_to
 from require "lapis.application"
 
-import error_404 from require "utils"
+import
+	error_404
+	error_500
+from require "utils"
+
 import
 	UserFollowings
 	Resources
@@ -51,8 +55,7 @@ class UserApplication extends lapis.Application
 	}
 
 	[follow: "/:username/follow"]: capture_errors respond_to
-		on_error: =>
-			status: 500, "Internal server error"
+		on_error: error_500
 		before: =>
 			if @active_user.id == @user.id
 				@write status:400, "<h1>You cannot follow yourself</h1>"

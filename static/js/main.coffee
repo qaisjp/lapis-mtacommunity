@@ -9,7 +9,7 @@ $(window).load ->
 		$("#mta-widget-login-username").focus()
 		e.preventDefault()
 
-	$('.mta-resources-tabs li a[data-toggle="pill"]').on 'shown.bs.tab', (e) ->
+	$('.mta-tablinks li a[data-toggle="pill"]').on 'shown.bs.tab', (e) ->
 		if history.pushState
 			history.pushState(null, null, e.target.hash)
 		else
@@ -29,7 +29,7 @@ $(".table-href > tbody > tr").click ->
 	# todo: handle middle click & ctrl click
 	window.document.location = $(this).data "href"
 
-window.check_user_page_tab = ->
+window.check_tablinks = ->
 	if window.location.hash
-		$('.mta-resources-tabs li a[href='+ window.location.hash+']').tab('show')
+		$('.mta-tablinks li a[href="'+ window.location.hash+'"]').tab('show')
 

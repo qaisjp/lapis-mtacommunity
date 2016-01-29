@@ -69,7 +69,7 @@ class MTAUserLayout extends Widget
 		div class: "container", ->
 			div class: "row", ->
 				div class: "col-md-2 ", ->
-					ul class: "nav nav-pills nav-stacked mta-resources-tabs", role: "tablist", ->
+					ul class: "nav nav-pills nav-stacked mta-tablinks", role: "tablist", ->
 						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
 							text "Resources "
 							span class: "label label-pill label-default", @resource_count
@@ -95,4 +95,4 @@ class MTAUserLayout extends Widget
 
 
 		@content_for "post_body_script", ->
-			script type: "text/javascript", -> raw "check_user_page_tab()"
+			script type: "text/javascript", -> raw "check_tablinks()"
