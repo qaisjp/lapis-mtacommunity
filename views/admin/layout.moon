@@ -19,7 +19,7 @@ class MTAAdminLayout extends Widget
 		div class:"row", ->
 			div class: "col-md-2", ->
 				ul class: "nav nav-pills nav-stacked", ->
-					for name in *{"Dashboard", "Users", "Bans"}
+					for name in *{"Dashboard", "Users", "Bans", "Console"}
 						li role: "presentation", class: "nav-item", ->
 							a {
 								class: "nav-link" .. (if name == main.category then " active" else "")

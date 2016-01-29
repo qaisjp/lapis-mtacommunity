@@ -30,9 +30,15 @@ class ResourceApplication extends lapis.Application
 	[view: "/:resource_name"]: capture_errors {
 		on_error: error_500
 		=>
-			if @current_user
-				-- this checks if the user is an admin OR given perms
-				@is_user_special = @resource\is_user_special @current_user
+			-- Get all the authors of the resource
+			@authors = @resource\get_authors "users.username, users.id"
+			
+			if @active_user
+				for author in *@authors do
+					if author.id == @active_user.id then
+						@active_user_is_author = true
+						break
+
 			render: true
 	}
 

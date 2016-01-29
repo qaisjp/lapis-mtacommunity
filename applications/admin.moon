@@ -77,3 +77,5 @@ class AdminApplication extends lapis.Application
 			user\write_to_session @session
 			redirect_to: @url_for "home"
 	}
+
+	[console: "/console"]: require("lapis.console").make!

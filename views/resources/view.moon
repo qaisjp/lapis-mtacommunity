@@ -8,14 +8,21 @@ class MTAResourcePage extends Widget
 		div class: "row", ->
 			div class: "card", ->
 				div class: "card-header", ->
-					-- draw the header
 					h2 ->
-						text "#{@resource.longname} (#{@resource.name})"
-						a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.edit", resource_name: @params.resource_name), ->
-							i class: "fa fa-cogs"
-							text " Manage"
+						text "#{@resource.longname} (#{@resource.name}) "
+						span class: "label label-primary", Resources.types[@resource.type]
+						if @active_user_is_author
+							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.edit", resource_name: @params.resource_name), ->
+								i class: "fa fa-cogs"
+								text " Manage"
 				div class: "card-block", ->
-					p "Body of card"
+					ul ->
+						li ->
+							text "Authors: "
+							for i, author in ipairs @authors
+								text ", " unless i == 1
+								text author.username
+
 				div class: "card-block", ->
 					div class: "container", ->
 						div class: "row", ->
@@ -35,7 +42,13 @@ class MTAResourcePage extends Widget
 			script type: "text/javascript", -> raw "check_tablinks()"
 
 	write_comments: =>
-		p "Comments go here."
+		paginated = @resource\get_comments_paginated per_page: 20
+		comments = paginated\get_page 1
+		ul ->
+			li "#{paginated\num_pages!} pages. #{#comments} showing."
+		
+		
+
 
 	write_changelog: =>
 		p "Changelog goes here."
