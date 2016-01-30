@@ -46,7 +46,12 @@ class MTAResourcePage extends Widget
 		comments = paginated\get_page 1
 		ul ->
 			li "#{paginated\num_pages!} pages. #{#comments} showing."
-		
+
+		for comment in *comments
+			div class: "card-header", ->
+				text "author here"
+			div class: "card-block", ->
+				text comment.message
 		
 
 
