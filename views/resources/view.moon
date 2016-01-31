@@ -1,6 +1,6 @@
 import Widget from require "lapis.html"
-import Resources, ResourcePackages from require "models"
-import time_ago, time_ago_in_words from require "lapis.util"
+import Users, Resources, ResourcePackages from require "models"
+import time_ago_in_words from require "lapis.util"
 date = require "date"
 
 class MTAResourcePage extends Widget
@@ -42,16 +42,31 @@ class MTAResourcePage extends Widget
 			script type: "text/javascript", -> raw "check_tablinks()"
 
 	write_comments: =>
-		paginated = @resource\get_comments_paginated per_page: 20
+		paginated = @resource\get_comments_paginated {
+			per_page: 20
+			prepare_results: (comments) ->
+				Users\include_in comments, "author", as: "author"
+				-- comments
+		}
+
 		comments = paginated\get_page 1
 		ul ->
 			li "#{paginated\num_pages!} pages. #{#comments} showing."
 
 		for comment in *comments
-			div class: "card-header", ->
-				text "author here"
-			div class: "card-block", ->
-				text comment.message
+			div class: "card", ->
+				div class: "card-header", ->
+					strong comment.author.username
+					span class: "text-muted", ->
+						text " commented "
+						text time_ago_in_words comment.created_at
+
+						unless comment.created_at == comment.updated_at
+							text " (modified "
+							text time_ago_in_words comment.updated_at
+							text ")"
+				div class: "card-block", ->
+					text comment.message
 		
 
 
