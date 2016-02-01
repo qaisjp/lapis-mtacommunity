@@ -73,7 +73,7 @@ class MTAResourcePage extends Widget
 				th "Changes"
 			tbody ->
 				for package in *packages
-					tr ["data-href"]: "get/#{package.version}", ->
+					tr ["data-href"]: @url_for("resources.get", resource_name: @resource.slug, version: package.version), ->
 						td package.version
 						td time_ago_in_words package.created_at
 						td package.description

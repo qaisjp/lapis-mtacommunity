@@ -72,6 +72,8 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			packages = ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file"
-			@write "length #{#packages}"
+			package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
+
+			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
+			@write "serve it!"
 	}
