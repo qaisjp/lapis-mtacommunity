@@ -194,7 +194,9 @@ CREATE TABLE comments (
     deleted boolean DEFAULT false NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
-    resource integer NOT NULL
+    resource integer NOT NULL,
+    edited_at timestamp without time zone,
+    deleted_at timestamp without time zone
 );
 
 
@@ -276,7 +278,8 @@ CREATE TABLE resource_packages (
     description text NOT NULL,
     download_count integer DEFAULT 0 NOT NULL,
     version character varying(10) NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
+    updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    uploader integer NOT NULL
 );
 
 
@@ -596,6 +599,14 @@ ALTER TABLE ONLY resource_packages
 
 
 --
+-- Name: resource_packages_resver_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY resource_packages
+    ADD CONSTRAINT resource_packages_resver_key UNIQUE (resource, version);
+
+
+--
 -- Name: resource_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -700,6 +711,13 @@ CREATE INDEX fki_resource_admins_user_fkey ON resource_admins USING btree ("user
 --
 
 CREATE INDEX fki_resource_packages_resource_fkey ON resource_packages USING btree (resource);
+
+
+--
+-- Name: fki_resource_packages_uploader_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fki_resource_packages_uploader_fkey ON resource_packages USING btree (uploader);
 
 
 --
@@ -808,6 +826,14 @@ ALTER TABLE ONLY resource_admins
 
 ALTER TABLE ONLY resource_packages
     ADD CONSTRAINT resource_packages_resource_fkey FOREIGN KEY (resource) REFERENCES resources(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: resource_packages_uploader_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_packages
+    ADD CONSTRAINT resource_packages_uploader_fkey FOREIGN KEY (uploader) REFERENCES users(id);
 
 
 --
