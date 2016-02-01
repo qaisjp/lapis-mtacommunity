@@ -29,14 +29,14 @@ class MTAResourcePage extends Widget
 							ul class: "nav nav-tabs mta-tablinks", role: "tablist", ->
 								li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
 									text "Comments "
-									span class: "label label-pill label-default", commentsPaginator\total_items!
+									span class: "label label-pill label-default", @commentsPaginator\total_items!
 								li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#changelog", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "changelog", ->
 									text "Changelog "
-									span class:"label label-pill label-default", packagesPaginator\total_items!
+									span class:"label label-pill label-default", @packagesPaginator\total_items!
 						div class: "row", ->
 							div class: "tab-content", ->
-								div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments commentsPaginator
-								div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog packagesPaginator
+								div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments @commentsPaginator
+								div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog @packagesPaginator
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"

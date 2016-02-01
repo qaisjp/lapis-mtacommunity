@@ -3,6 +3,7 @@ db    = require "lapis.db"
 
 import
 	Resources
+	ResourcePackages
 from require "models"
 import
 	error_404
@@ -43,7 +44,7 @@ class ResourceApplication extends lapis.Application
 						break
 
 			-- Paginator for comments
-			commentsPaginator = @resource\get_comments_paginated {
+			@commentsPaginator = @resource\get_comments_paginated {
 				per_page: 65536 -- postpone pagination code
 				prepare_results: (comments) ->
 					-- Allows comment authors to be loaded in one query
@@ -52,7 +53,7 @@ class ResourceApplication extends lapis.Application
 			}
 
 			-- Paginator for packages
-			packagesPaginator = @resource\get_packages_paginated {
+			@packagesPaginator = @resource\get_packages_paginated {
 				per_page: 65536 -- postpone pagination code
 			}
 
@@ -70,5 +71,6 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			
+			packages = ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file"
+			@write "length #{#packages}"
 	}
