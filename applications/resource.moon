@@ -4,6 +4,7 @@ db    = require "lapis.db"
 import
 	Resources
 	ResourcePackages
+	Users
 from require "models"
 import
 	error_404
