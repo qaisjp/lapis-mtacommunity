@@ -29,4 +29,4 @@ get_gravatar_url = (email, size) ->
 	hash = ngx.md5 email\lower!
 	"https://www.gravatar.com/avatar/#{hash}?s=#{size}"
 
-{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :get_gravatar_url}
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_500, :get_gravatar_url}

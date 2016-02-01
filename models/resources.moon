@@ -7,6 +7,7 @@ class Resources extends Model
 
     @relations: {
     	{"comments", has_many: "Comments", key: "resource", order: "created_at desc", where: deleted: false}
+        {"packages", has_many: "ResourcePackages", key: "resource", order: "created_at desc"}
     }
 
     @types: enum

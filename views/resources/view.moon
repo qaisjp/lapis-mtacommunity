@@ -29,29 +29,22 @@ class MTAResourcePage extends Widget
 							ul class: "nav nav-tabs mta-tablinks", role: "tablist", ->
 								li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
 									text "Comments "
-									span class: "label label-pill label-default", "1"
+									span class: "label label-pill label-default", commentsPaginator\total_items!
 								li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#changelog", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "changelog", ->
 									text "Changelog "
-									span class:"label label-pill label-default", "200"
+									span class:"label label-pill label-default", packagesPaginator\total_items!
 						div class: "row", ->
 							div class: "tab-content", ->
-								div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments!
-								div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog!
+								div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments commentsPaginator
+								div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog packagesPaginator
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"
 
-	write_comments: =>
-		paginated = @resource\get_comments_paginated {
-			per_page: 20
-			prepare_results: (comments) ->
-				Users\include_in comments, "author", as: "author"
-				-- comments
-		}
-
+	write_comments: (paginated) =>
 		comments = paginated\get_page 1
 		ul ->
-			li "#{paginated\num_pages!} pages. #{#comments} showing."
+			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
 		for comment in *comments
 			div class: "card", ->
@@ -61,14 +54,26 @@ class MTAResourcePage extends Widget
 						text " commented "
 						text time_ago_in_words comment.created_at
 
-						unless comment.created_at == comment.updated_at
+						if comment.edited_at
 							text " (modified "
-							text time_ago_in_words comment.updated_at
+							text time_ago_in_words comment.edited_at
 							text ")"
 				div class: "card-block", ->
 					text comment.message
-		
 
+	write_changelog: (paginated) =>
+		packages = paginated\get_page 1
+		ul ->
+			li "#{paginated\num_pages!} packages. #{#packages} packages showing."
 
-	write_changelog: =>
-		p "Changelog goes here."
+		element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
+			thead -> tr ->
+				th "Version"
+				th "Date Published"
+				th "Changes"
+			tbody ->
+				for package in *packages
+					tr ["data-href"]: "get/#{package.version}", ->
+						td package.version
+						td time_ago_in_words package.created_at
+						td package.description

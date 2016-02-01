@@ -11,6 +11,7 @@ from require "utils"
 import
 	capture_errors
 	assert_error
+	yield_error
 from require "lapis.application"
 
 class ResourceApplication extends lapis.Application
@@ -33,11 +34,27 @@ class ResourceApplication extends lapis.Application
 			-- Get all the authors of the resource
 			@authors = @resource\get_authors "users.username, users.id"
 			
+			-- If we're logged in...			
 			if @active_user
+				-- ... are we an author?
 				for author in *@authors do
 					if author.id == @active_user.id then
 						@active_user_is_author = true
 						break
+
+			-- Paginator for comments
+			commentsPaginator = @resource\get_comments_paginated {
+				per_page: 65536 -- postpone pagination code
+				prepare_results: (comments) ->
+					-- Allows comment authors to be loaded in one query
+					-- (this is much much faster than a query in a loop)
+					Users\include_in comments, "author", as: "author"
+			}
+
+			-- Paginator for packages
+			packagesPaginator = @resource\get_packages_paginated {
+				per_page: 65536 -- postpone pagination code
+			}
 
 			render: true
 	}
@@ -46,4 +63,12 @@ class ResourceApplication extends lapis.Application
 		on_error: error_500
 		=>
 			@write "You are now editing it."
+	}
+
+	[get: "/:resource_name/get/:version"]: capture_errors {
+		on_error: => error_500 @, "We're sorry we couldn't serve you that file."
+		=>
+			-- We already know we're a resource, so first we need to
+			-- check if our version is correct and exists.
+			
 	}
