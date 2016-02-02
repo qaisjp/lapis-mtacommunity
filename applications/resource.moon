@@ -4,6 +4,7 @@ db    = require "lapis.db"
 import
 	Resources
 	ResourcePackages
+	PackageDependencies
 	Users
 from require "models"
 import
@@ -75,5 +76,10 @@ class ResourceApplication extends lapis.Application
 			package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
 
 			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
-			@write "serve it!"
+			dependencies = PackageDependencies\select "where (source_package = ?)", package.id
+
+			if #dependencies == 0
+				@write "serve it!"
+			else
+				@write "find deps"
 	}

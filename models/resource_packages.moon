@@ -6,4 +6,3 @@ class ResourcePackages extends Model
     @relations: {
     	{"dependencies", has_many: "PackageDependencies", id: "source_package"}
     }
-    
