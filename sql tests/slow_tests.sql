@@ -1,1 +1,0 @@
-﻿SELECT array_agg(dep) FROM (SELECT package as dep FROM package_dependencies WHERE source_package = 4) as record
