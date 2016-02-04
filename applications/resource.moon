@@ -73,13 +73,26 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
+			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
 
 			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
-			dependencies = PackageDependencies\select "where (source_package = ?)", package.id
+			dependencies = (db.select "get_package_dependencies(?) as deps ", @package.id)[1].deps
+			unless #dependencies == 0
+				-- Workaround for efficiently getting all package data in one query
+				packagesNested = {}
+				for dep in *dependencies
+					table.insert packagesNested, {dep}
+				-- actually get the package data
+				ResourcePackages\include_in packagesNested, 1, as: 1
 
-			if #dependencies == 0
-				@write "serve it!"
-			else
-				@write "find deps"
+				-- Now we're reversing the workaround
+				packages = {}
+				for nestedPkg in *packagesNested
+					table.insert packages, nestedPkg[1]
+
+				-- Get resource data
+				Resources\include_in packages, "resource", as: "resource"
+				@dependencies = packages
+
+			render: true
 	}
