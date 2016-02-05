@@ -25,7 +25,7 @@ class MTAResourcesGet extends Widget
 			@content_for "post_body_script", -> raw"<script>$('#download-form').submit();</script>"
 			return
 
-		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have."
+		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"#{@resource.name}\" will be included in your download."
 
 		form method: "post", action: "", ->
 			for i, dep in ipairs @dependencies
@@ -36,6 +36,6 @@ class MTAResourcesGet extends Widget
 						input type: "checkbox", name: "deps[#{i}]", value: encode_base64 to_json {name, version}
 						text " #{name} - v#{version}"
 
-			input class: "btn btn-primary", type: "submit", value: "submit"
+			input class: "btn btn-primary", type: "submit", value: "download"
 			@write_csrf_input!
 			input type: "hidden", name: "download", value: "1", ["aria-hidden"]: "true"
