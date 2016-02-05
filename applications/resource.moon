@@ -16,16 +16,35 @@ import
 	assert_error
 	yield_error
 from require "lapis.application"
-import from_json from require "lapis.util"
+import
+	from_json
+	slugify
+from require "lapis.util"
 import decode_base64 from require "lapis.util.encoding"
 
 import var_dump from require "utils2"
+
+lfs = require "lfs"
 
 denest_table = (nested) ->
 	tab = {}
 	for obj in *nested
 		table.insert tab, obj[1]
 	tab
+
+serve_file = (filepath, filename, mime) ->
+	file, err = io.open filepath, "r"
+	unless file
+		return false, err
+  
+	contents = file\read "*all"
+	file\close!
+
+	ngx.header.content_type = mime
+	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
+	ngx.say contents
+	ngx.exit ngx.OK
+	render: false
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -83,11 +102,12 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
+			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file, resource")[1]
 
 			-- Are we asking ourselves for a download?
 			if @params.download
 				local dependencies
+				filepath = "uploads/#{@package.resource}/#{@package.id}.#{@package.file}"
 
 				-- Lets try and decode a deps field...
 				if jsonDeps = @params.deps
@@ -121,10 +141,11 @@ class ResourceApplication extends lapis.Application
 
 					unless #dependencies == expectedLength
 						return error_500 @, "One of the resource dependencies you tried to download was unavailable."
-					
-					
 
-				@write "Give me your download."
+				
+				success, err = serve_file filepath, @package.file, "application/octet-stream"
+				unless success
+					yield_error! -- ,err
 
 			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
 			dependencies = (db.select "get_package_dependencies(?) as deps ", @package.id)[1].deps
