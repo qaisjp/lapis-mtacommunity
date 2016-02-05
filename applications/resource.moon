@@ -16,6 +16,16 @@ import
 	assert_error
 	yield_error
 from require "lapis.application"
+import from_json from require "lapis.util"
+import decode_base64 from require "lapis.util.encoding"
+
+import var_dump from require "utils2"
+
+denest_table = (nested) ->
+	tab = {}
+	for obj in *nested
+		table.insert tab, obj[1]
+	tab
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -75,6 +85,47 @@ class ResourceApplication extends lapis.Application
 			-- check if our version is correct and exists.
 			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file")[1]
 
+			-- Are we asking ourselves for a download?
+			if @params.download
+				local dependencies
+
+				-- Lets try and decode a deps field...
+				if jsonDeps = @params.deps
+					dependencies = {}
+					for _, jsonDep in pairs jsonDeps
+						_, dep = assert_error pcall -> from_json decode_base64 jsonDep
+						table.insert dependencies, dep
+
+				-- Did we want any dependencies?
+				if dependencies
+					-- Get the exact packages we want to build
+					query = {[[
+						resource_packages.id, resources.name, file
+						FROM resource_packages, resources
+						WHERE FALSE]]}
+
+					for dep in *dependencies
+						table.insert query, db.interpolate_query [[
+							OR (
+								(resources.name = ?)
+								AND (resource_packages.version = ?)
+								AND (resources.id = resource_packages.resource)
+							)]], dep[1], dep[2]
+					table.insert query, [[
+						GROUP BY resources.name, resource_packages.id
+					]]
+
+					query = table.concat query, "\n"
+					expectedLength = #dependencies
+					_, dependencies = assert_error pcall -> db.select query
+
+					unless #dependencies == expectedLength
+						return error_500 @, "One of the resource dependencies you tried to download was unavailable."
+					
+					
+
+				@write "Give me your download."
+
 			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
 			dependencies = (db.select "get_package_dependencies(?) as deps ", @package.id)[1].deps
 			unless #dependencies == 0
@@ -86,9 +137,7 @@ class ResourceApplication extends lapis.Application
 				ResourcePackages\include_in packagesNested, 1, as: 1
 
 				-- Now we're reversing the workaround
-				packages = {}
-				for nestedPkg in *packagesNested
-					table.insert packages, nestedPkg[1]
+				packages = denest_table packagesNested
 
 				-- Get resource data
 				Resources\include_in packages, "resource", as: "resource"

@@ -80,6 +80,52 @@ CREATE TYPE token_type AS ENUM (
 
 ALTER TYPE token_type OWNER TO postgres;
 
+--
+-- Name: get_package_dependencies(integer, integer[], integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION get_package_dependencies(src integer, alldeps integer[] DEFAULT '{}'::integer[], self integer DEFAULT NULL::integer) RETURNS integer[]
+    LANGUAGE plpgsql STABLE
+    AS $$
+DECLARE
+    deps integer[] := '{}';
+    pkg integer;
+BEGIN
+	IF self IS NULL THEN
+		self = src;
+	END IF;
+	--ARRAY_APPEND(deps, 30)
+	--FOR i IN 1..src LOOP
+	--	deps := array_append(deps, i);
+	--END LOOP;
+	--SELECT array_agg(i) INTO deps FROM generate_series(1, src) AS i;
+	SELECT array_agg(package) INTO deps FROM (
+		SELECT package FROM package_dependencies WHERE source_package = src
+	) AS dep;
+
+	-- Go through deps
+	-- Is it in allDeps?
+	-- If not, add to alldeps and run the function!
+	IF deps IS NOT NULL THEN
+		FOREACH pkg IN ARRAY deps LOOP
+			IF ((pkg = self) or (SELECT pkg = ANY(allDeps))) THEN
+				-- That's fine, ignore this.
+				RAISE NOTICE 'reading dep % twice', pkg;
+			ELSE
+				RAISE NOTICE 'trying to add %', pkg;
+				allDeps = array_append(allDeps, pkg);
+				allDeps = get_package_dependencies(pkg, allDeps, self);
+			END IF;
+		END LOOP;
+	END IF;		
+	
+	RETURN allDeps;
+END;
+$$;
+
+
+ALTER FUNCTION public.get_package_dependencies(src integer, alldeps integer[], self integer) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -240,11 +286,19 @@ ALTER TABLE lapis_migrations OWNER TO postgres;
 
 CREATE TABLE package_dependencies (
     source_package integer NOT NULL,
-    package integer NOT NULL
+    package integer NOT NULL,
+    needs_version boolean NOT NULL
 );
 
 
 ALTER TABLE package_dependencies OWNER TO postgres;
+
+--
+-- Name: COLUMN package_dependencies.needs_version; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN package_dependencies.needs_version IS 'Whenever a new package is uploaded by a resource, it will update all dependencies with needs_version set to false to the newest package.';
+
 
 --
 -- Name: resource_admins; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
