@@ -5,6 +5,7 @@ nginx.conf.compiled
 dev_backup
 bower_components
 static/css/*.css
+uploads
 
 # Sublime Text 3
 *.sublime-project
