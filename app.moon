@@ -18,8 +18,8 @@ class MTAApp extends lapis.Application
 	@include "applications.user"
 	
 	@before_filter =>
-		@csrf_token = generate_csrf_token @
 		@active_user = Users\find @session.user_id if @session.user_id
+		@csrf_token = generate_csrf_token @
 
 	-- cookie_attributes: (name, value) =>
 	-- 	base = "Path=/; HttpOnly"

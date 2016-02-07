@@ -6,13 +6,13 @@ class Search extends Widget
 	content: =>
 		widget SearchWidget onSearchPage: true
 
-		unless @not_searched
+		if @searched
 			div class: "card", ->
 				div class: "card-header", ->
 					text "Search Results"
 					a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
 				div class: "card-block", ->
-					if @resourceList
+					if @resourceList and #@resourceList > 0
 						element "table", class: "table table-hover table-bordered table-href mta-resources-table", ->
 							thead -> tr ->
 								th "Name"
