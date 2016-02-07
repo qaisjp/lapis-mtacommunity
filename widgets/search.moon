@@ -30,7 +30,9 @@ class SearchCard extends Widget
 						@form_group_type true
 						text " "
 						div class: "checkbox", ->
-    						label -> input type: "checkbox", name: "description", value: "true", checked: @params.description, "Search in description"
+    						label ->
+    							input type: "checkbox", name: "description", value: "true", checked: @params.description
+    							text " Search in description"
 
 					div class: "row", ->
 						div class: "form-group", ->
@@ -41,6 +43,7 @@ class SearchCard extends Widget
 							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
 							input type: "number", class: "form-control", name: "showAmount", id: "searchShowAmount", min: "1", max: "100", placeholder: "show (1 - 100)", value: @params.showAmount
 
+						@write_csrf_input!
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
 							text " Search"

@@ -5,7 +5,12 @@ date = require "date"
 
 class MTAResourcesOverview extends Widget
 	content: =>
-		h1 "Resources"
+		h1 ->
+			text "Resources"
+			if @active_user
+				a href: url, class: "btn btn-secondary pull-xs-right" , ->
+					i class: "fa fa-upload"
+					text " Upload"
 
 		div class: "container", ->
 			div class: "row", ->

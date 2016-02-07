@@ -2,6 +2,7 @@ lapis = require "lapis"
 db = require "lapis.db"
 import Resources from require "models"
 import trim_filter from require "lapis.util"
+import assert_csrf_token from require "utils"
 import validate, validate_functions from require "lapis.validate"
 
 DEFAULT_SHOW_AMOUNT = 15
@@ -14,6 +15,7 @@ validate_functions.between = (input, lower, upper) ->
 
 class SearchApplication extends lapis.Application
 	[search: "/search"]: =>
+		@write assert_csrf_token @
 		trim_filter @params
 		
 		hasSearchArguments = false

@@ -10,6 +10,7 @@ from require "models"
 import
 	error_404
 	error_500
+	assert_csrf_token
 from require "utils"
 import
 	capture_errors
@@ -107,7 +108,7 @@ class ResourceApplication extends lapis.Application
 	}
 
 	[get: "/:resource_name/get/:version"]: capture_errors {
-		on_error: => error_500 @, "We're sorry we couldn't serve you that file."
+		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't serve you that file."
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
@@ -115,6 +116,8 @@ class ResourceApplication extends lapis.Application
 
 			-- Are we asking ourselves for a download?
 			if @params.download
+				-- assert_csrf_token @
+
 				local dependencies
 				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
 				filename = @resource.name .. ".zip"
