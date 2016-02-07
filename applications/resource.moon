@@ -50,7 +50,10 @@ serve_file = (filepath, filename, mime, delete) ->
 	ngx.exit ngx.OK
 
 build_filepath_upload_package = (resource, pkg, file) ->
-	"uploads/#{resource}/#{pkg}/#{file}"
+	"uploads/#{resource}/#{pkg}.#{file}"
+
+build_rename_comment = (oldname, newname) ->
+	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -149,16 +152,31 @@ class ResourceApplication extends lapis.Application
 					unless #dependencies == expectedLength
 						return error_500 @, "One of the resource dependencies you tried to download was unavailable."
 
+					dir = lfs.currentdir!
+
 					filepath = os.tmpname!
 					os.remove filepath
 					filepath..= ".zip"
 
-					cmd = {"zip -j", filepath}
+					cmd = {
+						"zip -0 -j"
+						filepath,
+						dir .. "/" .. build_filepath_upload_package @package.resource, @package.id, @package.file
+					}
 
-					dir = lfs.currentdir!
+					renameComments = {build_rename_comment "#{@package.id}.#{@package.file}", filename}
+
+					-- rename filename to "deps_with_..."
+					filename = "deps_with_" .. filename
+
 					for dep in *dependencies
 						table.insert cmd, "\"#{dir}/#{build_filepath_upload_package dep.resource, dep.id, dep.file}\""
+						table.insert renameComments, build_rename_comment "#{dep.id}.#{dep.file}", dep.name .. ".zip"
+					
 					cmd = table.concat cmd, " "
+					renameCmd = "printf \"#{table.concat renameComments}\" | zipnote -w #{filepath}"
+
+					print renameCmd	
 
 					success = os.execute cmd
 					unless success == 0
@@ -166,6 +184,11 @@ class ResourceApplication extends lapis.Application
 						yield_error!
 						return
 					
+					success = os.execute renameCmd
+					unless success == 0
+						os.remove filepath
+						yield_error!
+						return
 
 				success, err = serve_file filepath, filename, "application/octet-stream", dependencies and true
 				unless success
