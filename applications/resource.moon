@@ -114,7 +114,7 @@ class ResourceApplication extends lapis.Application
 			if @params.download
 				local dependencies
 				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
-				filename = @package.file
+				filename = @resource.name .. ".zip"
 
 				-- Lets try and decode a deps field...
 				if jsonDeps = @params.deps
@@ -153,7 +153,6 @@ class ResourceApplication extends lapis.Application
 					os.remove filepath
 					filepath..= ".zip"
 
-					filename = @resource.name .. ".zip"
 					cmd = {"zip -j", filepath}
 
 					dir = lfs.currentdir!
