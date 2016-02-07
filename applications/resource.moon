@@ -212,7 +212,7 @@ class ResourceApplication extends lapis.Application
 						yield_error!
 						return
 
-				success, err = serve_file filepath, filename, "application/octet-stream", dependencies and true
+				success, err = serve_file filepath, filename, "application/zip", dependencies and true
 				unless success
 					yield_error! -- ,err
 
