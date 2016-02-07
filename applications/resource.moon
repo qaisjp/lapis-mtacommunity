@@ -32,7 +32,7 @@ denest_table = (nested) ->
 		table.insert tab, obj[1]
 	tab
 
-serve_file = (filepath, filename, mime) ->
+serve_file = (filepath, filename, mime, delete) ->
 	file, err = io.open filepath, "r"
 	unless file
 		return false, err
@@ -40,11 +40,17 @@ serve_file = (filepath, filename, mime) ->
 	contents = file\read "*all"
 	file\close!
 
+	result = os.remove filepath if delete
+
 	ngx.header.content_type = mime
+	ngx.header.content_length = #contents
 	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
 	ngx.say contents
+
 	ngx.exit ngx.OK
-	render: false
+
+build_filepath_upload_package = (resource, pkg, file) ->
+	"uploads/#{resource}/#{pkg}/#{file}"
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -107,7 +113,8 @@ class ResourceApplication extends lapis.Application
 			-- Are we asking ourselves for a download?
 			if @params.download
 				local dependencies
-				filepath = "uploads/#{@package.resource}/#{@package.id}.#{@package.file}"
+				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
+				filename = @package.file
 
 				-- Lets try and decode a deps field...
 				if jsonDeps = @params.deps
@@ -120,7 +127,7 @@ class ResourceApplication extends lapis.Application
 				if dependencies
 					-- Get the exact packages we want to build
 					query = {[[
-						resource_packages.id, resources.name, file
+						resource_packages.id, resources.name, file, resource
 						FROM resource_packages, resources
 						WHERE FALSE]]}
 
@@ -142,8 +149,26 @@ class ResourceApplication extends lapis.Application
 					unless #dependencies == expectedLength
 						return error_500 @, "One of the resource dependencies you tried to download was unavailable."
 
-				
-				success, err = serve_file filepath, @package.file, "application/octet-stream"
+					filepath = os.tmpname!
+					os.remove filepath
+					filepath..= ".zip"
+
+					filename = @resource.name .. ".zip"
+					cmd = {"zip -j", filepath}
+
+					dir = lfs.currentdir!
+					for dep in *dependencies
+						table.insert cmd, "\"#{dir}/#{build_filepath_upload_package dep.resource, dep.id, dep.file}\""
+					cmd = table.concat cmd, " "
+
+					success = os.execute cmd
+					unless success == 0
+						os.remove filepath
+						yield_error!
+						return
+					
+
+				success, err = serve_file filepath, filename, "application/octet-stream", dependencies and true
 				unless success
 					yield_error! -- ,err
 
