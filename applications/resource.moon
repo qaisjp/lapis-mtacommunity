@@ -6,9 +6,11 @@ import
 	ResourcePackages
 	PackageDependencies
 	Users
+	Comments
 from require "models"
 import
 	error_404
+	error_405
 	error_500
 	assert_csrf_token
 from require "utils"
@@ -16,13 +18,14 @@ import
 	capture_errors
 	assert_error
 	yield_error
+	respond_to
 from require "lapis.application"
 import
 	from_json
 	slugify
 from require "lapis.util"
 import decode_base64 from require "lapis.util.encoding"
-
+import assert_valid from require "lapis.validate"
 import var_dump from require "utils2"
 
 lfs = require "lfs"
@@ -105,6 +108,22 @@ class ResourceApplication extends lapis.Application
 		on_error: error_500
 		=>
 			@write "You are now editing it."
+	}
+
+	[comment: "/:resource_name/comment"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make that comment for you."
+		GET: error_405
+		POST: =>
+			assert_error @active_user, "You need to be logged in to do that."
+			assert_valid @params, {
+				{"message", exists: true}
+			}
+			Comments\create {
+				resource: @resource.id,
+				author: @active_user.id
+				message: @params.message
+			}
+			redirect_to: @url_for "resources.view", resource_name: @resource.name
 	}
 
 	[get: "/:resource_name/get/:version"]: capture_errors {

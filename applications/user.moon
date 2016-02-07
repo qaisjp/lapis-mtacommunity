@@ -12,6 +12,7 @@ from require "lapis.application"
 import
 	error_404
 	error_500
+	assert_csrf_token
 from require "utils"
 
 import
@@ -61,7 +62,8 @@ class UserApplication extends lapis.Application
 				@write status:400, "<h1>You cannot follow yourself</h1>"
 			@isFollowing = @active_user\is_following @user
 		GET: =>	render: true
-		POST: capture_errors => 
+		POST: capture_errors =>
+			assert_csrf_token @
 			if (@params.intent == "follow") 
 				if @isFollowing
 					return @write status: 400, "<h1>You are already following this person</h1>"

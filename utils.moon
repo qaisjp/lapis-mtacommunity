@@ -19,6 +19,12 @@ error_404 = (err) =>
 		h1 "Sorry, this page isn't available"
 		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
 
+error_405 = (err) =>
+	@title = "Error 405"
+	status: 404, @html ->
+		h1 "Error 405: Method Not Allowed"
+		h3 err or "You shouldn't be here... maybe you followed a dodgy link or maybe you were playing around with inspect element!"
+
 error_500 = (err) =>
 	@title = "Oops"
 	status: 500, @html ->
@@ -29,4 +35,4 @@ get_gravatar_url = (email, size) ->
 	hash = ngx.md5 email\lower!
 	"https://www.gravatar.com/avatar/#{hash}?s=#{size}"
 
-{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_500, :get_gravatar_url}
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :get_gravatar_url}
