@@ -60,6 +60,8 @@ class Layout extends Widget
 			-- Now finally, our own code!
 			script src: "/static/js/main.js"
 
+			script src: "/static/js/anchor-handling.js"
+
 			@content_for "post_body_script"
 		-- /body
 	--/html

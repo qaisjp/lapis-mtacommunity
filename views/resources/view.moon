@@ -51,13 +51,14 @@ class MTAResourcePage extends Widget
 			textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
 
 			button class: "btn btn-primary", type: "submit", " Comment"
-				
+
 		for comment in *comments
-			div class: "card", ->
+			anchor = "comment-#{comment.id}"
+			div class: "card", id: anchor, ->
 				div class: "card-header", ->
-					strong comment.author.username
-					span class: "text-muted", ->
-						text " commented "
+					a style: "color: inherit;", href: @url_for("user.profile", comment.author.username), -> strong comment.author.username
+					span class: "text-muted", " commented "
+					a class: "text-muted", href: "#"..anchor, ->
 						text time_ago_in_words comment.created_at
 
 						if comment.edited_at
