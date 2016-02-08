@@ -76,8 +76,11 @@ class ResourceApplication extends lapis.Application
 
 	[overview: ""]: => render: true
 
-	[test: "/uploads/*"]: =>
-		ngx.exec "/uploads/#{@params.splat}"
+	[upload: "/upload"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1] or "We couldn't publish that resource for you."
+		GET: => "Upload form..."
+		POST: => "Uploading..."
+	}
 	
 	[view: "/:resource_name"]: capture_errors {
 		on_error: error_500

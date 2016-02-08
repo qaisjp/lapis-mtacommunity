@@ -8,7 +8,7 @@ class MTAResourcesOverview extends Widget
 		h1 ->
 			text "Resources"
 			if @active_user
-				a href: url, class: "btn btn-secondary pull-xs-right" , ->
+				a href: @url_for("resources.upload"), class: "btn btn-secondary pull-xs-right" , ->
 					i class: "fa fa-upload"
 					text " Upload"
 

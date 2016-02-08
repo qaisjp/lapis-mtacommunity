@@ -17,12 +17,12 @@ class MTAResourcesGet extends Widget
 				input type: "hidden", name: "download", value: "1", ["aria-hidden"]: "true"
 				label ->
 					text "Please click "
-					input class: "btn btn-sm btn-secondary ", type: "submit", value: "download"	
+					button class: "btn btn-link mta-nopadding", type: "submit", "here"
 					text " if the download did not start."
 
 			p -> strong "Do not give administrator rights to any resource unless you trust it."
 
-			@content_for "post_body_script", -> raw"<script>$('#download-form').submit();</script>"
+			@content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
 			return
 
 		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"#{@resource.name}\" will be included in your download."
