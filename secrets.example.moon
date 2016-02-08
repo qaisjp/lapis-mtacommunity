@@ -6,4 +6,9 @@
 		database "mtacommunity"
 
 	secret: "SECRET"
+
+	mailgun:
+		domain: "qaisjp.com"
+		api_key: "api:YOUR_API_KEY"
+
 }
