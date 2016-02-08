@@ -43,11 +43,8 @@ class UserApplication extends lapis.Application
 			if @active_user
 				@isFollowing = @active_user\is_following @user
 
-			@followers = UserFollowings\count "following = ?", @user.id
+			@followers = @user\get_followers "users.*, user_followings.created_at as followed_at"
 			@following = UserFollowings\count "follower  = ?", @user.id
-
-			registration_date = date @user.created_at
-			@registration_date = registration_date\fmt "%d %b %Y"
 
 			@resource_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
 			@screenshot_count = ResourceScreenshots\count "uploader = ?", @user.id

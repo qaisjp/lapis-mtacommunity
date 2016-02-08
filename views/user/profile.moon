@@ -1,6 +1,7 @@
 import Widget from require "lapis.html"
 import get_gravatar_url from require "utils"
 import Users, UserFollowings from require "models"
+import time_ago_in_words from require "lapis.util"
 db = require "lapis.db"
 
 class MTAUserLayout extends Widget
@@ -11,10 +12,10 @@ class MTAUserLayout extends Widget
 				div class: "media-left", -> img class: "media-object", src: get_gravatar_url @user.email, 150
 				div class: "media-body", ->
 					h1 class: "media-heading", "#{@user.username}"
-					if date = @registration_date
-						p ->
-							i class: "fa fa-fw fa-clock-o"
-							text "Registered #{@registration_date}"
+					
+					p ->
+						i class: "fa fa-fw fa-clock-o"
+						text "Member for #{time_ago_in_words @user.created_at, nil, ''}"
 
 					if loc = @data.location
 						p ->
@@ -75,7 +76,7 @@ class MTAUserLayout extends Widget
 							span class: "label label-pill label-default", @resource_count
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
 							text "Followers "
-							span class:"label label-pill label-default", @followers
+							span class:"label label-pill label-default", #@followers
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
 							text "Following "
 							span class: "label label-pill label-default", @following
@@ -88,7 +89,26 @@ class MTAUserLayout extends Widget
 				div class: "col-md-10", ->
 					div class: "tab-content", ->
 						div role: "tabpanel", class: "tab-pane fade in active", id: "resources", "res"
-						div role: "tabpanel", class: "tab-pane fade", id: "followers", "fol"
+						div role: "tabpanel", class: "tab-pane fade", id: "followers", ->
+							local closedColumn
+							for i, follower in ipairs @followers
+								if (i-1)%2 == 0
+									raw '<div class="col-md-4">'
+									closedColumn = false
+
+								div class: "card", ->
+									div class: "card-header", ->
+										a href: @url_for("user.profile", username: follower.username), follower.username
+									img src: get_gravatar_url(follower.email, 75), alt: "#{follower.username}'s email"
+									text "Following for #{time_ago_in_words follower.followed_at, nil, ''}"
+								
+								if (i-1)%2 == 1
+									raw '</div>'
+									closedColumn = true
+
+							unless closedColumn
+								raw "</div>"
+
 						div role: "tabpanel", class: "tab-pane fade", id: "following", "folin"
 						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", "scren"
 						div role: "tabpanel", class: "tab-pane fade", id: "comments", "com"

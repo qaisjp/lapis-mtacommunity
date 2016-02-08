@@ -103,6 +103,10 @@ class Users extends Model
 	is_following: (other_user) =>
 		(db.select "EXISTS(SELECT 1 FROM user_followings WHERE follower = ? AND following = ?)", @id, other_user.id)[1].exists
 
+
+	get_followers: (fields="users.*") =>
+		Users\select ", user_followings where (following = ?) and (users.id = follower)", 7, :fields
+
 	is_guest: => @level <= 1
 	can_manage: (user) =>
 		(not @is_guest!) and (@level >= user.level)
