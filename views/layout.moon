@@ -19,10 +19,10 @@ class Layout extends Widget
 				title "Multi Theft Auto Community"
 
 			-- Font Awesome icons
-			link href: "/bower_components/font-awesome/css/font-awesome.css", rel: "stylesheet"
+			link href: "/vendor/font-awesome/css/font-awesome.css", rel: "stylesheet"
 			
 			-- Bootstrap core CSS
-			link href: "/bower_components/bootstrap/dist/css/bootstrap.css", rel: "stylesheet"
+			link href: "/vendor/bootstrap/dist/css/bootstrap.css", rel: "stylesheet"
 
 			-- Custom styles
 			link href: "/static/css/main.css", rel: "stylesheet"
@@ -50,8 +50,8 @@ class Layout extends Widget
 
 			-- Bootstrap core JavaScript
 			-- Placed at the end of the document so the pages load faster
-			script src: "/bower_components/jquery/dist/jquery.js"
-			script src: "/bower_components/bootstrap/dist/js/bootstrap.js"
+			script src: "/vendor/jquery/dist/jquery.js"
+			script src: "/vendor/bootstrap/dist/js/bootstrap.js"
 
 			
 			-- IE10 viewport hack for Surface/desktop Windows 8 bug
