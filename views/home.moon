@@ -1,4 +1,6 @@
 import Widget from require "lapis.html"
+import time_ago_in_words from require "lapis.util"
+import ResourcePackages, Resources from require "models"
 
 class Home extends Widget
 	content: =>
@@ -14,17 +16,30 @@ class Home extends Widget
 			
 			div class: "container", ->
 				h2 "Latest Resources"
-				div class: "row", ->				
-					for i = 0, 5
-						if i%2 == 0
+
+				-- Get the last 5 uploaded resource instances
+				packageList = ResourcePackages\select "ORDER BY created_at DESC LIMIT 6"
+				Resources\include_in packageList, "resource", as: "resource"
+
+				div class: "row", ->
+					local closedColumn
+					for i, package in ipairs packageList
+						resource = package.resource
+
+						if (i-1)%2 == 0
 							raw '<div class="col-md-4">'
+							closedColumn = false
 
 						div class: "card", ->
 							div class: "card-header", ->
-								text "guieditor 1.2.3.4"
+								text "#{resource.longname} #{package.version}"
 								
 							img  ["data-src"]: "/static/favicon.ico", alt: "Card image cap"
-							div class: "card-footer", -> small class: "text-muted", " Last updated 3 mins ago"
+							div class: "card-footer", -> small class: "text-muted", " Last updated " .. time_ago_in_words package.created_at
 						
-						if i%2 == 1
+						if (i-1)%2 == 1
 							raw '</div>'
+							closedColumn = true
+
+					unless closedColumn
+						raw "</div>"

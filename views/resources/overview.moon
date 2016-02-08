@@ -1,6 +1,6 @@
 import Widget from require "lapis.html"
 import Resources, ResourcePackages from require "models"
-import time_ago, time_ago_in_words from require "lapis.util"
+import time_ago_in_words from require "lapis.util"
 date = require "date"
 
 class MTAResourcesOverview extends Widget
@@ -66,7 +66,7 @@ class MTAResourcesOverview extends Widget
 								th "Version"
 								th "Date Updated"
 							tbody ->
-								-- Get the top 15 rated resource instances
+								-- Get the recent uploaded resource instances
 								packageList = ResourcePackages\select "ORDER BY created_at DESC LIMIT 15"
 								Resources\include_in packageList, "resource", as: "resource"
 
