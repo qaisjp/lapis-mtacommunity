@@ -36,7 +36,13 @@ denest_table = (nested) ->
 		table.insert tab, obj[1]
 	tab
 
-serve_file = (filepath, filename, mime, delete) ->
+serve_file = (filepath, filename, mime, external) ->
+	ngx.header.content_type = mime
+	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
+
+	unless external
+		return ngx.exec "/"..filepath
+
 	file, err = io.open filepath, "r"
 	unless file
 		return false, err
@@ -44,11 +50,8 @@ serve_file = (filepath, filename, mime, delete) ->
 	contents = file\read "*all"
 	file\close!
 
-	result = os.remove filepath if delete
-
-	ngx.header.content_type = mime
+	result = os.remove filepath
 	ngx.header.content_length = #contents
-	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
 	ngx.say contents
 
 	ngx.exit ngx.OK
@@ -72,6 +75,9 @@ class ResourceApplication extends lapis.Application
 			return @write error_404 @ unless @resource
 
 	[overview: ""]: => render: true
+
+	[test: "/uploads/*"]: =>
+		ngx.exec "/uploads/#{@params.splat}"
 	
 	[view: "/:resource_name"]: capture_errors {
 		on_error: error_500
