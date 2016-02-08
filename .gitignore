@@ -1,12 +1,16 @@
 *.lua
+!utils2.lua
 logs/
 nginx.conf.compiled
 .tup
 dev_backup
 bower_components
-static/css/*.css
 uploads
 
 # Sublime Text 3
 *.sublime-project
 *.sublime-workspace
+
+# Exclude compiled stuff
+static/css/main.css
+static/js/main.js
