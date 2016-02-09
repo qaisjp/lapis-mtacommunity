@@ -110,7 +110,7 @@ class MTAUserLayout extends Widget
 
 							li role: "presentation", class: "nav-item", -> a class: {"nav-link", active: tab == lowerName}, :href, ->
 								text name .. " "
-								span class: "label label-pill label-default", @[name .. "_count"]
+								span class: "label label-pill label-default", @[lowerName .. "_count"]
 						
 				div class: "col-md-10",
 					if (tab == "followers") or (tab == "following")

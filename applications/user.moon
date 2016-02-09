@@ -43,12 +43,27 @@ class UserApplication extends lapis.Application
 			if @active_user
 				@isFollowing = @active_user\is_following @user
 
-			@followers = @user\get_followers "users.*, user_followings.created_at as followed_at"
-			@following = @user\get_following "users.*, user_followings.created_at as followed_at"
+			tab = @params.tab
+			accessed = false -- use this to detect if tab is resources or not
 
-			@resource_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
-			@screenshot_count = ResourceScreenshots\count "uploader = ?", @user.id
-			@comment_count = Comments\count "author = ?", @user.id
+			if tab == "followers"
+				@followers = @user\get_followers "users.*, user_followings.created_at as followed_at"
+				@followers_count = #@followers
+				accessed = true
+			else
+				@followers_count = UserFollowings\count "following = ?", @user.id
+
+			if tab == "following"
+				@following = @user\get_following "users.*, user_followings.created_at as followed_at"
+				@following_count = #@following
+				accessed = true
+			else
+				@following_count = UserFollowings\count "follower  = ?", @user.id
+
+
+			@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
+			@screenshots_count = ResourceScreenshots\count "uploader = ?", @user.id
+			@comments_count = Comments\count "author = ?", @user.id
 			render: true
 	}
 
