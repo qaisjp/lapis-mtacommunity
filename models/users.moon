@@ -105,7 +105,10 @@ class Users extends Model
 
 
 	get_followers: (fields="users.*") =>
-		Users\select ", user_followings where (following = ?) and (users.id = follower)", 7, :fields
+		Users\select ", user_followings where (following = ?) and (users.id = follower)", @id, :fields
+
+	get_following: (fields="users.*") =>
+		Users\select ", user_followings where (follower = ?) and (users.id = following)", @id, :fields
 
 	is_guest: => @level <= 1
 	can_manage: (user) =>

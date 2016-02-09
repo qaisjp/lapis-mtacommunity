@@ -44,7 +44,7 @@ class UserApplication extends lapis.Application
 				@isFollowing = @active_user\is_following @user
 
 			@followers = @user\get_followers "users.*, user_followings.created_at as followed_at"
-			@following = UserFollowings\count "follower  = ?", @user.id
+			@following = @user\get_following "users.*, user_followings.created_at as followed_at"
 
 			@resource_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
 			@screenshot_count = ResourceScreenshots\count "uploader = ?", @user.id

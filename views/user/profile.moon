@@ -4,6 +4,27 @@ import Users, UserFollowings from require "models"
 import time_ago_in_words from require "lapis.util"
 db = require "lapis.db"
 
+build_follow_cards = (users) =>
+	->
+		local closedColumn
+		for i, user in ipairs users
+			if (i-1)%2 == 0
+				raw '<div class="col-md-4">'
+				closedColumn = false
+
+			div class: "card", ->
+				div class: "card-header", ->
+					a href: @url_for("user.profile", username: user.username), user.username
+				img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
+				text "Following for #{time_ago_in_words user.followed_at, nil, ''}"
+			
+			if (i-1)%2 == 1
+				raw '</div>'
+				closedColumn = true
+
+		unless closedColumn
+			raw "</div>"
+
 class MTAUserLayout extends Widget
 	@include require "widgets.utils"
 	content: =>
@@ -79,7 +100,7 @@ class MTAUserLayout extends Widget
 							span class:"label label-pill label-default", #@followers
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
 							text "Following "
-							span class: "label label-pill label-default", @following
+							span class: "label label-pill label-default", #@following
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
 							text "Screenshots "
 							span class: "label label-pill label-default", @screenshot_count
@@ -89,27 +110,8 @@ class MTAUserLayout extends Widget
 				div class: "col-md-10", ->
 					div class: "tab-content", ->
 						div role: "tabpanel", class: "tab-pane fade in active", id: "resources", "res"
-						div role: "tabpanel", class: "tab-pane fade", id: "followers", ->
-							local closedColumn
-							for i, follower in ipairs @followers
-								if (i-1)%2 == 0
-									raw '<div class="col-md-4">'
-									closedColumn = false
-
-								div class: "card", ->
-									div class: "card-header", ->
-										a href: @url_for("user.profile", username: follower.username), follower.username
-									img src: get_gravatar_url(follower.email, 75), alt: "#{follower.username}'s email"
-									text "Following for #{time_ago_in_words follower.followed_at, nil, ''}"
-								
-								if (i-1)%2 == 1
-									raw '</div>'
-									closedColumn = true
-
-							unless closedColumn
-								raw "</div>"
-
-						div role: "tabpanel", class: "tab-pane fade", id: "following", "folin"
+						div role: "tabpanel", class: "tab-pane fade", id: "followers", -> div class: "row", build_follow_cards @, @followers
+						div role: "tabpanel", class: "tab-pane fade", id: "following", -> div class: "row", build_follow_cards @, @following
 						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", "scren"
 						div role: "tabpanel", class: "tab-pane fade", id: "comments", "com"
 
