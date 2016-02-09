@@ -2,10 +2,12 @@ import Widget from require "lapis.html"
 import get_gravatar_url from require "utils"
 import Users, UserFollowings from require "models"
 import time_ago_in_words from require "lapis.util"
-db = require "lapis.db"
+db = require "lapis.db"	
 
-build_follow_cards = (users) =>
-	->
+build_cards = {
+	following: true
+	followers: true
+	follow: (users) => ->
 		local closedColumn
 		for i, user in ipairs users
 			if (i-1)%2 == 0
@@ -17,13 +19,18 @@ build_follow_cards = (users) =>
 					a href: @url_for("user.profile", username: user.username), user.username
 				img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
 				text "Following for #{time_ago_in_words user.followed_at, nil, ''}"
-			
+
 			if (i-1)%2 == 1
 				raw '</div>'
 				closedColumn = true
 
 		unless closedColumn
 			raw "</div>"
+
+	resources: => "resource"
+	comments: => "comment"
+	screenshots: => "screen"
+}
 
 class MTAUserLayout extends Widget
 	@include require "widgets.utils"
@@ -86,35 +93,31 @@ class MTAUserLayout extends Widget
 									button type: "submit", class: "btn btn-secondary #{@isFollowing and '' or 'btn-success'}", ->
 										i class: "fa fa-bell"
 										text " " .. followtext
-	
+		
 		hr!
+
 		div class: "container", ->
 			div class: "row", ->
-				div class: "col-md-2 ", ->
-					ul class: "nav nav-pills nav-stacked mta-tablinks", role: "tablist", ->
-						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#resources", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "resources", ->
-							text "Resources "
-							span class: "label label-pill label-default", @resource_count
-						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#followers", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "followers", ->
-							text "Followers "
-							span class:"label label-pill label-default", #@followers
-						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#following", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "following", ->
-							text "Following "
-							span class: "label label-pill label-default", #@following
-						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
-							text "Screenshots "
-							span class: "label label-pill label-default", @screenshot_count
-						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
-							text "Comments "
-							span class: "label label-pill label-default", @comment_count
-				div class: "col-md-10", ->
-					div class: "tab-content", ->
-						div role: "tabpanel", class: "tab-pane fade in active", id: "resources", "res"
-						div role: "tabpanel", class: "tab-pane fade", id: "followers", -> div class: "row", build_follow_cards @, @followers
-						div role: "tabpanel", class: "tab-pane fade", id: "following", -> div class: "row", build_follow_cards @, @following
-						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", "scren"
-						div role: "tabpanel", class: "tab-pane fade", id: "comments", "com"
+				tab = build_cards[@params.tab] and @params.tab or "resources"
 
+				div class: "col-md-2 ", ->
+					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
+						for name in *{"Resources", "Followers", "Following", "Comments", "Screenshots"}
+							lowerName = string.lower name
+
+							-- make the "resources" page not really need ?tab=resources
+							href = (name == "Resources") and "?" or "?tab=#{lowerName}"
+
+							li role: "presentation", class: "nav-item", -> a class: {"nav-link", active: tab == lowerName}, :href, ->
+								text name .. " "
+								span class: "label label-pill label-default", @[name .. "_count"]
+						
+				div class: "col-md-10",
+					if (tab == "followers") or (tab == "following")
+						raw build_cards.follow @, @[tab]
+					else
+						raw build_cards[tab] @, @[tab]
+						
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"
