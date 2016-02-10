@@ -60,10 +60,20 @@ class UserApplication extends lapis.Application
 			else
 				@following_count = UserFollowings\count "follower  = ?", @user.id
 
+			if tab == "screenshots"
+				accessed = true
+			else
+				@screenshots_count = ResourceScreenshots\count "uploader = ?", @user.id
+			
+			if tab == "comments"
+				accessed = true
+			else
+				@comments_count = Comments\count "author = ?", @user.id
 
-			@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
-			@screenshots_count = ResourceScreenshots\count "uploader = ?", @user.id
-			@comments_count = Comments\count "author = ?", @user.id
+			if accessed
+				@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
+			
+
 			render: true
 	}
 

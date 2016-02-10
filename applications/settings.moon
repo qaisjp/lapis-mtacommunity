@@ -20,6 +20,6 @@ class SettingsApplication extends lapis.Application
 
 	[main: ""]: => redirect_to: @url_for "settings.profile"
 		
-	[profile: "/profile"]: assert_error =>
-		render: true
+	[profile: "/profile"]: => render: "settings.layout"
+	[account: "/account"]: => render: "settings.layout"
 	

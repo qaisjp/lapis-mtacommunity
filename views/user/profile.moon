@@ -102,7 +102,7 @@ class MTAUserLayout extends Widget
 
 				div class: "col-md-2 ", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						for name in *{"Resources", "Followers", "Following", "Comments", "Screenshots"}
+						for name in *{"Resources", "Followers", "Following", "Screenshots", "Comments"}
 							lowerName = string.lower name
 
 							-- make the "resources" page not really need ?tab=resources
