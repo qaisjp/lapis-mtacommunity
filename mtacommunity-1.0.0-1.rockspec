@@ -15,3 +15,7 @@ dependencies = {
 	"bcrypt",
 	"lapis-console"
 }
+
+build = {
+	type = "none"
+}
