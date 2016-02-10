@@ -85,14 +85,7 @@ class MTAUserLayout extends Widget
 							if (@active_user.id ~= @user.id)
 								-- We follow them
 								-- should use widget, cloned in follow.moon
-								followtext = @isFollowing and 'Unfollow' or 'Follow'
-								form class: "mta-inline-form", method: "POST", action: @url_for("user.follow", username: @user.slug), ->
-									input type: "hidden", name: "intent", value: followtext\lower!, ["aria-hidden"]: "true"
-
-									@write_csrf_input!
-									button type: "submit", class: "btn btn-secondary #{@isFollowing and '' or 'btn-success'}", ->
-										i class: "fa fa-bell"
-										text " " .. followtext
+								widget require("widgets.user_follow_form") isFollowing: @isFollowing
 		
 		hr!
 

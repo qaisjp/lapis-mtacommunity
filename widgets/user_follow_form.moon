@@ -6,10 +6,11 @@ class FollowForm extends Widget
 	@include "widgets.utils"
 	
 	content: =>
-		form class: "mta-inline-form", method: "POST", action: @url_for("user.follow", username: @user.username), ->
+		followtext = @isFollowing and 'Unfollow' or 'Follow'
+		form class: "mta-inline-form", method: "POST", action: @url_for("user.follow", username: @user.slug), ->
 			input type: "hidden", name: "intent", value: followtext\lower!, ["aria-hidden"]: "true"
 
 			@write_csrf_input!
 			button type: "submit", class: "btn btn-secondary #{@isFollowing and '' or 'btn-success'}", ->
-				i class: "fa fa-pencil"
-				text @isFollowing and ' Unfollow' or ' Follow'
+				i class: "fa fa-bell"
+				text " " .. followtext

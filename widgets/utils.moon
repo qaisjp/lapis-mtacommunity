@@ -5,7 +5,8 @@ class WidgetUtils
 	write_pagination_nav: (url, pages, current_page, post, get={}) =>
 		old_get = get.page
 		nav -> ul class: "pagination", ->
-			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Previous", href: "#", ->
+			get.page = current_page - 1
+			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Previous", href: @url_for(url, post, get), ->
 				span ["aria-hidden"]: "true", -> raw "&laquo;"
 				span class: "sr-only", "Previous"
 
@@ -14,7 +15,8 @@ class WidgetUtils
 				get.page = page
 				li class: active_class, -> a class: "page-link", href: @url_for(url, post, get), page
 			
-			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Next", href: "#", ->
+			get.page = current_page + 1
+			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Next", href: @url_for(url, post, get), ->
 				span ["aria-hidden"]: "true", -> raw "&raquo;"
 				span class: "sr-only", "Next"
 		get.page = old_get

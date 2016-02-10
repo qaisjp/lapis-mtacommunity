@@ -8,7 +8,7 @@ class LoginForm extends Widget
 	
 	content: =>
 		form id: "mta-login-form", method: "POST", action: @url_for("auth.login"), ->
-			-- csrf token to prevent cross-side-request-forgery (who would've guessed?)
+			-- csrf token to prevent cross-side-request-forgery
 			@write_csrf_input!
 
 			if @params.return_to
