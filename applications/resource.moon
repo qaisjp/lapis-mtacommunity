@@ -123,7 +123,7 @@ class ResourceApplication extends lapis.Application
 
 			-- Are we asking ourselves for a download?
 			if @params.download
-				-- assert_csrf_token @
+				assert_csrf_token @
 
 				local dependencies
 				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
@@ -185,8 +185,6 @@ class ResourceApplication extends lapis.Application
 					
 					cmd = table.concat cmd, " "
 					renameCmd = "printf \"#{table.concat renameComments}\" | zipnote -w #{filepath}"
-
-					print renameCmd	
 
 					success = os.execute cmd
 					unless success == 0
