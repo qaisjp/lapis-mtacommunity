@@ -6,11 +6,6 @@ BEGIN
 	IF self IS NULL THEN
 		self = src;
 	END IF;
-	--ARRAY_APPEND(deps, 30)
-	--FOR i IN 1..src LOOP
-	--	deps := array_append(deps, i);
-	--END LOOP;
-	--SELECT array_agg(i) INTO deps FROM generate_series(1, src) AS i;
 	SELECT array_agg(package) INTO deps FROM (
 		SELECT package FROM package_dependencies WHERE source_package = src
 	) AS dep;
