@@ -125,15 +125,19 @@ class ResourceApplication extends lapis.Application
 			if @params.download
 				assert_csrf_token @
 
-				local dependencies
+				-- build the base package path as well as its filename
 				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
 				filename = @resource.name .. ".zip"
 
 				-- Lets try and decode a deps field...
+				local dependencies -- shadow the variable
 				if jsonDeps = @params.deps
 					dependencies = {}
 					for _, jsonDep in pairs jsonDeps
+						-- safely decode the base64 dependency info to get json
+						-- and in the same function, convert the json to a table
 						_, dep = assert_error pcall -> from_json decode_base64 jsonDep
+
 						table.insert dependencies, dep
 
 				-- Did we want any dependencies?
@@ -144,6 +148,7 @@ class ResourceApplication extends lapis.Application
 						FROM resource_packages, resources
 						WHERE FALSE]]}
 
+					-- Add a clause checking for each dependency
 					for dep in *dependencies
 						table.insert query, db.interpolate_query [[
 							OR (
@@ -151,6 +156,8 @@ class ResourceApplication extends lapis.Application
 								AND (resource_packages.version = ?)
 								AND (resources.id = resource_packages.resource)
 							)]], dep[1], dep[2]
+
+					-- prevent duplicates
 					table.insert query, [[
 						GROUP BY resources.name, resource_packages.id
 					]]
@@ -164,40 +171,48 @@ class ResourceApplication extends lapis.Application
 
 					dir = lfs.currentdir!
 
-					filepath = os.tmpname!
-					os.remove filepath
-					filepath..= ".zip"
+					filepath = os.tmpname! -- get a temporary file
+					os.remove filepath -- delete the lua created one
+					filepath..= ".zip" -- append .zip to the temp filename
 
+					-- base command for creating the zip file
 					cmd = {
 						"zip -0 -j"
 						filepath,
 						dir .. "/" .. build_filepath_upload_package @package.resource, @package.id, @package.file
 					}
 
+					-- add a renamer to the base package
 					renameComments = {build_rename_comment "#{@package.id}.#{@package.file}", filename}
 
 					-- rename filename to "deps_with_..."
 					filename = "deps_with_" .. filename
 
 					for dep in *dependencies
+						-- add the package to the zip file
 						table.insert cmd, "\"#{dir}/#{build_filepath_upload_package dep.resource, dep.id, dep.file}\""
+
+						-- rename the package to something friendly
 						table.insert renameComments, build_rename_comment "#{dep.id}.#{dep.file}", dep.name .. ".zip"
 					
 					cmd = table.concat cmd, " "
 					renameCmd = "printf \"#{table.concat renameComments}\" | zipnote -w #{filepath}"
 
+					-- build the zip file
 					success = os.execute cmd
 					unless success == 0
 						os.remove filepath
 						yield_error!
 						return
 					
+					-- rename each file in the zip file
 					success = os.execute renameCmd
 					unless success == 0
 						os.remove filepath
 						yield_error!
 						return
 
+				-- throw it to the user!
 				success, err = serve_file filepath, filename, "application/zip", dependencies and true
 				unless success
 					yield_error! -- ,err
