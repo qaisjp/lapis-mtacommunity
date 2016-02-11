@@ -10,8 +10,10 @@ from require "lapis.application"
 import assert_csrf_token from require "utils"
 import validate, validate_functions from require "lapis.validate"
 
+-- Default number of results to show
 DEFAULT_SHOW_AMOUNT = 15
 
+-- Custom validator for bounding input between (inclusive) certain values
 validate_functions.between = (input, lower, upper) ->
 	input = tonumber(input)
 	if not input
@@ -23,9 +25,10 @@ class SearchApplication extends lapis.Application
 		GET: => render: true
 		POST: =>
 			assert_csrf_token @
+
+			-- remove empty parameters
 			trim_filter @params
-			
-			hasSearchArguments = false
+
 			@errors = validate @params, {
 				{ "name", exists: true }
 				{ "type", optional: true, one_of: {"script", "map", "gamemode", "misc", "any"} }
@@ -36,13 +39,17 @@ class SearchApplication extends lapis.Application
 			if @errors
 				if @errors.showAmount
 					@params.showAmount = DEFAULT_SHOW_AMOUNT
-					@errors.showAmount = nil
+					@errors.showAmount = nil -- remove the error
 
 				local hasErrors
 				if @errors.name
-					hasErrors = true
+					-- remove errors if there is no name field
 					@errors = nil
+
+					-- but don't continue on to the actual search
+					hasErrors = true
 				else
+					-- check if there are any errors left
 					for _ in pairs @errors
 						hasErrors = true
 						break
