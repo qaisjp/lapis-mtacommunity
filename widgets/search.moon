@@ -60,7 +60,7 @@ class SearchCard extends Widget
 				name: "name"
 				id: "searchGreedyName"
 				placeholder: "short or long name"
-				required: not advancedMode
+				required: true
 				value: @params.name
 
 	-- Snippet for creating the "type" form group
