@@ -12,8 +12,7 @@ dependencies = {
 	"lua ~> 5.1",
 	"lapis",
 	"mailgun",
-	"bcrypt",
-	"lapis-console"
+	"bcrypt"
 }
 
 build = {
