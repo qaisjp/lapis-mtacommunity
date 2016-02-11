@@ -17,38 +17,42 @@ import
 	ResourceScreenshots
 	UserFollowings
 from require "models"
-import error_404 from require "utils"
+import error_404, error_500 from require "utils"
 
 class AdminApplication extends lapis.Application
 	path: "/admin"
 	name: "admin."
 
 	@before_filter =>
+		-- limit this entire application to certain users
 		unless @active_user and (@active_user.level >= Users.levels.QA)
 			@write error_404 @
 
 	[dashboard: ""]: =>
 		@title = "Admin"
+
+		-- generate statistics
 		@user_count = Users\count!
 		@resource_count = Resources\count!
 		@ban_count = Bans\count!
 		@banned_users_count = Bans\count "active = true"
 		@gallery_count = ResourceScreenshots\count!
 		@follows_count = UserFollowings\count!
+
 		render: "admin.layout"
 	
 	[users: "/users"]: =>
 		@title = "Users - Admin"
-		@page = math.max 1, tonumber(@params.page) or 1
+		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination
 		render: "admin.layout"
 
 	[bans: "/bans"]: =>
 		@title = "Bans - Admin"
-		@page = math.max 1, tonumber(@params.page) or 1
+		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination
 		render: "admin.layout"
 
 	[view_ban: "/bans/:ban_id"]: capture_errors {
-		on_error: => @html -> p to_json @errors
+		on_error: => error_500 @, @errors[1]
 		=> 
 			@title = "Bans - Admin"
 			assert_valid @params, {
@@ -78,4 +82,11 @@ class AdminApplication extends lapis.Application
 			redirect_to: @url_for "home"
 	}
 
-	[console: "/console"]: require("lapis.console").make!
+	-- This is a debugging feature that is not required.
+	[console: "/console"]: (->
+		exists, console = pcall(require, "lapis.console")
+		if exists
+			return console.make!
+		else
+			return -> "Feature not available."
+		)!
