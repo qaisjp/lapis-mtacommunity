@@ -13,6 +13,8 @@ import
 	error_405
 	error_500
 	assert_csrf_token
+	serve_file
+	denest_table
 from require "utils"
 import
 	capture_errors
@@ -26,39 +28,14 @@ import
 from require "lapis.util"
 import decode_base64 from require "lapis.util.encoding"
 import assert_valid from require "lapis.validate"
-import var_dump from require "utils2"
 
 lfs = require "lfs"
 
-denest_table = (nested) ->
-	tab = {}
-	for obj in *nested
-		table.insert tab, obj[1]
-	tab
-
-serve_file = (filepath, filename, mime, external) ->
-	ngx.header.content_type = mime
-	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
-
-	unless external
-		return ngx.exec "/"..filepath
-
-	file, err = io.open filepath, "r"
-	unless file
-		return false, err
-  
-	contents = file\read "*all"
-	file\close!
-
-	result = os.remove filepath
-	ngx.header.content_length = #contents
-	ngx.say contents
-
-	ngx.exit ngx.OK
-
+-- general function to build a path relative to the web root
 build_filepath_upload_package = (resource, pkg, file) ->
 	"uploads/#{resource}/#{pkg}.#{file}"
 
+-- generate statements for renaming in zipnote comments
 build_rename_comment = (oldname, newname) ->
 	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
 
@@ -67,6 +44,7 @@ class ResourceApplication extends lapis.Application
 	name: "resources."
 
 	@before_filter =>
+		-- are we on a route for specific resources?
 		if @params.resource_name
 			-- try to find the resource by slugname
 			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_name\lower!
@@ -76,6 +54,7 @@ class ResourceApplication extends lapis.Application
 
 	[overview: ""]: => render: true
 
+	-- TODO
 	[upload: "/upload"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1] or "We couldn't publish that resource for you."
 		GET: => "Upload form..."
@@ -113,10 +92,10 @@ class ResourceApplication extends lapis.Application
 			render: true
 	}
 
+	-- TODO
 	[edit: "/:resource_name/edit"]: capture_errors {
 		on_error: error_500
-		=>
-			@write "You are now editing it."
+		=> "You are now editing it."
 	}
 
 	[comment: "/:resource_name/comment"]: capture_errors respond_to {

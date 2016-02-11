@@ -35,4 +35,49 @@ get_gravatar_url = (email, size) ->
 	hash = ngx.md5 email\lower!
 	"https://www.gravatar.com/avatar/#{hash}?s=#{size}"
 
-{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :get_gravatar_url}
+
+-- serves a file on the filesystem or redirect to a
+-- path internally for serving files
+serve_file = (filepath, filename, mime_type, external) ->
+	-- set the correct mime type, so the browser doesn't display
+	-- knows how to deal with this type of file
+	ngx.header.content_type = mime_type
+
+	-- make the browser download the file instead of showing it inline
+	-- set the filename
+	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
+
+	-- if it's on an internal path
+	-- we'll let nginx deal with serving
+	-- that file.
+	unless external
+		return ngx.exec "/"..filepath
+
+	file, err = io.open filepath, "r"
+	unless file
+		return false, err
+  
+	contents = file\read "*all"
+	file\close!
+
+	-- remove the external file
+	-- this needs to be here because ngx.exit kills
+	-- the entire Lua VM
+	os.remove filepath
+
+	-- set the length of the file, so that the browser
+	-- can provide a "5/50MB downloaded" indicator
+	ngx.header.content_length = #contents
+
+	ngx.say contents
+	ngx.exit ngx.OK
+
+
+-- converts { {"hi"}, {"hello"} } to {"hi", "hello"}
+denest_table = (nested, index=1) ->
+	tab = {}
+	for obj in *nested
+		table.insert tab, obj[index]
+	tab
+
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :get_gravatar_url, :serve_file, :denest_table}
