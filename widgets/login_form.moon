@@ -10,9 +10,12 @@ class LoginForm extends Widget
 		form id: "mta-login-form", method: "POST", action: @url_for("auth.login"), ->
 			-- csrf token to prevent cross-side-request-forgery
 			@write_csrf_input!
-
-			if @params.return_to
-				input type: "hidden", name: "return_to", value: @params.return_to, ["aria-hidden"]: "true"
+			
+			with route = @params.return_to
+				route = @route_name unless route
+				route = "home" if route == "auth.login"	
+				route = (route == "home") and (@url_for route) or @req.parsed_url.path
+				input type: "hidden", name: "return_to", value: route, ["aria-hidden"]: "true"
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-user"
