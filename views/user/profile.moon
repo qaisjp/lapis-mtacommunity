@@ -85,7 +85,7 @@ class MTAUserLayout extends Widget
 							if (@active_user.id ~= @user.id)
 								-- We follow them
 								-- should use widget, cloned in follow.moon
-								widget require("widgets.user_follow_form") isFollowing: @isFollowing
+								widget require "widgets.user_follow_form"
 		
 		hr!
 

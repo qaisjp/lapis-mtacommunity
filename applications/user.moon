@@ -104,4 +104,4 @@ class UserApplication extends lapis.Application
 				uf = UserFollowings\find {follower: @active_user.id, following: @user.id}
 				uf\delete! if uf
 
-			redirect_to: @url_for "user.profile", username: @user.slug
+			redirect_to: @url_for "user.profile", (username: @user.slug), (tab: @params.tab)
