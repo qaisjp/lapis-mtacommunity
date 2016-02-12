@@ -22,8 +22,9 @@ class MTAResourcesGet extends Widget
 
 			p -> strong "Do not give administrator rights to any resource unless you trust it."
 
-			@content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
-			return
+			-- make the script automatically submit the download form
+			return @content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
+
 
 		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"#{@resource.name}\" will be included in your download."
 

@@ -22,7 +22,7 @@ class MTAAdminLayout extends Widget
 					for name in *{"Dashboard", "Users", "Bans", "Console"}
 						li role: "presentation", class: "nav-item", ->
 							a {
-								class: "nav-link" .. (if name == main.category then " active" else "")
+								class: {"nav-link", active: name == main.category}
 								href: @url_for("admin." .. name\lower!)
 							}, name
 

@@ -9,20 +9,25 @@ class SearchCard extends Widget
 		div class: "card", id: "mta-search-widget", ->
 			div class: "card-header", ->
 				text " Search"
+
+				-- We won't show the quick search fields if we're on the search page
 				unless @onSearchPage
 					text " "
 					form action: @url_for("search"), method: "POST", class: "mta-inline-form form-inline mta-search-form", ->
 						@form_group_name!
 						text " "
 						@form_group_type!
+
 						a {
 							class: "btn btn-secondary btn-sm pull-xs-right", role: "button",
 							["data-toggle"]: "collapse", href: "#advancedSearch",
 							["aria-expanded"]: "false", ["aria-controls"]: "advancedSearch"
 						}, -> i class: "fa fa-cogs"
+
 						@write_csrf_input!
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
 
+			-- "collapse": we want the full thing to show when we're on the search page
 			div class: {"card-block", ["collapse"]: not @onSearchPage}, id: "advancedSearch", ->
 				form action: @url_for("search"), method: "POST", class: "form-inline form-control-sm mta-search-form", ->
 					div class: "row", ->
@@ -38,18 +43,29 @@ class SearchCard extends Widget
 					div class: "row", ->
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchAuthor", "Author"
-							input type: "text", class: "form-control", name: "author", id: "searchAuthor", placeholder: "author", value: @params.author
+							input
+								type: "text", class: "form-control",
+								name: "author", id: "searchAuthor",
+								placeholder: "author", value: @params.author
+								
 						text " "
 						div class: "form-group", ->
 							label class: "sr-only", ["for"]: "searchShowAmount", "Show (1 - 100)"
-							input type: "number", class: "form-control", name: "showAmount", id: "searchShowAmount", min: "1", max: "100", placeholder: "show (1 - 100)", value: @params.showAmount
+							input
+								type: "number"
+								class: "form-control"
+								name: "showAmount"
+								id: "searchShowAmount"
+								min: "1", max: "100",
+								placeholder: "show (1 - 100)"
+								value: @params.showAmount
 
 						@write_csrf_input!
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
 							text " Search"
 
-	-- Snippet for creating the "name" form group
+	-- Creating the "name" form group
 	form_group_name: (advancedMode) =>
 		div class: "form-group", ->
 			label class: "sr-only", ["for"]: "searchGreedyName", "Name"
@@ -63,11 +79,13 @@ class SearchCard extends Widget
 				required: true
 				value: @params.name
 
-	-- Snippet for creating the "type" form group
+	-- Creating the "type" form group
 	form_group_type: (advancedMode) =>
 		div class: "form-group", ->
 			label class: "sr-only", ["for"]: "searchType", "Type"
 			element "select", name: "type", class: {"form-control", ["form-control-sm"]: not advancedMode, "c-select"}, ->
 				option value: "any", selected: not @params.type, "any type"
+
+				--  iterate through and create each option
 				for opt in *{"script", "map", "gamemode", "misc"}
 					option selected: @params.type == opt, opt

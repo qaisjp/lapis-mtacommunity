@@ -41,7 +41,6 @@ main = class MTAAdminBans extends Widget
 						td ban.expires_at
 						td -> span class: "label label-#{ban.active and 'warning' or 'default'}", ->
 							text "#{ban.active and '' or 'in'}active"
-					-- li to_json(ban)
 
 		@write_pagination_nav "admin.bans", pages, @page
 

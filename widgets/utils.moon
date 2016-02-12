@@ -6,6 +6,8 @@ class WidgetUtils
 		old_get = get.page
 		nav -> ul class: "pagination", ->
 			get.page = current_page - 1
+
+			-- This is the left arrow
 			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Previous", href: @url_for(url, post, get), ->
 				span ["aria-hidden"]: "true", -> raw "&laquo;"
 				span class: "sr-only", "Previous"
@@ -16,6 +18,8 @@ class WidgetUtils
 				li class: active_class, -> a class: "page-link", href: @url_for(url, post, get), page
 			
 			get.page = current_page + 1
+
+			-- This is the right arrow
 			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Next", href: @url_for(url, post, get), ->
 				span ["aria-hidden"]: "true", -> raw "&raquo;"
 				span class: "sr-only", "Next"

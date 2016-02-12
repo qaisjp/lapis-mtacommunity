@@ -12,18 +12,34 @@ class LoginForm extends Widget
 			@write_csrf_input!
 			
 			with route = @params.return_to
-				route = @route_name unless route
-				route = "home" if route == "auth.login"	
-				route = (route == "home") and (@url_for route) or @req.parsed_url.path
+				-- if we don't have to return anywhere...
+				unless route
+					-- if the route we're on is login, go home, or go to the current page
+					route = (@route_name == "auth.login") and (@url_for "home") or @req.parsed_url.path
+				
 				input type: "hidden", name: "return_to", value: route, ["aria-hidden"]: "true"
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-user"
-				input type: "text", id: "mta-widget-login-username", class: "form-control", placeholder: "username", autocomplete: "on", name: "username", value: @params.username, required: true
+				input
+					type: "text"
+					id: "mta-widget-login-username"
+					class: "form-control"
+					placeholder: "username"
+					autocomplete: "on"
+					name: "username"
+					value: @params.username
+					required: true
 
 			div class: "input-group", ->
 				span class: "input-group-addon", -> i class: "fa fa-fw fa-key"
-				input type: "password", class: "form-control", placeholder: "password", autocomplete: "on", name: "password", required: true
+				input
+					type: "password"
+					class: "form-control"
+					placeholder: "password"
+					autocomplete: "on"
+					name: "password"
+					required: true
 			
 			row class: "no-gutter", ->
 				div class: "col-md-4", ->
