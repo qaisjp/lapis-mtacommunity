@@ -30,17 +30,20 @@ class UserApplication extends lapis.Application
 	@before_filter =>
 		-- try to find the user by username
 		@user = Users\find [db.raw "lower(slug)"]: @params.username\lower!
+
+		-- throw a 404 if it doesn't exist
 		unless @user
 			return @write error_404 @
 
+		-- get (or create if it doesn't exist) userdata 
 		@data = @user\get_userdata!
-		unless @data
-			@data = @user\create_userdata!
+		@data = @user\create_userdata! unless @data
 
 	[profile: "/:username"]: capture_errors {
 		on_error: error_404
 		=>
 			if @active_user
+				-- get following state
 				@isFollowing = @active_user\is_following @user
 
 			tab = @params.tab
@@ -71,8 +74,7 @@ class UserApplication extends lapis.Application
 				@comments_count = Comments\count "author = ?", @user.id
 
 			if accessed
-				@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
-			
+				@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)			
 
 			render: true
 	}
@@ -83,16 +85,23 @@ class UserApplication extends lapis.Application
 			if @active_user.id == @user.id
 				@write status:400, "<h1>You cannot follow yourself</h1>"
 			@isFollowing = @active_user\is_following @user
+
 		GET: =>	render: true
+
 		POST: capture_errors =>
 			assert_csrf_token @
-			if (@params.intent == "follow") 
+
+			if @params.intent == "follow"
 				if @isFollowing
-					return @write status: 400, "<h1>You are already following this person</h1>"
+					return status: 400, "<h1>You are already following this person</h1>"
+
 				UserFollowings\create {follower: @active_user.id, following: @user.id}
-			elseif (@params.intent == "unfollow") 
+
+			elseif @params.intent == "unfollow"
 				unless @isFollowing
-					return @write status:400, "<h1>You are not following this person</h1>"
+					return status: 400, "<h1>You are not following this person</h1>"
+
 				uf = UserFollowings\find {follower: @active_user.id, following: @user.id}
 				uf\delete! if uf
+
 			redirect_to: @url_for "user.profile", username: @user.slug
