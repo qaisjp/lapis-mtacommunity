@@ -2,7 +2,6 @@ import Model, enum from require "lapis.db.model"
 import slugify from require "lapis.util"
 
 bcrypt = require "bcrypt"
-config = require("lapis.config").get!
 db     = require "lapis.db"
 
 import
@@ -51,7 +50,7 @@ class Users extends Model
 		if @check_unique_constraint "email", email
 			return nil, "Account already exists"
 
-		-- I'm not even sure if we even need this, but, why not?
+		-- I'm not even sure if we even need this...
 		if @check_unique_constraint "email", username
 			return nil, "Account already exists"
 
@@ -63,6 +62,9 @@ class Users extends Model
 		-- ^ no pun intended
 		if Users\find [db.raw "lower(email)"]: email\lower!
 			return nil, "Account already exists"
+
+		-- Get the config (we don't need to load it every request)
+		config = require("lapis.config").get!
 
 		-- Generate the password
 		password = bcrypt.digest password, config.bcrypt_log_rounds
