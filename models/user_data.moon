@@ -5,5 +5,3 @@ class UserData extends Model
     @relations: {
     	{"user_id", belongs_to: "Users"}
     }
-    
-    

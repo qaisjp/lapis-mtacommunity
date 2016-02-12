@@ -12,6 +12,7 @@ class Bans extends Model
 
     -- refresh all the bans ever (or just for the given user)
     @refresh_bans: (user) =>
+        -- todo: just use an update query rather than selecting and then updating. use db.query
     	bans = Bans\select "where active = true AND now() > expires_at" .. (if user then " AND banned_user = ?" else ""), user and user.id or nil
     	for ban in *bans
     		ban\update active: false

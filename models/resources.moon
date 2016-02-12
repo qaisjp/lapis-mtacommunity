@@ -31,7 +31,7 @@ class Resources extends Model
 	    			(resource_admins.user = users.id) -- Make sure they are an admin...
 	    			AND (resource_admins.resource = resources.id) -- ... of the correct resource...
 	    			AND (resource_admins.user_confirmed) -- but make sure they've confirmed the request!
-	    		)				
+	    		)
     		)
 
 			-- Make sure we're looking through the right resource
