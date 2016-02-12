@@ -22,4 +22,3 @@ class SettingsApplication extends lapis.Application
 		
 	[profile: "/profile"]: => render: "settings.layout"
 	[account: "/account"]: => render: "settings.layout"
-	

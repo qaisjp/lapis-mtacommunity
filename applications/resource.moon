@@ -14,7 +14,6 @@ import
 	error_500
 	assert_csrf_token
 	serve_file
-	denest_table
 from require "utils"
 import
 	capture_errors
@@ -220,15 +219,7 @@ class ResourceApplication extends lapis.Application
 			-- Okay, we already threw out the possibility of not having a package. Lets check for dependencies.
 			dependencies = (db.select "get_package_dependencies(?) as deps ", @package.id)[1].deps
 			unless #dependencies == 0
-				-- Workaround for efficiently getting all package data in one query
-				packagesNested = {}
-				for dep in *dependencies
-					table.insert packagesNested, {dep}
-				-- actually get the package data
-				ResourcePackages\include_in packagesNested, 1, as: 1
-
-				-- Now we're reversing the workaround
-				packages = denest_table packagesNested
+				packages = ResourcePackages\find_all dependencies
 
 				-- Get resource data
 				Resources\include_in packages, "resource", as: "resource"
