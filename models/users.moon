@@ -92,28 +92,37 @@ class Users extends Model
 
 		user
 
+	-- log the current user into the session
 	write_to_session: (session) =>
 		session.user_id = @id
 
 	is_banned: =>
 		Bans.refresh_bans @
 		#@get_active_bans! > 0
-		-- true
 
 	create_userdata: => UserData\create user_id: @id
 
 	is_following: (other_user) =>
-		(db.select "EXISTS(SELECT 1 FROM user_followings WHERE follower = ? AND following = ?)", @id, other_user.id)[1].exists
+		(db.select "EXISTS(SELECT 1 FROM user_followings WHERE follower = ? AND following = ?)",
+			@id,
+			other_user.id
+		)[1].exists
 
 
 	get_followers: (fields="users.*") =>
-		Users\select ", user_followings where (following = ?) and (users.id = follower)", @id, :fields
+		Users\select ", user_followings where (following = ?) and (users.id = follower)",
+			@id,
+			:fields
 
 	get_following: (fields="users.*") =>
-		Users\select ", user_followings where (follower = ?) and (users.id = following)", @id, :fields
+		Users\select ", user_followings where (follower = ?) and (users.id = following)",
+			@id,
+			:fields
 
-	is_guest: => @level <= 1
-	can_manage: (user) =>
+	is_guest: => @level <= 1 
+
+	can_manage: (user) => -- can this user manage a specific user?
 		(not @is_guest!) and (@level >= user.level)
-	can_open_admin_panel: =>
+
+	can_open_admin_panel: => -- can this user administrate the website?
 		@level >= Users.levels.QA
