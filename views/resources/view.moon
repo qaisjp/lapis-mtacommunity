@@ -21,7 +21,7 @@ class MTAResourcePage extends Widget
 							text "Authors: "
 							for i, author in ipairs @authors
 								text ", " unless i == 1
-								text author.username
+								a href: @url_for("user.profile", username: author.slug), author.username
 
 				div class: "card-block", ->
 					div class: "container", ->
@@ -56,7 +56,7 @@ class MTAResourcePage extends Widget
 			anchor = "comment-#{comment.id}"
 			div class: "card", id: anchor, ->
 				div class: "card-header", ->
-					a style: "color: inherit;", href: @url_for("user.profile", comment.author.username), -> strong comment.author.username
+					a style: "color: inherit;", href: @url_for("user.profile", username: comment.author.slug), -> strong comment.author.username
 					span class: "text-muted", " commented "
 					a class: "text-muted", href: "#"..anchor, ->
 						text time_ago_in_words comment.created_at
