@@ -30,6 +30,5 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE;
 
-SELECT get_package_dependencies(1),get_package_dependencies(2),get_package_dependencies(3),get_package_dependencies(4)  as result 
---SELECT get_package_dependencies(1)  as result 
--- 50 000
+-- SELECT get_package_dependencies(1),get_package_dependencies(2),get_package_dependencies(3),get_package_dependencies(4)  as result 
+-- SELECT get_package_dependencies(4) as result 
