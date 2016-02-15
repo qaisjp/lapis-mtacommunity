@@ -25,9 +25,13 @@ window.check_register_validity = (input) ->
 	)
 
 
-$(".table-href > tbody > tr").click ->
-	# todo: handle middle click & ctrl click
-	window.document.location = $(this).data "href"
+$(".table-href > tbody > tr").click (e) ->
+	# todo: handle middle click
+	href = $(this).data "href"
+	if e.ctrlKey
+		window.open href
+	else
+		window.document.location = href
 
 window.check_tablinks = ->
 	if window.location.hash
