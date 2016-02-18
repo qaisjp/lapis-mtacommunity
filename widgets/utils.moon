@@ -12,10 +12,16 @@ class WidgetUtils
 				span ["aria-hidden"]: "true", -> raw "&laquo;"
 				span class: "sr-only", "Previous"
 
-			for page = 1, pages
+			for page = math.max(1, current_page-5), math.min(pages-1, current_page+4)
 				active_class = "page-item " .. (if current_page == page then "active" else "")
 				get.page = page
 				li class: active_class, -> a class: "page-link", href: @url_for(url, post, get), page
+
+			li class: "page-item", -> a class: "page-link", "..."
+
+			get.page = pages
+			active_class = "page-item " .. (if current_page == pages then "active" else "")
+			li class: active_class, -> a class: "page-link", href: @url_for(url, post, get), pages
 			
 			get.page = current_page + 1
 
