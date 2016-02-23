@@ -46,11 +46,14 @@ class MTAResourcePage extends Widget
 		ul ->
 			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
-		form action: @url_for("resources.comment", resource_name: @resource.name), method: "POST", ->
-			label class: "sr-only", ["for"]: "commentText", "Comment message:"
-			textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
+		if @active_user
+			form action: @url_for("resources.comment", resource_name: @resource.name), method: "POST", ->
+				label class: "sr-only", ["for"]: "commentText", "Comment message:"
+				textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
 
-			button class: "btn btn-primary", type: "submit", " Comment"
+				button class: "btn btn-primary", type: "submit", " Comment"
+		else
+			p "Log in to leave a comment"
 
 		for comment in *comments
 			anchor = "comment-#{comment.id}"

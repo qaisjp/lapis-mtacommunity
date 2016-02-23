@@ -21,9 +21,9 @@ error_404 = (err) =>
 
 error_405 = (err) =>
 	@title = "Error 405"
-	status: 404, @html ->
-		h1 "Error 405: Method Not Allowed"
-		h3 err or "You shouldn't be here... maybe you followed a dodgy link or maybe you were playing around with inspect element!"
+	status: 405, @html ->
+		h1 "Error 405: Sorry, this page isn't available"
+		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
 
 error_500 = (err) =>
 	@title = "Oops"
