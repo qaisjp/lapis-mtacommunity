@@ -333,7 +333,7 @@ CREATE TABLE resource_packages (
     download_count integer DEFAULT 0 NOT NULL,
     version character varying(10) NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    uploader integer NOT NULL
+    uploader integer
 );
 
 
@@ -384,7 +384,7 @@ CREATE TABLE resource_screenshots (
     description text NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     file text NOT NULL,
-    uploader integer NOT NULL,
+    uploader integer,
     updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
@@ -761,6 +761,13 @@ CREATE INDEX fki_resource_admins_user_fkey ON resource_admins USING btree ("user
 
 
 --
+-- Name: fki_resource_dependencies_target_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fki_resource_dependencies_target_fkey ON package_dependencies USING btree (package);
+
+
+--
 -- Name: fki_resource_packages_resource_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -772,6 +779,13 @@ CREATE INDEX fki_resource_packages_resource_fkey ON resource_packages USING btre
 --
 
 CREATE INDEX fki_resource_packages_uploader_fkey ON resource_packages USING btree (uploader);
+
+
+--
+-- Name: fki_resource_ratings_resource_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fki_resource_ratings_resource_fkey ON resource_ratings USING btree (resource);
 
 
 --
@@ -839,7 +853,7 @@ ALTER TABLE ONLY comment_reports
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_author_fkey FOREIGN KEY (author) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT comments_author_fkey FOREIGN KEY (author) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -875,6 +889,22 @@ ALTER TABLE ONLY resource_admins
 
 
 --
+-- Name: resource_dependencies_source_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY package_dependencies
+    ADD CONSTRAINT resource_dependencies_source_fkey FOREIGN KEY (source_package) REFERENCES resource_packages(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: resource_dependencies_target_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY package_dependencies
+    ADD CONSTRAINT resource_dependencies_target_fkey FOREIGN KEY (package) REFERENCES resource_packages(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: resource_packages_resource_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -887,7 +917,23 @@ ALTER TABLE ONLY resource_packages
 --
 
 ALTER TABLE ONLY resource_packages
-    ADD CONSTRAINT resource_packages_uploader_fkey FOREIGN KEY (uploader) REFERENCES users(id);
+    ADD CONSTRAINT resource_packages_uploader_fkey FOREIGN KEY (uploader) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: resource_ratings_resource_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_ratings
+    ADD CONSTRAINT resource_ratings_resource_fkey FOREIGN KEY (resource) REFERENCES resources(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: resource_ratings_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_ratings
+    ADD CONSTRAINT resource_ratings_user_fkey FOREIGN KEY ("user") REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -903,7 +949,7 @@ ALTER TABLE ONLY resource_screenshots
 --
 
 ALTER TABLE ONLY resource_screenshots
-    ADD CONSTRAINT resource_screenshots_uploader_fkey FOREIGN KEY (uploader) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT resource_screenshots_uploader_fkey FOREIGN KEY (uploader) REFERENCES users(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -943,7 +989,7 @@ ALTER TABLE ONLY user_followings
 --
 
 ALTER TABLE ONLY user_tokens
-    ADD CONSTRAINT user_tokens_owner_fkey FOREIGN KEY (owner) REFERENCES users(id);
+    ADD CONSTRAINT user_tokens_owner_fkey FOREIGN KEY (owner) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
