@@ -90,7 +90,7 @@ class Users extends Model
 		if user\is_banned!
 			return nil, "You are banned."
 
-		user
+		user -- return user
 
 	-- log the current user into the session
 	write_to_session: (session) =>

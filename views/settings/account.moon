@@ -23,4 +23,7 @@ class MTASettingsAccount extends Widget
 			div class: "card-header bg-danger", "Delete account"
 			div class: "card-block", ->
 				p "Deleting your account removes all resources, names from your comments, and screenshots. The username also becomes available for other people to register."
+
+				form action: @url_for("settings.delete"), method: "POST", ->
+					button class: "btn btn-primary btn-danger", type: "submit", " Delete (this will actually delete your account)"
 				

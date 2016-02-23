@@ -59,7 +59,10 @@ class MTAResourcePage extends Widget
 			anchor = "comment-#{comment.id}"
 			div class: "card", id: anchor, ->
 				div class: "card-header", ->
-					a style: "color: inherit;", href: @url_for("user.profile", username: comment.author.slug), -> strong comment.author.username
+					if comment.author
+						a style: "color: inherit;", href: @url_for("user.profile", username: comment.author.slug), -> strong comment.author.username
+					else
+						span "[deleted]"
 					span class: "text-muted", " commented "
 					a class: "text-muted", href: "#"..anchor, ->
 						text time_ago_in_words comment.created_at
