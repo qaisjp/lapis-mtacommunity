@@ -5,25 +5,44 @@ class MTASettingsAccount extends Widget
 	content: =>
 		div class: "card", ->
 			div class: "card-header", "Change password"
-			div class: "card-block", ->
-				element "table", class: "table table-bordered mta-resources-table", ->
-					thead -> tr ->
-						th "Name"
-						th "Description"
-						th "Downloads"
-						th "T"
-					tbody ->
-						tr ->
-							td "longname (shortname)"
-							td "description"
-							td "downloads"
-							td "s"
+			div class: "card-block", -> form ->
+				div class: "form-group row", ->
+					label class: "col-sm-2", "Old password"
+					div class: "col-sm-10", ->
+						input type: "password", class: "form-control", id: "settingsOldPassword"
+
+				div class: "form-group row", ->
+					label class: "col-sm-2", "New password"
+					div class: "col-sm-10", ->
+						input type: "password", class: "form-control", id: "settingsNewPassword"
+
+				div class: "form-group row", ->
+					label class: "col-sm-2", "Confirm new password"
+					div class: "col-sm-10", ->
+						input type: "password", class: "form-control", id: "settingsConfirmNewPassword"
+
+				div class: "form-group row", ->
+						div class: "col-sm-offset-2 col-sm-10", ->
+							button type: "submit", class: "btn btn-secondary", "Change password"
+
+		div class: "card", ->
+			div class: "card-header", "Change username"
+			div class: "card-block", -> form action: @url_for("settings.rename_account"), method: "POST", ->
+				p "Your old username also becomes available for other people to register. No redirections will be set up."
+				div class: "form-group row", ->
+					label class: "col-sm-2", "Username"
+					div class: "col-sm-10", ->
+						input type: "text", class: "form-control", name: "settingsNewUsername", value: @active_user.username
+
+				div class: "form-group row", ->
+						div class: "col-sm-offset-2 col-sm-10", ->
+							button type: "submit", class: "btn btn-secondary", "Change username now"
 
 		div class: "card", ->
 			div class: "card-header bg-danger", "Delete account"
 			div class: "card-block", ->
 				p "Deleting your account removes all resources, names from your comments, and screenshots. The username also becomes available for other people to register."
 
-				form action: @url_for("settings.delete"), method: "POST", ->
+				form action: @url_for("settings.delete_account"), method: "POST", ->
 					button class: "btn btn-primary btn-danger", type: "submit", " Delete (this will actually delete your account)"
 				

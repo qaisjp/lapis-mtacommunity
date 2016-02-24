@@ -1,5 +1,8 @@
 import Model, enum from require "lapis.db.model"
-import slugify from require "lapis.util"
+
+slugify_username = (username) ->
+	import slugify from require "lapis.util"
+	slugify username
 
 bcrypt = require "bcrypt"
 db     = require "lapis.db"
@@ -42,7 +45,7 @@ class Users extends Model
 		if @check_unique_constraint "username", email
 			return nil, "Username already exists"
 
-		slug = slugify username
+		slug = slugify_username username
 		if @check_unique_constraint "slug", slug
 			return nil, "Username already exists"
 
@@ -91,6 +94,20 @@ class Users extends Model
 			return nil, "You are banned."
 
 		user -- return user
+
+	rename: (newName) =>
+		if Users\check_unique_constraint "username", newName	
+			return nil, "Username already exists"
+
+		slug = slugify_username newName	
+		if Users\check_unique_constraint "slug", slug
+			return nil, "Username already exists"
+
+		-- i think lapis sanitises this
+		@username = newName
+		@slug = slug
+		@update "username", "slug"
+		true
 
 	-- log the current user into the session
 	write_to_session: (session) =>

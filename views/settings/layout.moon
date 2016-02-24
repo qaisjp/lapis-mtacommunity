@@ -8,7 +8,7 @@ class MTASettingsLayout extends Widget
 				div class: "card-header", "Settings"
 				div class: "card-block", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						for name in *{"Account", "Profile"}
+						for name in *{"Profile", "Account"}
 							li role: "presentation", class: "nav-item", ->
 								a {
 									class: "nav-link" .. (if name == viewWidget.name then " active" else "")

@@ -7,7 +7,7 @@ import
 	assert_error
 	respond_to
 from require "lapis.application"
-
+import assert_valid from require "lapis.validate"
 import
 	check_logged_in
 	error_404
@@ -27,7 +27,7 @@ class SettingsApplication extends lapis.Application
 	[profile: "/profile"]: => render: "settings.layout"
 	[account: "/account"]: => render: "settings.layout"
 
-	[delete: "/delete"]: capture_errors respond_to
+	[delete_account: "/delete_account"]: capture_errors respond_to
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't delete your account."
 		GET: error_405
 		POST: =>
@@ -35,3 +35,13 @@ class SettingsApplication extends lapis.Application
 			@session.user_id = nil
 			@active_user\delete!
 			redirect_to: @url_for "home"
+
+	[rename_account: "/rename_account"]: capture_errors respond_to
+		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't rename your account."
+		GET: error_405
+		POST: => 
+			assert_valid @params, {
+				{ "settingsNewUsername", exists: true, min_length: 1, max_length: 255 }
+			}
+			assert_error @active_user\rename @params.settingsNewUsername
+			redirect_to: @url_for "settings.account"
