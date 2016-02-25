@@ -52,22 +52,17 @@ class MTAUserLayout extends Widget
 
 				div class: "media-right", ->
 					div class: "btn-group-vertical", role: "group", ["aria-label"]: "Profile Buttons", ->
-						if @active_user
-							admin_mode = @active_user\can_manage @user
-							self_mode  = @active_user.id == @user.id
+						if @active_user							
+							if @active_user\can_manage @user
+								a href: @url_for("admin.manage_user", user_id: @user.id), class: "btn btn-secondary", ->
+									i class: "fa fa-cogs"
+									text " Manage user"
 
-							if self_mode or admin_mode
-								url = if admin_mode and not self_mode
-										-- @url_for "admin.view_user", user: @user.id
-										"soon"
-									else
-										@url_for "settings.profile"
-
-								a href: url, class: "btn btn-secondary" , ->
+							if (@active_user.id == @user.id)
+								a href: @url_for("settings.profile"), class: "btn btn-secondary" , ->
 									i class: "fa fa-pencil"
 									text " Edit profile"
-
-							if (@active_user.id ~= @user.id)
+							else
 								-- We follow them
 								-- should use widget, cloned in follow.moon
 								widget require "widgets.user_follow_form"
