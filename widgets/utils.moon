@@ -20,7 +20,7 @@ class WidgetUtils
 				get.page = page
 				li class: active_class, -> a class: "page-link", href: @url_for(url, post, get), page
 
-			li class: "page-item", -> a class: "page-link", "..."
+			li class: "page-item disabled", -> span class: "page-link", "..."
 
 			get.page = pages
 			active_class = "page-item " .. (if current_page == pages then "active" else "")
@@ -32,4 +32,5 @@ class WidgetUtils
 			li class: "page-item", -> a class: "page-link", ["aria-label"]: "Next", href: @url_for(url, post, get), ->
 				span ["aria-hidden"]: "true", -> raw "&raquo;"
 				span class: "sr-only", "Next"
+
 		get.page = old_get
