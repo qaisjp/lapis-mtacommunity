@@ -40,3 +40,10 @@ class Resources extends Model
 			-- Prevent duplicates
 			GROUP BY users.id
     	]], @id, :fields
+
+    can_user: (user, perm) => false
+        -- perm = column name (check with validate for a selection of column names)
+        -- sql query should return 1 if:
+        -- > user is a creator of this resource
+        -- > or user has the perm for this resource
+

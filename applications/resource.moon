@@ -92,9 +92,11 @@ class ResourceApplication extends lapis.Application
 	}
 
 	-- TODO
-	[edit: "/:resource_name/edit"]: capture_errors {
+	[manage: "/:resource_name/manage"]: capture_errors {
 		on_error: error_500
-		=> "You are now editing it."
+		=>
+			"You are now editing " .. @resource.name
+			
 	}
 
 	[comment: "/:resource_name/comment"]: capture_errors respond_to {

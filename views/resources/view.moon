@@ -12,7 +12,7 @@ class MTAResourcePage extends Widget
 						text "#{@resource.longname} (#{@resource.name}) "
 						span class: "label label-primary", Resources.types[@resource.type]
 						if @active_user_is_author
-							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.edit", resource_name: @params.resource_name), ->
+							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.manage", resource_name: @params.resource_name), ->
 								i class: "fa fa-cogs"
 								text " Manage"
 				div class: "card-block", ->
