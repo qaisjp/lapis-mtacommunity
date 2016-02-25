@@ -44,9 +44,9 @@ class ResourceApplication extends lapis.Application
 
 	@before_filter =>
 		-- are we on a route for specific resources?
-		if @params.resource_name
+		if @params.resource_slug
 			-- try to find the resource by slugname
-			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_name\lower!
+			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_slug\lower!
 
 			-- no resource? 404 it.
 			return @write error_404 @ unless @resource
@@ -60,7 +60,7 @@ class ResourceApplication extends lapis.Application
 		POST: => "Uploading..."
 	}
 	
-	[view: "/:resource_name"]: capture_errors {
+	[view: "/:resource_slug"]: capture_errors {
 		on_error: error_500
 		=>
 			-- Get all the authors of the resource
@@ -92,14 +92,14 @@ class ResourceApplication extends lapis.Application
 	}
 
 	-- TODO
-	[manage: "/:resource_name/manage"]: capture_errors {
+	[manage: "/:resource_slug/manage"]: capture_errors {
 		on_error: error_500
 		=>
 			"You are now editing " .. @resource.name
 			
 	}
 
-	[comment: "/:resource_name/comment"]: capture_errors respond_to {
+	[comment: "/:resource_slug/comment"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make that comment for you."
 		GET: error_405
 		POST: =>
@@ -112,10 +112,10 @@ class ResourceApplication extends lapis.Application
 				author: @active_user.id
 				message: @params.message
 			}
-			redirect_to: @url_for "resources.view", resource_name: @resource.name
+			redirect_to: @url_for "resources.view", resource_slug: @resource.name
 	}
 
-	[get: "/:resource_name/get/:version"]: capture_errors {
+	[get: "/:resource_slug/get/:version"]: capture_errors {
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't serve you that file."
 		=>
 			-- We already know we're a resource, so first we need to

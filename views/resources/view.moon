@@ -12,7 +12,7 @@ class MTAResourcePage extends Widget
 						text "#{@resource.longname} (#{@resource.name}) "
 						span class: "label label-primary", Resources.types[@resource.type]
 						if @active_user_is_author
-							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.manage", resource_name: @params.resource_name), ->
+							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.manage", resource_slug: @params.resource_slug), ->
 								i class: "fa fa-cogs"
 								text " Manage"
 				div class: "card-block", ->
@@ -47,7 +47,7 @@ class MTAResourcePage extends Widget
 			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
 		if @active_user
-			form action: @url_for("resources.comment", resource_name: @resource.name), method: "POST", ->
+			form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
 				label class: "sr-only", ["for"]: "commentText", "Comment message:"
 				textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
 
@@ -86,7 +86,7 @@ class MTAResourcePage extends Widget
 				th "Changes"
 			tbody ->
 				for package in *packages
-					tr ["data-href"]: @url_for("resources.get", resource_name: @resource.slug, version: package.version), ->
+					tr ["data-href"]: @url_for("resources.get", resource_slug: @resource.slug, version: package.version), ->
 						td package.version
 						td time_ago_in_words package.created_at
 						td package.description
