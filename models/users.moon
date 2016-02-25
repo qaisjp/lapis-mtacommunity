@@ -66,11 +66,8 @@ class Users extends Model
 		if Users\find [db.raw "lower(email)"]: email\lower!
 			return nil, "Account already exists"
 
-		-- Get the config (we don't need to load it every request)
-		config = require("lapis.config").get!
-
 		-- Generate the password
-		password = bcrypt.digest password, config.bcrypt_log_rounds
+		password = Users\generate_password password
 
 		-- And create the database row!
 		user = @create { :username, :slug, :password, :email }
@@ -84,7 +81,7 @@ class Users extends Model
 			user = Users\find [db.raw "lower(username)"]: uname_l
 			user = Users\find [db.raw "lower(email)"]: uname_l unless user
 
-		unless user and bcrypt.verify password, user.password
+		unless user and user\check_password password
 			return nil, "Incorrect username or password."
 
 		unless user.activated
@@ -94,6 +91,10 @@ class Users extends Model
 			return nil, "You are banned."
 
 		user -- return user
+
+	@generate_password: (password) =>
+		config = require("lapis.config").get! -- Get the config (we don't need to load it every request)
+		bcrypt.digest password, config.bcrypt_log_rounds
 
 	rename: (newName) =>
 		if Users\check_unique_constraint "username", newName	
@@ -108,6 +109,11 @@ class Users extends Model
 		@slug = slug
 		@update "username", "slug"
 		true
+
+	check_password: (password) => bcrypt.verify password, @password
+	update_password: (password) =>
+		@password = Users\generate_password password -- update password
+		@update "password" -- commit to database
 
 	-- log the current user into the session
 	write_to_session: (session) =>

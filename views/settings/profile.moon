@@ -1,12 +1,16 @@
 import Widget from require "lapis.html"
 
 class MTASettingsProfile extends Widget
+	@include "widgets.utils"
+
 	name: "Profile"
 	content: =>
 		div class: "card", ->
 			div class: "card-header", "Account"
 			div class: "card-block", ->
 				form ->
+					@write_csrf_input!
+					
 					div class: "form-group row", ->
 						label class: "col-sm-2", -> abbr title: "This only affects your profile page. Everyone will be able to see your comments and see in others' list that they follow you.", "Privacy"
 						div class: "col-sm-10", ->

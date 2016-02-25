@@ -1,9 +1,10 @@
 lapis = require "lapis"
 Users = require "models.users"
 db    = require "lapis.db"
-
+import assert_csrf_token from require "utils"
 import
 	capture_errors
+	yield_error
 	assert_error
 	respond_to
 from require "lapis.application"
@@ -21,7 +22,6 @@ class SettingsApplication extends lapis.Application
 
 	@before_filter => check_logged_in @
 
-
 	[main: ""]: => redirect_to: @url_for "settings.profile"
 		
 	[profile: "/profile"]: => render: "settings.layout"
@@ -31,6 +31,7 @@ class SettingsApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't delete your account."
 		GET: error_405
 		POST: =>
+			assert_csrf_token @
 			-- clear session user id
 			@session.user_id = nil
 			@active_user\delete!
@@ -40,8 +41,27 @@ class SettingsApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't rename your account."
 		GET: error_405
 		POST: => 
+			assert_csrf_token @
 			assert_valid @params, {
 				{ "settingsNewUsername", exists: true, min_length: 1, max_length: 255 }
 			}
 			assert_error @active_user\rename @params.settingsNewUsername
 			redirect_to: @url_for "settings.account"
+
+	[change_password: "/change_password"]: capture_errors respond_to
+		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't change your password."
+		GET: error_405
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {
+				{ "settingsOldPassword", exists: true }
+				{ "settingsNewPassword", exists: true }
+				{ "settingsNewPasswordConfirm", exists: true, equals: @params.settingsNewPassword }
+			}
+
+			unless @active_user\check_password @params.settingsOldPassword
+				return yield_error "Your old password is incorrect."
+				-- note: yield_error kills the function i think but put "return" to make it obvious
+
+			@active_user\update_password @params.settingsNewPassword
+			redirect_to: @url_for "settings.account" -- send them back to the account page
