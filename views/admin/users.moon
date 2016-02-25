@@ -34,11 +34,13 @@ main = class MTAAdminUsers extends Widget
 								i class: "fa fa-user"
 								text " profile"
 
-							text " "
+							raw " " -- spacing..
 
 							a href: @url_for("admin.manage_user", user_id: user.id), class: "btn btn-sm btn-secondary", ->
 								i class: "fa fa-cogs"
 								text " manage"
+
+							raw " " -- spacing..
 
 							form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
 								@write_csrf_input!

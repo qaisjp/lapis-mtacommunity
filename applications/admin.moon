@@ -1,6 +1,6 @@
 lapis = require "lapis"
 db    = require "lapis.db"
-
+import assert_csrf_token from require "utils"
 import assert_valid from require "lapis.validate"
 import
 	capture_errors
@@ -59,7 +59,6 @@ class AdminApplication extends lapis.Application
 			render: "admin.layout"
 	}
 
-
 	[bans: "/bans"]: =>
 		@title = "Bans - Admin"
 		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination
@@ -88,6 +87,8 @@ class AdminApplication extends lapis.Application
 		on_error: => @html -> p @errors[1]
 		GET: => status: 404
 		POST: =>
+			assert_csrf_token @
+			
 			assert_valid @params, {
 				{"user_id", exists: true, is_integer: true}
 			}
