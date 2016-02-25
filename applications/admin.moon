@@ -46,6 +46,20 @@ class AdminApplication extends lapis.Application
 		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination
 		render: "admin.layout"
 
+	[manage_user: "/users/:user_id"]: capture_errors {
+		on_error: => error_500 @, @errors[1]
+		=> 
+			@title = "Users - Admin"
+			assert_valid @params, {
+				-- exists is probably redundant here
+				{"user_id", exists: true, is_integer: true}
+			}
+
+			@user = assert_error (Users\find @params.user_id), "user does not exist"
+			render: "admin.layout"
+	}
+
+
 	[bans: "/bans"]: =>
 		@title = "Bans - Admin"
 		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination

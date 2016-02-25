@@ -30,14 +30,20 @@ main = class MTAAdminUsers extends Widget
 						td user.username
 						td user.created_at
 						td ->
-							a href: @url_for("user.profile", username: user.slug), class: "btn btn-secondary btn-sm", ->
+							a href: @url_for("user.profile", username: user.slug), class: "btn btn-sm btn-secondary", ->
 								i class: "fa fa-user"
 								text " profile"
-							text" "
+
+							text " "
+
+							a href: @url_for("admin.manage_user", user_id: user.id), class: "btn btn-sm btn-secondary", ->
+								i class: "fa fa-cogs"
+								text " manage"
+
 							form class: "mta-inline-form", method: "POST", action: @url_for("admin.become"), ->
 								@write_csrf_input!
 								input type: "hidden", name: "user_id", value: user.id, ["aria-hidden"]: "true"
-								button type: "submit", class: "btn btn-secondary btn-sm", ->
+								button type: "submit", class: "btn btn-sm btn-secondary", ->
 									i class: "fa fa-eye"
 									text " become"
 
