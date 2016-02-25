@@ -5,27 +5,12 @@ import time_ago_in_words from require "lapis.util"
 db = require "lapis.db"	
 
 build_cards = {
-	following: true
-	followers: true
-	follow: (users) => ->
-		local closedColumn
-		for i, user in ipairs users
-			if (i-1)%2 == 0
-				raw '<div class="col-md-4">'
-				closedColumn = false
-
-			div class: "card", ->
-				div class: "card-header", ->
-					a href: @url_for("user.profile", username: user.username), user.username
-				img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
-				text "Following for #{time_ago_in_words user.followed_at, nil, ''}"
-
-			if (i-1)%2 == 1
-				raw '</div>'
-				closedColumn = true
-
-		unless closedColumn
-			raw "</div>"
+	following: true, followers: true
+	follow: (user) => ->
+		div class: "card-header", ->
+			a href: @url_for("user.profile", username: user.username), user.username
+		img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
+		text " Following for #{time_ago_in_words user.followed_at, nil, ''}"
 
 	resources: => "resource"
 	comments: => "comment"
@@ -105,11 +90,25 @@ class MTAUserLayout extends Widget
 								text name .. " "
 								span class: "label label-pill label-default", @[lowerName .. "_count"]
 						
-				div class: "col-md-10",
-					if (tab == "followers") or (tab == "following")
-						raw build_cards.follow @, @[tab]
-					else
-						raw build_cards[tab] @, @[tab]
+				div class: "col-md-10", ->
+					local closedColumn
+					for i, cardItem in ipairs @[tab] or {}
+						if (i-1)%2 == 0
+							raw '<div class="col-md-4">'
+							closedColumn = false
+						
+						div class: "card", ->
+							if (tab == "followers") or (tab == "following")
+								raw build_cards.follow @, cardItem
+							else
+								raw build_cards[tab] @, cardItem
+
+						if (i-1)%2 == 1
+							raw '</div>'
+							closedColumn = true
+
+					unless closedColumn
+						raw "</div>"
 						
 
 		@content_for "post_body_script", ->
