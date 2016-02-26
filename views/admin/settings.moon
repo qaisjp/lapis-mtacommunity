@@ -13,12 +13,25 @@ main = class MTAAdminSettings extends Widget
 		
 		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->
+				label class: "pull-xs-right", ->
+					input type: "checkbox", disabled: true
+					text " check the box to update values"
 				tr ->
 					th "setting_id"
 					th "setting_name"
 					th "setting_value"
-					th "update"
+					th ""
 			tbody ->
+
+				-- example
+				tr ->
+					td ""
+					td ""
+					td ""
+					td ->
+						input type: "checkbox"
+
+				
 				-- for user in *paginated\get_page @page
 				-- 	tr ["data-href"]: (@url_for "admin.manage_user", user_id: user.id), ->
 				-- 		td scope: "row", user.id
