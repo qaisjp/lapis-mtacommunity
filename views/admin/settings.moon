@@ -15,7 +15,7 @@ main = class MTAAdminSettings extends Widget
 			thead ->
 				label class: "pull-xs-right", ->
 					input type: "checkbox", disabled: true
-					text " check the box to update values"
+					text " check the boxes below to update their values"
 				tr ->
 					th "setting_id"
 					th "setting_name"
