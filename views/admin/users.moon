@@ -25,7 +25,7 @@ main = class MTAAdminUsers extends Widget
 					th "Tools"
 			tbody ->
 				for user in *paginated\get_page @page
-					tr ["data-href"]: (@url_for "user.profile", username: user.slug), ->
+					tr ["data-href"]: (@url_for "admin.manage_user", user_id: user.id), ->
 						td scope: "row", user.id
 						td user.username
 						td user.created_at
