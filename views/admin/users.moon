@@ -11,10 +11,7 @@ main = class MTAAdminUsers extends Widget
 	category: "Users"
 	content: =>
 		paginated = Users\paginated "order by created_at desc",
-			per_page: 2
-		
-		pages = paginated\num_pages!
-		p "page #{@page} of #{pages}"
+			per_page: 3
 
 		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->
@@ -49,6 +46,6 @@ main = class MTAAdminUsers extends Widget
 									i class: "fa fa-eye"
 									text " become"
 
-		@write_pagination_nav "admin.users", pages, @page
+		@write_pagination_nav "admin.users", paginated\num_pages!, @page
 
 {:main, :breadcrumb}
