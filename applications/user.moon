@@ -1,5 +1,4 @@
 lapis = require "lapis"
-Users = require "models.users"
 db    = require "lapis.db"
 date  = require "date"
 import to_json from require "lapis.util"
@@ -21,6 +20,7 @@ import
 	ResourceAdmins
 	ResourceScreenshots
 	Comments
+	Users
 from require "models"
 
 class UserApplication extends lapis.Application
@@ -70,6 +70,8 @@ class UserApplication extends lapis.Application
 			
 			if tab == "comments"
 				@comments = @user\get_comments!
+				Users\include_in @comments, "author", as: "author"
+
 				@comments_count = #@comments
 				accessed = true
 			else

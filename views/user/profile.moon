@@ -5,7 +5,7 @@ import time_ago_in_words from require "lapis.util"
 db = require "lapis.db"	
 
 build_cards = {
-	following: true, followers: true
+	following: true, followers: true, comments: true
 	follow: (user) => ->
 		div class: "card-header", ->
 			img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
@@ -21,8 +21,6 @@ build_cards = {
 			text " Downloads: #{resource.downloads}"
 			br!
 			text " Rating: #{resource.rating}"
-		
-	comments: => "comment"
 	screenshots: => "screen"
 }
 
@@ -95,24 +93,30 @@ class MTAUserLayout extends Widget
 								span class: "label label-pill label-default", @[lowerName .. "_count"]
 						
 				div class: "col-md-10", ->
-					local closedColumn
-					for i, cardItem in ipairs @[tab] or {}
-						if (i-1)%2 == 0
-							raw '<div class="col-md-4">'
-							closedColumn = false
-						
-						div class: "card", ->
-							if (tab == "followers") or (tab == "following")
-								raw build_cards.follow @, cardItem
-							else
-								raw build_cards[tab] @, cardItem
+					if build_cards[tab] and (build_cards[tab] != true)
+						local closedColumn
+						for i, cardItem in ipairs @[tab] or {}
+							if (i-1)%2 == 0
+								raw '<div class="col-md-4">'
+								closedColumn = false
+							
+							div class: "card", ->
+								if (tab == "followers") or (tab == "following")
+									raw build_cards.follow @, cardItem
+								else
+									raw build_cards[tab] @, cardItem
 
-						if (i-1)%2 == 1
-							raw '</div>'
-							closedColumn = true
+							if (i-1)%2 == 1
+								raw '</div>'
+								closedColumn = true
 
-					unless closedColumn
-						raw "</div>"
+						unless closedColumn
+							raw "</div>"
+					elseif tab == "comments"
+						CommentWidget = require "widgets.comment"
+						for _, comment in ipairs @comments
+							div class: "row", ->
+								widget CommentWidget :comment
 						
 
 		@content_for "post_body_script", ->

@@ -55,24 +55,9 @@ class MTAResourcePage extends Widget
 		else
 			p "Log in to leave a comment"
 
+		CommentWidget = require "widgets.comment"
 		for comment in *comments
-			anchor = "comment-#{comment.id}"
-			div class: "card", id: anchor, ->
-				div class: "card-header", ->
-					if comment.author
-						a style: "color: inherit;", href: @url_for("user.profile", username: comment.author.slug), -> strong comment.author.username
-					else
-						span "[deleted]"
-					span class: "text-muted", " commented "
-					a class: "text-muted", href: "#"..anchor, ->
-						text time_ago_in_words comment.created_at
-
-						if comment.edited_at
-							text " (modified "
-							text time_ago_in_words comment.edited_at
-							text ")"
-				div class: "card-block", ->
-					text comment.message
+			widget CommentWidget :comment
 
 	write_changelog: (paginated) =>
 		packages = paginated\get_page 1
