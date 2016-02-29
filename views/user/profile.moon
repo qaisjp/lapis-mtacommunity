@@ -8,11 +8,20 @@ build_cards = {
 	following: true, followers: true
 	follow: (user) => ->
 		div class: "card-header", ->
+			img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
+			raw " "
 			a href: @url_for("user.profile", username: user.username), user.username
-		img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
-		text " Following for #{time_ago_in_words user.followed_at, nil, ''}"
+		div class: "card-block", ->
+			text " Following for #{time_ago_in_words user.followed_at, nil, ''}"
 
-	resources: => "resource"
+	resources: (resource) => ->
+		div class: "card-header", ->
+			a href: @url_for("resources.view", resource_slug: resource.slug), resource.name
+		div class: "card-block", ->
+			text " Downloads: #{resource.downloads}"
+			br!
+			text " Rating: #{resource.rating}"
+		
 	comments: => "comment"
 	screenshots: => "screen"
 }
@@ -79,7 +88,7 @@ class MTAUserLayout extends Widget
 							lowerName = string.lower name
 
 							-- make the "resources" page not really need ?tab=resources
-							href = (name == "Resources") and "?" or "?tab=#{lowerName}"
+							href = (name == "Resources") and @user.slug or "?tab=#{lowerName}"
 
 							li role: "presentation", class: "nav-item", -> a class: {"nav-link", active: tab == lowerName}, :href, ->
 								text name .. " "

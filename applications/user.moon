@@ -69,12 +69,17 @@ class UserApplication extends lapis.Application
 				@screenshots_count = ResourceScreenshots\count "uploader = ?", @user.id
 			
 			if tab == "comments"
+				@comments = @user\get_comments!
+				@comments_count = #@comments
 				accessed = true
 			else
 				@comments_count = Comments\count "author = ?", @user.id
 
 			if accessed
-				@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)			
+				@resources_count = (Resources\count "creator = ?", @user.id) + (ResourceAdmins\count "\"user\" = ?", @user.id)
+			else
+				@resources = @user\get_resources!
+				@resources_count = #@resources
 
 			render: true
 	}

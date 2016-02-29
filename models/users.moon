@@ -19,6 +19,7 @@ class Users extends Model
 	@relations: {
 		{"bans", has_many: "Bans", key: "banned_user"}
 		{"active_bans", has_many: "Bans", key: "banned_user", where: active: true}
+		{"comments", has_many: "Comments", key: "author"}
 		{"userdata", has_one: "UserData"}
 		{"follows", has_many: "UserFollowings", key: "follower", order: "created_at desc"}
 		{"followed_by", has_many: "UserFollowings", key: "following", order: "created_at desc"}
@@ -149,3 +150,26 @@ class Users extends Model
 
 	can_open_admin_panel: => -- can this user administrate the website?
 		@level >= Users.levels.QA
+
+	get_resources: (fields="resources.*") =>
+		import Resources from require "models" -- req it here because you don't want an infinite loop
+		Resources\select [[
+    		-- The columns we're looking through...
+    		, users, resource_admins
+
+    		WHERE
+    		(
+    			-- Is the user the creator
+	    		(resources.creator = users.id)
+
+	    		OR
+	    		(
+	    			(resource_admins.user = users.id) -- Make sure they are an admin...
+	    			AND (resource_admins.resource = resources.id) -- ... of the correct resource...
+	    			AND (resource_admins.user_confirmed) -- but make sure they've confirmed the request!
+	    		)
+    		)
+
+			-- Make sure we're looking for the ones from the right users
+			AND (users.id = ?)			
+    	]], @id, fields: "DISTINCT ON (resources.id) #{fields}"
