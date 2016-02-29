@@ -23,8 +23,6 @@ class AdminApplication extends lapis.Application
 	path: "/admin"
 	name: "admin."
 
-	@can_modify_settings: (user) -> user.level >= Users.levels.admin
-
 	@before_filter =>
 		-- limit this entire application to certain users
 		unless @active_user and (@active_user.level >= Users.levels.QA)
@@ -41,13 +39,6 @@ class AdminApplication extends lapis.Application
 		@gallery_count = ResourceScreenshots\count!
 		@follows_count = UserFollowings\count!
 
-		render: "admin.layout"
-
-	[settings: "/settings"]: =>
-		-- limit it only to whoever can modify settings
-		unless AdminApplication.can_modify_settings @active_user
-			return error_404 @
-			
 		render: "admin.layout"
 	
 	[users: "/users"]: =>

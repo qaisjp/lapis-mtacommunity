@@ -1,5 +1,4 @@
 import Widget from require "lapis.html"
-AdminApplication = require "applications.admin"
 
 class MTAAdminLayout extends Widget
 	content: =>
@@ -20,12 +19,8 @@ class MTAAdminLayout extends Widget
 		div class:"row", ->
 			div class: "col-md-2", ->
 				ul class: "nav nav-pills nav-stacked", ->
-					for name in *{"Dashboard", "Users", "Bans", "Console", {"Settings", AdminApplication.can_modify_settings}}
+					for name in *{"Dashboard", "Users", "Bans", "Console"}
 						li role: "presentation", class: "nav-item", ->
-							if type(name) == "table"
-								return unless name[2] @active_user
-								name = name[1]
-
 							a {
 								class: {"nav-link", active: name == main.category}
 								href: @url_for("admin." .. name\lower!)

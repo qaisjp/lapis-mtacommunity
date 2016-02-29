@@ -7,7 +7,7 @@ breadcrumb = class extends Widget
 		li -> a href: @url_for("admin.users"), "Users"
 		li class: "active", "Manage #" .. @user.id
 
-main = class MTAdminManageUser extends Widget
+main = class MTAAdminBan extends Widget
 	@include require "widgets.utils"
 
 	category: "Users"
