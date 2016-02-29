@@ -42,7 +42,7 @@ class MTASettingsAccount extends Widget
 
 				div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->
-							button type: "submit", class: "btn btn-secondary", "Change username now"
+							button type: "submit", class: "btn btn-secondary", onclick: "return confirm('Are you sure you want to change your username?')", "Change username..."
 
 		div class: "card", ->
 			div class: "card-header bg-danger", "Delete account"
@@ -52,5 +52,5 @@ class MTASettingsAccount extends Widget
 				form action: @url_for("settings.delete_account"), method: "POST", ->
 					@write_csrf_input!
 
-					button class: "btn btn-primary btn-danger", type: "submit", " Delete (this will actually delete your account)"
+					button class: "btn btn-primary btn-danger", type: "submit", onclick: "return confirm('Are you sure you want to delete your account? This is permanent.')", " Delete account..."
 				
