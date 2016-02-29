@@ -116,9 +116,6 @@ class SearchApplication extends lapis.Application
 
 			-- pull the list with our query and fields
 			@resourceList = Resources\select query, :fields
-			@resourceList = nil if #@resourceList == 0
-
-			@searched = true
 
 			-- let's get rendering!
 			render: true
