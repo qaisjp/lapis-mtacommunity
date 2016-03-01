@@ -28,4 +28,6 @@ The website frontend requires three libraries:
 * 
 To make things easier I use the `bower` package manager to handle the frontend libraries. After installing Bower, execute `bower install` and the package manager will download the other libraries.
 
+You also need to install Go. Run `go get -d` and then `go build` to build the zip file checker.
+
 The final dependency required is `postgres`, the database system being used. You will need to install that and change the username and password to whatever you chose inside the `config.moon` file of the main project. Make sure you also set the API tokens and secret tokens inside `secret.moon`. See `secret.example.moon` for an example of how to structure `secret.moon`.

@@ -1,0 +1,3 @@
+[submodule "mta-communitycli"]
+	path = mta-communitycli
+	url = git@github.com:qaisjp/mta-communitycli.git
