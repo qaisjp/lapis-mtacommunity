@@ -14,6 +14,7 @@ import
 	error_500
 	assert_csrf_token
 	serve_file
+	check_logged_in
 from require "utils"
 import
 	capture_errors
@@ -55,8 +56,9 @@ class ResourceApplication extends lapis.Application
 
 	-- TODO
 	[upload: "/upload"]: capture_errors respond_to {
+		before: => check_logged_in @
 		on_error: => error_500 @, @errors[1] or "We couldn't publish that resource for you."
-		GET: => "Upload form..."
+		GET: => render: true
 		POST: => "Uploading..."
 	}
 	
