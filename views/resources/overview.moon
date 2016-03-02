@@ -44,7 +44,7 @@ class MTAResourcesOverview extends Widget
 							thead -> tr ->
 								th "Name"
 								th "Description"
-								th "Downloads"
+								th "Rating"
 							tbody ->
 								-- Get the top 15 rated resource instances
 								resourceList = Resources\select "ORDER BY rating DESC LIMIT 15"
@@ -54,7 +54,7 @@ class MTAResourcesOverview extends Widget
 											text "#{resource.longname} (#{resource.name}) "
 											span class: "label label-info", Resources.types[resource.type]
 										td resource.description
-										td resource.downloads
+										td resource.rating
 
 			div class: "row", ->
 				div class: "card", ->
