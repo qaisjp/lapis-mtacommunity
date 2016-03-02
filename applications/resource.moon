@@ -40,19 +40,33 @@ build_rename_comment = (oldname, newname) ->
 	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
 
 check_file = (file) ->
-	f, err = io.popen "../mtacommunity-cli/mtacommunity-cli check --file=#{file}"
+	-- open up a feed
+	output, err = io.popen "../mtacommunity-cli/mtacommunity-cli check --file=#{file}"
 
-	return false, {"Internal failure..."} unless f
+	-- if it failed to open...
+	return false, {"Internal error..."} unless output
 
-	errors = {}				
-	for line in f\lines! do
+	-- read all the possible errors...
+	errors = {}
+	success = true	
+	for line in output\lines! do
+		-- did we have a reportable error?
 		if line\sub(1, 7) == "error: "
+			success = false
 			table.insert errors, line\sub 8
-	
-	f\close!
 
-	errors = nil if #errors == 0
-	return not errors, errors
+		-- are we done? is everything okay?
+		elseif line == "ok"
+			success = true
+			break
+
+		-- we got something else...
+		else
+			success = false
+			errors  = {"Internal error..."}
+	
+	output\close!
+	return success, errors
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -65,7 +79,7 @@ class ResourceApplication extends lapis.Application
 			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_slug\lower!
 
 			-- no resource? 404 it.
-			return @write error_404 @ unless @resource
+			return @write error_404 unless @resource
 
 	[overview: ""]: => render: true
 
@@ -79,13 +93,19 @@ class ResourceApplication extends lapis.Application
 				{"resName", exists: true }
 				{"resDescription", exists: true }
 			}
-			
-			-- file = "uploads/failpit.zip"
-			success, @errors = check_file file
-			
+
+			filename = os.tmpname!			
+			file = io.open(filename, "w")
+			file\write @params.resUpload.content
+			file\close!
+
+			success, @errors = check_file filename
+			os.remove filename
+
 			return render: true if not success
 
-			@write "ok"
+			@errors = {"success!!"}
+			render: true
 	}
 	
 	[view: "/:resource_slug"]: capture_errors {

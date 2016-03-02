@@ -12,7 +12,7 @@ class MTAResourcesUpload extends Widget
 		ul ->
 			li -> raw "version - in the format of <code>X</code>, <code>X.X</code>, or <code>X.X.X</code>"
 			li -> raw "name - for the 'descriptive name'" 
-			li -> raw "type (<code>gamemode</code>, <code>map</code>, or <code>misc</code>)"
+			li -> raw "type (<code>gamemode</code>, <code>script</code>, <code>map</code>, or <code>misc</code>)"
 
 		if @errors and #@errors > 0
 			div class: "alert alert-danger", role: "alert", -> ul ->
