@@ -39,6 +39,21 @@ build_filepath_upload_package = (resource, pkg, file) ->
 build_rename_comment = (oldname, newname) ->
 	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
 
+check_file = (file) ->
+	f, err = io.popen "../mtacommunity-cli/mtacommunity-cli check --file=#{file}"
+
+	return false, {"Internal failure..."} unless f
+
+	errors = {}				
+	for line in f\lines! do
+		if line\sub(1, 7) == "error: "
+			table.insert errors, line\sub 8
+	
+	f\close!
+
+	errors = nil if #errors == 0
+	return not errors, errors
+
 class ResourceApplication extends lapis.Application
 	path: "/resources"
 	name: "resources."
@@ -57,9 +72,20 @@ class ResourceApplication extends lapis.Application
 	-- TODO
 	[upload: "/upload"]: capture_errors respond_to {
 		before: => check_logged_in @
-		on_error: => error_500 @, @errors[1] or "We couldn't publish that resource for you."
 		GET: => render: true
-		POST: => "Uploading..."
+		POST: =>
+			assert_valid @params, {
+				{"resUpload", is_file: true, exists: true}
+				{"resName", exists: true }
+				{"resDescription", exists: true }
+			}
+			
+			-- file = "uploads/failpit.zip"
+			success, @errors = check_file file
+			
+			return render: true if not success
+
+			@write "ok"
 	}
 	
 	[view: "/:resource_slug"]: capture_errors {
