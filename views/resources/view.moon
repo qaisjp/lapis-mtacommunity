@@ -4,6 +4,7 @@ import time_ago_in_words from require "lapis.util"
 date = require "date"
 
 class MTAResourcePage extends Widget
+	@include "widgets.utils"
 	content: =>
 		div class: "row", ->
 			div class: "card", ->
@@ -48,6 +49,7 @@ class MTAResourcePage extends Widget
 
 		if @active_user
 			form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
+				@write_csrf_input @
 				label class: "sr-only", ["for"]: "commentText", "Comment message:"
 				textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
 

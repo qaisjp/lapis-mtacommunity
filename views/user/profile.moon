@@ -5,7 +5,7 @@ import time_ago_in_words from require "lapis.util"
 db = require "lapis.db"	
 
 build_cards = {
-	following: true, followers: true, comments: true
+	following: 1, followers: 1, comments: true
 	follow: (user) => ->
 		div class: "card-header", ->
 			img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"

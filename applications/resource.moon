@@ -151,6 +151,7 @@ class ResourceApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make that comment for you."
 		GET: error_405
 		POST: =>
+			assert_csrf_token @
 			assert_error @active_user, "You need to be logged in to do that."
 			assert_valid @params, {
 				{"message", exists: true}
