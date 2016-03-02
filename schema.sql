@@ -235,7 +235,7 @@ ALTER SEQUENCE comment_reports_reporter_seq OWNED BY comment_reports.reporter;
 CREATE TABLE comments (
     id integer NOT NULL,
     parent integer,
-    author integer NOT NULL,
+    author integer,
     message text NOT NULL,
     deleted boolean DEFAULT false NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
@@ -493,7 +493,7 @@ CREATE TABLE user_tokens (
     owner integer NOT NULL,
     type integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    expires_at timestamp without time zone NOT NULL
+    expires_at timestamp without time zone
 );
 
 
