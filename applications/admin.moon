@@ -73,7 +73,9 @@ class AdminApplication extends lapis.Application
 				{"ban_id", exists: true, is_integer: true}
 			}
 
-			@ban = assert_error (Bans\find @params.ban_id), "ban does not exist"
+			@ban = assert_error Bans\find(@params.ban_id), "ban does not exist"
+			@banned_user = @ban\get_receiver!
+			@banner = @ban\get_sender!
 
 			render: "admin.layout"
 	}

@@ -6,8 +6,8 @@ class Bans extends Model
 
     -- Relations
     @relations: {
-    	{"banned_user", belongs_to: "Users", key: "banned_user"}
-    	{"banner", belongs_to: "Users", key: "banner"}
+        {"receiver", belongs_to: "Users", key: "banned_user"}
+        {"sender", belongs_to: "Users", key: "banner"}
     }
 
     -- refresh all the bans ever (or just for the given user)
