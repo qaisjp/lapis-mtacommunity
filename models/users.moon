@@ -80,6 +80,7 @@ class Users extends Model
 		local user
 		with uname_l = username\lower!
 			user = Users\find [db.raw "lower(username)"]: uname_l
+			user = Users\find [db.raw "lower(slug)"]: uname_l unless user
 			user = Users\find [db.raw "lower(email)"]: uname_l unless user
 
 		unless user and user\check_password password
