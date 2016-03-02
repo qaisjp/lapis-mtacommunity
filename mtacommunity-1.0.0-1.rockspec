@@ -12,6 +12,7 @@ dependencies = {
 	"lua ~> 5.1",
 	"lapis",
 	"luafilesystem",
+	"date",
 	"mailgun",
 	"bcrypt"
 }
