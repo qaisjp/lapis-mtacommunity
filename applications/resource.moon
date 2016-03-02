@@ -169,7 +169,7 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file, resource")[1]
+			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file, resource, download_count")[1]
 
 			-- Are we asking ourselves for a download?
 			if @params.download
@@ -261,6 +261,11 @@ class ResourceApplication extends lapis.Application
 						os.remove filepath
 						yield_error!
 						return
+
+				@package.download_count += 1
+				@resource.downloads += 1
+				@package\update "download_count"
+				@resource\update "downloads"
 
 				-- throw it to the user!
 				success, err = serve_file filepath, filename, "application/zip", dependencies and true
