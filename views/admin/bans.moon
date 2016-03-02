@@ -18,8 +18,6 @@ main = class MTAAdminBans extends Widget
 				Users\include_in bans, "banner", as: "banner"--, fields: "username"
 				bans
 
-		pages = paginated\num_pages!
-		p "page #{@page} of #{pages}"
 		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->
 				tr ->
@@ -42,6 +40,6 @@ main = class MTAAdminBans extends Widget
 						td -> span class: "label label-#{ban.active and 'warning' or 'default'}", ->
 							text "#{ban.active and '' or 'in'}active"
 
-		@write_pagination_nav "admin.bans", pages, @page
+		@write_pagination_nav "admin.bans", paginated\num_pages!, @page
 
 {:breadcrumb, :main}
