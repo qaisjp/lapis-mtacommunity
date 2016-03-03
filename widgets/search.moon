@@ -23,7 +23,7 @@ class SearchCard extends Widget
 							["data-toggle"]: "collapse", href: "#advancedSearch",
 							["aria-expanded"]: "false", ["aria-controls"]: "advancedSearch"
 						}, -> i class: "fa fa-cogs"
-
+						raw " "
 						@write_csrf_input!
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", -> i class: "fa fa-search"
 
