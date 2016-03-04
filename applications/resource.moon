@@ -164,12 +164,16 @@ class ResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.view", resource_slug: @resource.name
 	}
 
-	[get: "/:resource_slug/get/:version"]: capture_errors {
+	[get: "/:resource_slug/get(/:version)"]: capture_errors {
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't serve you that file."
 		=>
 			-- We already know we're a resource, so first we need to
 			-- check if our version is correct and exists.
-			@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, fields: "id, file, resource, download_count")[1]
+			fields = "id, file, resource, download_count, version"
+			if @params.version
+				@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, :fields)[1]
+			else
+				@package = assert_error (ResourcePackages\select "where (resource = ?) order by created_at desc limit 1", @resource.id, :fields)[1]
 
 			-- Are we asking ourselves for a download?
 			if @params.download

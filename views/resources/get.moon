@@ -7,7 +7,7 @@ import encode_base64 from require "lapis.util.encoding"
 class MTAResourcesGet extends Widget
 	@include require "widgets.utils"
 	content: =>
-		h1 "Downloading #{@resource.name} v#{@params.version}"
+		h1 "Downloading #{@resource.name} v#{@package.version}"
 
 		unless @dependencies
 			text "Your download should start momentarily. "

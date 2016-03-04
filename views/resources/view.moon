@@ -12,10 +12,18 @@ class MTAResourcePage extends Widget
 					h2 ->
 						text "#{@resource.longname} (#{@resource.name}) "
 						span class: "label label-primary", Resources.types[@resource.type]
-						if @active_user_is_author
-							a class: "btn btn-secondary pull-xs-right", href: @url_for("resources.manage", resource_slug: @params.resource_slug), ->
-								i class: "fa fa-cogs"
-								text " Manage"
+
+						span class: "pull-xs-right", ->
+							if @active_user_is_author
+								a class: "btn btn-secondary", href: @url_for("resources.manage", resource_slug: @params.resource_slug), ->
+									i class: "fa fa-cogs"
+									text " Manage"
+								raw " "
+
+							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @params.resource_slug), ->
+								i class: "fa fa-download"
+								text " Download"
+
 				div class: "card-block", ->
 					ul ->
 						li ->
