@@ -1,6 +1,7 @@
 lapis = require "lapis"
 db    = require "lapis.db"
-
+date  = require "date"
+lfs   = require "lfs"
 import
 	Resources
 	ResourcePackages
@@ -103,24 +104,55 @@ class ResourceApplication extends lapis.Application
 
 			yield_error "Max filesize is 20mb" if #@params.resUpload.content > 20 * 1000 * 1000
 
+			resource = 
+				name: @params.resName
+				slug: slugify @params.resName
+				description: @params.resDescription
+				creator: @active_user.id
+
 			-- check if the resource already exists
-			assert_error not (db.select "EXISTS(SELECT 1 FROM resources WHERE name = ?)", @params.resName)[1].exists, "Resource already exists"
+			assert_error not (db.select "EXISTS(SELECT 1 FROM resources WHERE (name = ?) or (slug = ?))", @params.resName, slugify @params.resName)[1].exists, "Resource already exists"
 
 			filename = os.tmpname!			
-			file = io.open(filename, "w")
+			file = io.open filename, "w"
 			file\write @params.resUpload.content
 			file\close!
 
 			metaResults, @errors = check_file filename
-			os.remove filename
-
-			return render: true if not metaResults
-
-			@errors = {}
-			for k, v in pairs success
-				table.insert @errors, k ..  " " .. v
 			
-			render: true
+			if not metaResults
+				os.remove filename
+				return render: true
+			
+			resource.type = Resources.types\for_db metaResults.type
+			resource.longname = metaResults.name
+
+			resource = assert_error Resources\create resource
+			
+			package =
+				version: metaResults.version
+				description: "First release"
+				uploader: @active_user.id
+				resource: resource.id
+				file: date!\spanseconds!
+
+			clean_assert = (success, err, ...) ->
+				return success, err, ... if success
+				resource\delete!
+				yield_error err
+
+			package = clean_assert ResourcePackages\create(package), "Could not create package"
+				
+
+			success = clean_assert lfs.mkdir "uploads/#{resource.id}"
+
+			success, file = clean_assert pcall io.open, build_filepath_upload_package(resource.id, package.id, package.file), "w"
+			
+
+			file\write @params.resUpload.content
+			file\close!
+
+			redirect_to: @url_for "resources.view", resource_slug: resource.slug
 	}
 	
 	[view: "/:resource_slug"]: capture_errors {
@@ -176,7 +208,7 @@ class ResourceApplication extends lapis.Application
 				author: @active_user.id
 				message: @params.message
 			}
-			redirect_to: @url_for "resources.view", resource_slug: @resource.name
+			redirect_to: @url_for "resources.view", resource_slug: @resource.slug
 	}
 
 	[get: "/:resource_slug/get(/:version)"]: capture_errors {
