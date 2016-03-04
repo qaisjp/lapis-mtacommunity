@@ -7,7 +7,7 @@ import encode_base64 from require "lapis.util.encoding"
 class MTAResourcesGet extends Widget
 	@include require "widgets.utils"
 	content: =>
-		h1 "Downloading #{@resource.name} v#{@package.version}"
+		h1 "Downloading #{@resource.longname} v#{@package.version}"
 
 		unless @dependencies
 			text "Your download should start momentarily. "
@@ -23,7 +23,8 @@ class MTAResourcesGet extends Widget
 			p -> strong "Do not give administrator rights to any resource unless you trust it."
 
 			-- make the script automatically submit the download form
-			return @content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
+			@content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
+			return
 
 
 		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"#{@resource.name}\" will be included in your download."
