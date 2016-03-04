@@ -15,9 +15,8 @@ class MTAResourcesUpload extends Widget
 			li -> raw "type (<code>gamemode</code>, <code>script</code>, <code>map</code>, or <code>misc</code>)"
 
 		if @errors and #@errors > 0
-			div class: "alert alert-danger", role: "alert", -> ul ->
-				for err in *@errors
-					li err
+			div class: "alert alert-danger", role: "alert", ->
+				ul -> for err in *@errors do li err
 
 		form method: "POST", enctype: "multipart/form-data", ->
 			div class: "card", ->

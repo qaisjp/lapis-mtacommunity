@@ -56,14 +56,21 @@ check_file = (file) ->
 			table.insert errors, line\sub 8
 
 		-- are we done? is everything okay?
-		elseif line == "ok"
-			success = true
+		elseif line\sub(1, 2) == "ok"
+			success, decoded = pcall from_json, line\sub 3
+
+			if not success	
+				errors = {"Internal error. Give the following information to a codemonkey:", decoded, line\sub 3}
+			else
+				success = decoded
+
 			break
 
 		-- we got something else...
 		else
 			success = false
 			errors  = {"Internal error..."}
+			break
 	
 	output\close!
 	return success, errors
@@ -94,17 +101,25 @@ class ResourceApplication extends lapis.Application
 				{"resDescription", exists: true }
 			}
 
+			yield_error "Max filesize is 20mb" if #@params.resUpload.content > 20 * 1000 * 1000
+
+			-- check if the resource already exists
+			assert_error not (db.select "EXISTS(SELECT 1 FROM resources WHERE name = ?)", @params.resName)[1].exists, "Resource already exists"
+
 			filename = os.tmpname!			
 			file = io.open(filename, "w")
 			file\write @params.resUpload.content
 			file\close!
 
-			success, @errors = check_file filename
+			metaResults, @errors = check_file filename
 			os.remove filename
 
-			return render: true if not success
+			return render: true if not metaResults
 
-			@errors = {"success!!"}
+			@errors = {}
+			for k, v in pairs success
+				table.insert @errors, k ..  " " .. v
+			
 			render: true
 	}
 	
