@@ -167,12 +167,13 @@ class ResourceApplication extends lapis.Application
 	[get: "/:resource_slug/get(/:version)"]: capture_errors {
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't serve you that file."
 		=>
-			-- We already know we're a resource, so first we need to
-			-- check if our version is correct and exists.
+			-- We already know we're a resource
 			fields = "id, file, resource, download_count, version"
 			if @params.version
+				-- check if our version is correct and exists.
 				@package = assert_error (ResourcePackages\select "where (resource = ?) AND (version = ?) limit 1", @resource.id, @params.version, :fields)[1]
 			else
+				-- get the last created resource
 				@package = assert_error (ResourcePackages\select "where (resource = ?) order by created_at desc limit 1", @resource.id, :fields)[1]
 
 			-- Are we asking ourselves for a download?
