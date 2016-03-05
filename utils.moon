@@ -13,6 +13,12 @@ check_logged_in = =>
 	unless @active_user
 		@write redirect_to: @url_for "auth.login", nil, return_to: ngx.var.request_uri
 
+error_not_authorized = (err) =>
+	@title = "Not Authorized"
+	status: 403, @html ->
+		h1 "Sorry, you can't access this page."
+		h3 err if err
+
 error_404 = (err) =>
 	@title = "Page not found"
 	status: 404, @html ->
@@ -80,4 +86,4 @@ denest_table = (nested, index=1) ->
 		table.insert tab, obj[index]
 	tab
 
-{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :get_gravatar_url, :serve_file, :denest_table}
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :error_not_authorized, :get_gravatar_url, :serve_file, :denest_table}

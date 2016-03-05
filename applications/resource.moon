@@ -13,6 +13,7 @@ import
 	error_404
 	error_405
 	error_500
+	error_not_authorized
 	assert_csrf_token
 	serve_file
 	check_logged_in
@@ -187,10 +188,13 @@ class ResourceApplication extends lapis.Application
 	}
 
 	-- TODO
-	[manage: "/:resource_slug/manage"]: capture_errors {
+	[manage: "/:resource_slug/manage"]: capture_errors respond_to {
+		before: =>
+			check_logged_in @
+			if @active_user and (not @resource\is_user_admin @active_user)
+				@write error_not_authorized @
 		on_error: error_500
-		=>
-			"You are now editing " .. @resource.name
+		GET: => "You are now editing " .. @resource.name
 			
 	}
 

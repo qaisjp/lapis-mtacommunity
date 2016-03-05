@@ -8,7 +8,7 @@ config "development", ->
 	bcrypt_log_rounds 5
 	postgres secrets.postgres
 	logging ->
-		-- queries false
+		queries false
 		-- requests false
 
 
