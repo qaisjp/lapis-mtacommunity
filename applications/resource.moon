@@ -194,7 +194,7 @@ class ResourceApplication extends lapis.Application
 			if @active_user and (not @resource\is_user_admin @active_user)
 				@write error_not_authorized @
 		on_error: error_500
-		GET: => "You are now editing " .. @resource.name
+		GET: => render: true
 			
 	}
 
