@@ -83,7 +83,7 @@ class MTAResourcePage extends Widget
 	write_changelog: (paginated) =>
 		packages = paginated\get_page 1
 		ul ->
-			li "#{paginated\num_pages!} packages. #{#packages} packages showing."
+			li "#{paginated\num_pages!} pages. #{#packages} packages showing."
 
 		element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 			thead -> tr ->
