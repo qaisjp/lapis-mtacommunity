@@ -23,5 +23,18 @@ class CommentWidget extends Widget
 						text " (modified "
 						text time_ago_in_words @comment.edited_at
 						text ")"
+
+				if @resource
+					a class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
 			div class: "card-block", ->
 				text @comment.message
+
+			if @resource
+				div class: "card-footer", id: "commentreply-#{@comment.id}", style: "display:none;", ->
+					form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
+						@write_csrf_input @
+
+						input type: "hidden", name: "comment_parent", value: @comment.id, ["aria-hidden"]: "true"
+						label class: "sr-only", ["for"]: "comment_text", "Comment reply message:"
+						textarea class: "form-control", rows: 1, placeholder: "place your comment here", required: true, id: "comment_text", name: "comment_text"
+						button class: "btn btn-sm btn-secondary", type: "submit", " Comment"

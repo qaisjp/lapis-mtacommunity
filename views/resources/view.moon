@@ -58,8 +58,8 @@ class MTAResourcePage extends Widget
 		if @active_user
 			form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
 				@write_csrf_input @
-				label class: "sr-only", ["for"]: "commentText", "Comment message:"
-				textarea class: "form-control", name: "message", id: "commentText", required: true, placeholder: "markdown comment..."
+				label class: "sr-only", ["for"]: "comment_text", "Comment message:"
+				textarea class: "form-control", name: "comment_text", id: "comment_text", required: true, placeholder: "markdown comment..."
 
 				button class: "btn btn-primary", type: "submit", " Comment"
 		else

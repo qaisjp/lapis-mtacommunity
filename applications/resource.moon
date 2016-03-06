@@ -187,15 +187,13 @@ class ResourceApplication extends lapis.Application
 			render: true
 	}
 
-	-- TODO
 	[manage: "/:resource_slug/manage"]: capture_errors respond_to {
 		before: =>
 			check_logged_in @
 			if @active_user and (not @resource\is_user_admin @active_user)
 				@write error_not_authorized @
 		on_error: error_500
-		GET: => render: true
-			
+		GET: => render: true			
 	}
 
 	[comment: "/:resource_slug/comment"]: capture_errors respond_to {
@@ -205,12 +203,20 @@ class ResourceApplication extends lapis.Application
 			assert_csrf_token @
 			assert_error @active_user, "You need to be logged in to do that."
 			assert_valid @params, {
-				{"message", exists: true}
+				{"comment_text", exists: true}
 			}
+
+			parent = tonumber @params.comment_parent
+			if parent
+				if not Comments\find parent
+					yield_error "Parent comment not found"
+
+
 			Comments\create {
 				resource: @resource.id,
 				author: @active_user.id
-				message: @params.message
+				message: @params.comment_text
+				:parent
 			}
 			redirect_to: @url_for "resources.view", resource_slug: @resource.slug
 	}
