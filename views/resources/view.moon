@@ -66,8 +66,19 @@ class MTAResourcePage extends Widget
 			p "Log in to leave a comment"
 
 		CommentWidget = require "widgets.comment"
+		childComments = {}
+
+		-- add all children to parent pool
 		for comment in *comments
-			widget CommentWidget :comment
+			if comment.parent
+				childComments[comment.parent] = {} if not childComments[comment.parent]
+				table.insert childComments[comment.parent], comment
+
+		-- now try to render all parents
+		for comment in *comments
+			if not comment.parent
+				widget CommentWidget :comment, childComments: childComments[comment.id]
+
 
 	write_changelog: (paginated) =>
 		packages = paginated\get_page 1

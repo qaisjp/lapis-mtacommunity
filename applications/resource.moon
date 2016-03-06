@@ -208,8 +208,13 @@ class ResourceApplication extends lapis.Application
 
 			parent = tonumber @params.comment_parent
 			if parent
-				if not Comments\find parent
+				parentObj = Comments\find parent
+				if (not parentObj)
 					yield_error "Parent comment not found"
+				else if parentObj.parent
+					-- tell them we can't find a parent comment if the comment
+					-- they tried to reply to is a child comment
+					yield_error "Cannot reply to a replycomment"
 
 
 			Comments\create {

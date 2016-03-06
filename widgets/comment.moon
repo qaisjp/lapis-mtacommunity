@@ -15,7 +15,7 @@ class CommentWidget extends Widget
 					a style: "color: inherit;", href: @url_for("user.profile", username: @comment.author.slug), -> strong @comment.author.username
 				else
 					span "[deleted]"
-				span class: "text-muted", " commented "
+				span class: "text-muted", @comment.parent and " replied " or " commented "
 				a class: "text-muted", href: "#"..anchor, ->
 					text time_ago_in_words @comment.created_at
 
@@ -24,8 +24,8 @@ class CommentWidget extends Widget
 						text time_ago_in_words @comment.edited_at
 						text ")"
 
-				if @resource
-					a class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
+				if @resource and not @comment.parent
+					a style: "cursor:pointer;", class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
 			div class: "card-block", ->
 				text @comment.message
 
@@ -38,3 +38,7 @@ class CommentWidget extends Widget
 						label class: "sr-only", ["for"]: "comment_text", "Comment reply message:"
 						textarea class: "form-control", rows: 1, placeholder: "place your comment here", required: true, id: "comment_text", name: "comment_text"
 						button class: "btn btn-sm btn-secondary", type: "submit", " Comment"
+
+			if @childComments
+				for comment in *@childComments
+					widget CommentWidget :comment
