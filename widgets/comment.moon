@@ -24,7 +24,7 @@ class CommentWidget extends Widget
 						text time_ago_in_words @comment.edited_at
 						text ")"
 
-				if @resource and not @comment.parent
+				if @active_user and @resource and not @comment.parent
 					a style: "cursor:pointer;", class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
 			div class: "card-block", ->
 				text @comment.message
