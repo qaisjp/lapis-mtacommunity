@@ -5,6 +5,7 @@ import Users from require "models"
 trueTable = setmetatable {},
     __index: -> true
     __newindex: -> error("attempting to change readonly trueTable", 2)
+    
 class Resources extends Model
     -- Has created_at and updated_at
     @timestamp: true

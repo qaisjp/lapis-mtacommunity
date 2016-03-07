@@ -90,6 +90,8 @@ class ResourceApplication extends lapis.Application
 			-- no resource? 404 it.
 			return @write error_404 unless @resource
 
+	@include "applications.manage_resource"
+
 	[overview: ""]: => render: true
 
 	-- TODO
@@ -185,28 +187,6 @@ class ResourceApplication extends lapis.Application
 			}
 
 			render: true
-	}
-
-	[manage: "/:resource_slug/manage(/:tab)"]: capture_errors respond_to {
-		before: =>
-			check_logged_in @
-			if @active_user and (not @resource\is_user_admin @active_user)
-				@write error_not_authorized @
-
-			@rights = @resource\get_rights @active_user
-		on_error: error_500
-		GET: =>
-			@params.tab = @params.tab or "dashboard"
-
-			tabs = {
-				dashboard: true,
-				settings: true,
-				details: true
-			}
-			unless tabs[@params.tab]
-				return error_404 @
-
-			render: "resources.manage.layout"
 	}
 
 	[comment: "/:resource_slug/comment"]: capture_errors respond_to {

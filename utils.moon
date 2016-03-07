@@ -12,6 +12,8 @@ assert_csrf_token = =>
 check_logged_in = =>
 	unless @active_user
 		@write redirect_to: @url_for "auth.login", nil, return_to: ngx.var.request_uri
+		return false
+	true
 
 error_not_authorized = (err) =>
 	@title = "Not Authorized"
