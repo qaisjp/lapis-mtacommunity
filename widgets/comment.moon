@@ -9,6 +9,8 @@ class CommentWidget extends Widget
 			return p "Internal error: no comment passed to widget!"
 
 		anchor = "comment-#{@comment.id}"
+		can_show_reply = @active_user and @resource and not @comment.parent
+
 		div class: "card", id: anchor, ->
 			div class: "card-header", ->
 				if @comment.author
@@ -24,12 +26,12 @@ class CommentWidget extends Widget
 						text time_ago_in_words @comment.edited_at
 						text ")"
 
-				if @active_user and @resource and not @comment.parent
+				if can_show_reply
 					a style: "cursor:pointer;", class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
 			div class: "card-block", ->
 				text @comment.message
 
-			if @resource
+			if can_show_reply
 				div class: "card-footer", id: "commentreply-#{@comment.id}", style: "display:none;", ->
 					form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
 						@write_csrf_input @
