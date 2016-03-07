@@ -7,7 +7,7 @@ class MTAResourceManageDetails extends Widget
 	content: =>
 		div class: "card", ->
 			div class: "card-header", "Change description"
-			div class: "card-block", -> form method: "POST", ->
+			div class: "card-block", -> form action: @url_for("resource.update_description"), method: "POST", ->
 				fieldset class: "form-group", ->
 					label for: "resDescription", ->
 						text "Description "

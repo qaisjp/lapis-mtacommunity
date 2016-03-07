@@ -2,7 +2,9 @@ db = require "lapis.db"
 import Model, enum from require "lapis.db.model"
 import Users from require "models"
 
-trueTable = setmetatable {}, __index: -> true
+trueTable = setmetatable {},
+    __index: -> true
+    __newindex: -> error("attempting to change readonly trueTable", 2)
 class Resources extends Model
     -- Has created_at and updated_at
     @timestamp: true
@@ -71,4 +73,5 @@ class Resources extends Model
     get_rights: (user) =>
         return trueTable if @creator == user.id
         import ResourceAdmins from require "models"
-        ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true
+        rights = ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true
+        right or {}
