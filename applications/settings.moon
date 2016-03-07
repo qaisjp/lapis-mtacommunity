@@ -47,7 +47,7 @@ class SettingsApplication extends lapis.Application
 			@data.gang = @params.settingsGang
 			@data.location = @params.settingsLocation
 			@data.website = @params.settingsWebsite
-			assert_error @data\update "birthday", "privacy", "gang", "location", "website"
+			assert_error @data\update "birthday", "privacy_mode", "gang", "location", "website"
 			render: "settings.layout"
 
 	[account: "/account"]: => render: "settings.layout"
