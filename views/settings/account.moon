@@ -34,7 +34,7 @@ class MTASettingsAccount extends Widget
 			div class: "card-block", -> form action: @url_for("settings.rename_account"), method: "POST", ->
 				@write_csrf_input!
 
-				p "Your old username also becomes available for other people to register. No redirections will be set up."
+				p "Your old username becomes available for other people to register. No redirections will be set up."
 				div class: "form-group row", ->
 					label class: "col-sm-2", "Username"
 					div class: "col-sm-10", ->

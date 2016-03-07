@@ -187,7 +187,7 @@ class ResourceApplication extends lapis.Application
 			render: true
 	}
 
-	[manage: "/:resource_slug/manage"]: capture_errors respond_to {
+	[manage: "/:resource_slug/manage(/:tab)"]: capture_errors respond_to {
 		before: =>
 			check_logged_in @
 			if @active_user and (not @resource\is_user_admin @active_user)
@@ -195,7 +195,18 @@ class ResourceApplication extends lapis.Application
 
 			@rights = @resource\get_rights @active_user
 		on_error: error_500
-		GET: => render: true
+		GET: =>
+			@params.tab = @params.tab or "dashboard"
+
+			tabs = {
+				dashboard: true,
+				settings: true,
+				details: true
+			}
+			unless tabs[@params.tab]
+				return error_404 @
+
+			render: "resources.manage.layout"
 	}
 
 	[comment: "/:resource_slug/comment"]: capture_errors respond_to {
