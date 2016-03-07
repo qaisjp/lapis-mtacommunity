@@ -27,6 +27,11 @@ build_cards = {
 class MTAUserLayout extends Widget
 	@include require "widgets.utils"
 	content: =>
+		protectedMode = @data.privacy_mode != 1
+
+		if protectedMode and @active_user
+			protectedMode = not (  (@user\is_following @active_user) or (@active_user.id == @user.id)  )
+
 		div class: "page-header", ->
 			div class: "media", ->
 				div class: "media-left", -> img class: "media-object", src: get_gravatar_url @user.email, 150
@@ -36,6 +41,10 @@ class MTAUserLayout extends Widget
 					p ->
 						i class: "fa fa-fw fa-clock-o"
 						text "Member for #{time_ago_in_words @user.created_at, nil, ''}"
+
+					if protectedMode
+						p "This user's profile is private."
+						return 
 
 					if loc = @data.location
 						p ->
@@ -71,9 +80,9 @@ class MTAUserLayout extends Widget
 									text " Edit profile"
 							else
 								-- We follow them
-								-- should use widget, cloned in follow.moon
 								widget require "widgets.user_follow_form"
 		
+		return if protectedMode
 		hr!
 
 		div class: "container", ->
