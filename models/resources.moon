@@ -2,6 +2,7 @@ db = require "lapis.db"
 import Model, enum from require "lapis.db.model"
 import Users from require "models"
 
+trueTable = setmetatable {}, __index: -> true
 class Resources extends Model
     -- Has created_at and updated_at
     @timestamp: true
@@ -66,10 +67,8 @@ class Resources extends Model
                 AND (users.id = ?)
             )]],  @id, user.id
         )[1].exists
-    
-    can_user: (user, perm) => false
-        -- perm = column name (check with validate for a selection of column names)
-        -- sql query should return 1 if:
-        -- > user is a creator of this resource
-        -- > or user has the perm for this resource
 
+    get_rights: (user) =>
+        return trueTable if @creator == user.id
+        import ResourceAdmins from require "models"
+        ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true

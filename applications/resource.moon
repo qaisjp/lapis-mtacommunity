@@ -192,8 +192,10 @@ class ResourceApplication extends lapis.Application
 			check_logged_in @
 			if @active_user and (not @resource\is_user_admin @active_user)
 				@write error_not_authorized @
+
+			@rights = @resource\get_rights @active_user
 		on_error: error_500
-		GET: => render: true			
+		GET: => render: true
 	}
 
 	[comment: "/:resource_slug/comment"]: capture_errors respond_to {
