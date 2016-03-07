@@ -27,6 +27,10 @@ build_cards = {
 class MTAUserLayout extends Widget
 	@include require "widgets.utils"
 	content: =>
+		-- make it go into protected mode if
+		-- the setting is not explicitly public
+		-- this way if somehow something breaks,
+		-- it will default to protecting everyone
 		protectedMode = @data.privacy_mode != 1
 
 		if protectedMode and @active_user
