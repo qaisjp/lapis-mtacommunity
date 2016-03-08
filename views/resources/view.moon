@@ -15,12 +15,12 @@ class MTAResourcePage extends Widget
 
 						span class: "pull-xs-right", ->
 							if @active_user_is_author
-								a class: "btn btn-secondary", href: @url_for("resources.manage", resource_slug: @params.resource_slug), ->
+								a class: "btn btn-secondary", href: @url_for("resources.manage.dashboard", resource_slug: @resource), ->
 									i class: "fa fa-cogs"
 									text " Manage"
 								raw " "
 
-							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @params.resource_slug), ->
+							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
 								i class: "fa fa-download"
 								text " Download"
 
@@ -30,7 +30,7 @@ class MTAResourcePage extends Widget
 							text "Authors: "
 							for i, author in ipairs @authors
 								text ", " unless i == 1
-								a href: @url_for("user.profile", username: author.slug), author.username
+								a href: @url_for(author), author.username
 
 					text @resource.description
 
@@ -58,7 +58,7 @@ class MTAResourcePage extends Widget
 			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
 		if @active_user
-			form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
+			form action: @url_for("resources.comment", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input @
 				label class: "sr-only", ["for"]: "comment_text", "Comment message:"
 				textarea class: "form-control", name: "comment_text", id: "comment_text", required: true, placeholder: "markdown comment..."
@@ -94,7 +94,7 @@ class MTAResourcePage extends Widget
 				th "Changes"
 			tbody ->
 				for package in *packages
-					tr ["data-href"]: @url_for("resources.get", resource_slug: @resource.slug, version: package.version), ->
+					tr ["data-href"]: @url_for("resources.get", resource_slug: @resource, version: package.version), ->
 						td package.version
 						td time_ago_in_words package.created_at
 						td package.description

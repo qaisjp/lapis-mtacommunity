@@ -25,7 +25,7 @@ import assert_valid from require "lapis.validate"
 
 class ManageResourceApplication extends lapis.Application
 	path: "/:resource_slug/manage"
-	name: "manage"
+	name: "manage."
 
 	@before_filter =>
 		if not check_logged_in @
@@ -40,10 +40,40 @@ class ManageResourceApplication extends lapis.Application
 			dashboard: true,
 			details: @rights.can_configure
 			settings: @resource.creator == @active_user.id
-			managers: @rights.can_manage_managers
+			authors: @rights.can_manage_authors
 		}
 
-	[".update_description": "/update_description"]: capture_errors respond_to {
+	check_tab: =>
+		unless @tabs[@params.tab]
+			return error_404 @, "Nothing to manage here..."
+
+	[""]: => redirect_to: "resources.manage.dashboard", resource_slug: @resource
+	
+	[dashboard: "/dashboard"]: capture_errors {
+		before: => @check_tab @
+		on_error: error_500
+		=> render: "resources.manage.layout"
+	}
+
+	[details: "/details"]: capture_errors {
+		before: => @check_tab @
+		on_error: error_500
+		=> render: "resources.manage.layout"
+	}
+
+	[settings: "/settings"]: capture_errors {
+		before: => @check_tab @
+		on_error: error_500
+		=> render: "resources.manage.layout"
+	}
+
+	[authors: "/authors"]: capture_errors {
+		before: => @check_tab @
+		on_error: error_500
+		=> render: "resources.manage.layout"
+	}
+
+	["update_description": "/update_description"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -54,10 +84,10 @@ class ManageResourceApplication extends lapis.Application
 			@resource\update "description"
 
 			-- refresh
-			redirect_to: @url_for "resources.manage", resource_slug: @resource, tab: "details"
+			redirect_to: @url_for "resources.manage.details", resource_slug: @resource
 	}
 
-	[".transfer_ownership": "/transfer_ownership"]: capture_errors respond_to {
+	["transfer_ownership": "/transfer_ownership"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -77,7 +107,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for @resource
 	}
 
-	[".rename": "/rename"]: capture_errors respond_to {
+	["rename": "/rename"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -91,7 +121,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage", resource_slug: @resource, tab: "settings"
 	}
 
-	[".delete": "/delete"]: capture_errors respond_to {
+	["delete": "/delete"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -104,13 +134,16 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.overview"
 	}
 
-	["": "(/:tab)"]: capture_errors {
+	["delete_author": "/delete_author"]: capture_errors respond_to {
 		on_error: error_500
-		=>
-			@params.tab = @params.tab or "dashboard"
+		GET: error_405
+		POST: =>
+			unless @tabs.authors
+				return error_not_authorized @
 
-			unless @tabs[@params.tab]
-				return error_404 @, "Nothing to manage here..."
+			-- check if author exists
+			-- if so, remove them
 
-			render: "resources.manage.layout"
+			-- refresh
+			redirect_to: @url_for "resources.manage", resource_slug: @resource, tab: "authors"
 	}

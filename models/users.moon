@@ -35,6 +35,9 @@ class Users extends Model
 	-- excluded because ID is the default primary key
 	-- @primary_key: "id"
 
+	url_key: (route_name) => @slug
+	url_params: (reg, ...) => "user.profile", { username: @ }, ...
+
 	-- Create a new user, given the following:
 	@register: (username, password, email) =>
 		-- First check if the username is unique

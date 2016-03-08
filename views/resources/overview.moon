@@ -20,7 +20,7 @@ class MTAResourcesOverview extends Widget
 				div class: "card", ->
 					div class: "card-header", "Most Downloaded"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -40,7 +40,7 @@ class MTAResourcesOverview extends Widget
 				div class: "card", ->
 					div class: "card-header", "Best Resources"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Description"
@@ -60,7 +60,7 @@ class MTAResourcesOverview extends Widget
 				div class: "card", ->
 					div class: "card-header", "Recently Uploaded"
 					div class: "card-block", ->
-						element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
+						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
 								th "Name"
 								th "Version"

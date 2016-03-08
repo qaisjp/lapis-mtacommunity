@@ -15,7 +15,7 @@ class Search extends Widget
 				a href: @url_for("search", nil, @params), class: "btn btn-sm btn-primary pull-xs-right", -> i class: "fa fa-link"
 			div class: "card-block", ->
 				if #@resourceList > 0
-					element "table", class: "table table-hover table-bordered table-href mta-resources-table", ->
+					element "table", class: "table table-hover table-bordered table-href mta-card-table", ->
 						thead -> tr ->
 							th "Name"
 							th "Description"
