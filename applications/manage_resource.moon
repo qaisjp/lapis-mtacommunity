@@ -3,7 +3,7 @@ db    = require "lapis.db"
 import
 	Resources
 	ResourcePackages
-	PackageDependencies
+	ResourceAdmins
 	Users
 	Comments
 from require "models"
@@ -35,6 +35,8 @@ class ManageResourceApplication extends lapis.Application
 		unless @rights
 			return @write error_not_authorized @
 
+		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
+
 		-- see views.resources.manage.layout to add sections
 		@tabs = {
 			dashboard: true,
@@ -47,7 +49,7 @@ class ManageResourceApplication extends lapis.Application
 		unless @tabs[@params.tab]
 			return error_404 @, "Nothing to manage here..."
 
-	[""]: => redirect_to: "resources.manage.dashboard", resource_slug: @resource
+	["":""]: => redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
 	
 	[dashboard: "/dashboard"]: capture_errors {
 		before: => @check_tab @
@@ -67,10 +69,13 @@ class ManageResourceApplication extends lapis.Application
 		=> render: "resources.manage.layout"
 	}
 
-	[authors: "/authors"]: capture_errors {
+	[authors: "/authors(/:author)"]: capture_errors {
 		before: => @check_tab @
 		on_error: error_500
 		=>
+			unless @tabs.authors
+				return error_not_authorized @
+
 			if author_slug = @params.author
 				while true do
 					@author = Users\find slug: author_slug
@@ -97,6 +102,8 @@ class ManageResourceApplication extends lapis.Application
 			unless @tabs.details
 				return error_not_authorized @
 
+			assert_csrf_token @
+
 			@resource.description = @params.resDescription
 			@resource\update "description"
 
@@ -110,6 +117,8 @@ class ManageResourceApplication extends lapis.Application
 		POST: =>
 			unless @tabs.settings
 				return error_not_authorized @
+
+			assert_csrf_token @
 
 			-- check if new owner exists
 
@@ -131,11 +140,13 @@ class ManageResourceApplication extends lapis.Application
 			unless @tabs.settings
 				return error_not_authorized @
 
+			assert_csrf_token @
+
 			-- check if new resource name exists
 			-- update resource name
 
 			-- refresh
-			redirect_to: @url_for "resources.manage", resource_slug: @resource, tab: "settings"
+			redirect_to: @url_for "resources.manage.settings", resource_slug: @resource
 	}
 
 	["delete": "/delete"]: capture_errors respond_to {
@@ -145,6 +156,8 @@ class ManageResourceApplication extends lapis.Application
 			unless @tabs.settings
 				return error_not_authorized @
 
+			assert_csrf_token @
+
 			-- check if new resource name exists
 
 			-- refresh
@@ -152,15 +165,57 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	["delete_author": "/delete_author"]: capture_errors respond_to {
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
 			unless @tabs.authors
 				return error_not_authorized @
 
-			-- check if author exists
-			-- if so, remove them
+			assert_csrf_token @
+			assert_valid @params, {
+				{ "author", exists: true }
+			}
+
+			result = db.query [[
+				DELETE FROM resource_admins USING users
+				WHERE
+				(
+					(resource_admins.resource = ?) AND
+					(resource_admins.user = users.id) AND
+					(users.slug = ?)
+				)
+			]], @resource.id, @params.author
+
+			yield_error "Failed to remove #{@params.author}" if result.affected_rows == 0
+			print "Multiple deletes?!" if result.affected_rows > 1
 
 			-- refresh
-			redirect_to: @url_for "resources.manage", resource_slug: @resource, tab: "authors"
+			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource
+	}
+
+	["update_author_rights": "/update_author_rights"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			unless @tabs.authors
+				return error_not_authorized @
+
+			assert_csrf_token @
+			assert_valid @params, {
+				{ "author", exists: true }
+			}
+
+			author = Users\find slug: @params.author
+			yield_error "Cannot find author \"#{@params.author}\"" unless author
+
+			rightsObj = ResourceAdmins\find resource: @resource.id, user: author.id
+			if (not rightsObj) or (author.id == @resource.creator)
+				yield_error "\"#{author_slug}\" is not an existing author"
+
+			for right in *@right_names
+				rightsObj[right] = (@params[right] == "true")
+
+			rightsObj\update unpack @right_names
+
+			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
 	}
