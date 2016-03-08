@@ -32,6 +32,8 @@ class MTAResourcePage extends Widget
 								text ", " unless i == 1
 								a href: @url_for("user.profile", username: author.slug), author.username
 
+					text @resource.description
+
 				div class: "card-block", ->
 					div class: "container", ->
 						div class: "row", ->

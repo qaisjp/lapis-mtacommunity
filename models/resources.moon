@@ -74,5 +74,4 @@ class Resources extends Model
     get_rights: (user) =>
         return trueTable if @creator == user.id
         import ResourceAdmins from require "models"
-        rights = ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true
-        right or {}
+        ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true

@@ -24,13 +24,13 @@ error_not_authorized = (err) =>
 error_404 = (err) =>
 	@title = "Page not found"
 	status: 404, @html ->
-		h1 "Sorry, this page isn't available"
+		h1 "404: Sorry, this page isn't available"
 		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
 
 error_405 = (err) =>
 	@title = "Error 405"
 	status: 405, @html ->
-		h1 "Error 405: Sorry, this page isn't available"
+		h1 "405: Sorry, this page isn't available"
 		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
 
 error_500 = (err) =>

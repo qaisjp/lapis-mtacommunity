@@ -6,7 +6,7 @@ class MTAResourceManageSettings extends Widget
 	name: "Settings"
 	content: =>
 		div class: "card", ->
-			div class: "card-header", "Change rights"
+			div class: "card-header", "Manage managers"
 			div class: "card-block", ->
 
 		div class: "card", ->

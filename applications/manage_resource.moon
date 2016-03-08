@@ -13,7 +13,6 @@ import
 	error_500
 	error_not_authorized
 	assert_csrf_token
-	serve_file
 	check_logged_in
 from require "utils"
 import
@@ -36,19 +35,34 @@ class ManageResourceApplication extends lapis.Application
 			return @write error_not_authorized @
 
 		@rights = @resource\get_rights @active_user
+		unless @rights
+			return error_not_authorized @
+			
+		@tabs = {
+			dashboard: true,
+			settings: @rights.can_configure,
+			details: @rights.can_configure
+		}
 
-	["": "(/:tab)"]: capture_errors respond_to {
+	[".update_description": "/update_description"]: capture_errors respond_to {
 		on_error: error_500
-		GET: =>
+		GET: error_405
+		POST: =>
+			unless @tabs.details
+				return error_not_authorized @
+
+			@resource.description = @params.resDescription
+			@resource\update "description"
+			redirect_to: @url_for "resources.manage", resource_slug: @resource.slug, tab: "details"
+	}
+
+	["": "(/:tab)"]: capture_errors {
+		on_error: error_500
+		=>
 			@params.tab = @params.tab or "dashboard"
 
-			tabs = {
-				dashboard: true,
-				settings: true,
-				details: true
-			}
-			unless tabs[@params.tab]
-				return error_404 @
+			unless @tabs[@params.tab]
+				return error_404 @, "Nothing to manage here..."
 
 			render: "resources.manage.layout"
 	}
