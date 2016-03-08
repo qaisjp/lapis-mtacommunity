@@ -83,7 +83,7 @@ class ManageResourceApplication extends lapis.Application
 						@errors = {"Cannot find author \"#{author_slug}\""}
 						break -- continue to render
 
-					@author_rights = @resource\get_rights @author
+					@author_rights = @resource\get_rights @author, false
 					if (not @author_rights) or (@author.id == @resource.creator)
 						@author_rights = nil
 						@author = nil
@@ -216,6 +216,29 @@ class ManageResourceApplication extends lapis.Application
 				rightsObj[right] = (@params[right] == "true")
 
 			rightsObj\update unpack @right_names
+
+			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
+	}
+
+	["invite_author": "/invite_author"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			unless @tabs.authors
+				return error_not_authorized @
+
+			assert_csrf_token @
+			assert_valid @params, {
+				{ "author", exists: true }
+			}
+
+			author = Users\search @params.author
+			yield_error "Cannot find author \"#{@params.author}\"" unless author
+
+			if @resource\is_user_admin author, false
+				yield_error "\"#{author.slug}\" is already an author"
+
+			ResourceAdmins\create resource: @resource.id, user: author.id
 
 			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
 	}

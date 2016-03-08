@@ -26,7 +26,7 @@ class Resources extends Model
 
 
     -- all authors
-    get_authors: (fields = "users.*", include_creator = true) =>
+    get_authors: (fields = "users.*", include_creator = true, is_confirmed = true) =>
     	Users\select [[
     		-- The columns we're looking through...
     		, resources, resource_admins
@@ -41,7 +41,7 @@ class Resources extends Model
 	    		(
 	    			(resource_admins.user = users.id) -- Make sure they are an admin...
 	    			AND (resource_admins.resource = resources.id) -- ... of the correct resource...
-	    			AND (resource_admins.user_confirmed) -- but make sure they've confirmed the request!
+	    			AND (resource_admins.user_confirmed = ?) -- but make sure they've confirmed the request!
 	    		)
     		)
 
@@ -50,9 +50,9 @@ class Resources extends Model
 
 			-- Prevent duplicates
 			GROUP BY users.id
-    	]], @id, :fields
+    	]], tostring(is_confirmed), @id, :fields
 
-    is_user_admin: (user) =>
+    is_user_admin: (user, is_confirmed = true) =>
         (db.select [[
             EXISTS(
                 SELECT 1 FROM users, resources, resource_admins
@@ -65,7 +65,7 @@ class Resources extends Model
                     (
                         (resource_admins.user = users.id) -- Make sure they are an admin...
                         AND (resource_admins.resource = resources.id) -- ... of the correct resource...
-                        AND (resource_admins.user_confirmed) -- but make sure they've confirmed the request!
+                        AND (resource_admins.user_confirmed = ?) -- but make sure they've confirmed the request!
                     )
                 )
 
@@ -74,10 +74,10 @@ class Resources extends Model
 
                 -- And checking the right person
                 AND (users.id = ?)
-            )]],  @id, user.id
+            )]],  tostring(is_confirmed), @id, user.id
         )[1].exists
 
-    get_rights: (user) =>
+    get_rights: (user, user_confirmed = true) =>
         return trueTable if @creator == user.id
         import ResourceAdmins from require "models"
-        ResourceAdmins\find resource: @id, user: user.id, user_confirmed: true
+        ResourceAdmins\find resource: @id, user: user.id, :user_confirmed

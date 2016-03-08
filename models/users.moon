@@ -80,11 +80,7 @@ class Users extends Model
 
 
 	@login: (username, password) =>
-		local user
-		with uname_l = username\lower!
-			user = Users\find [db.raw "lower(username)"]: uname_l
-			user = Users\find [db.raw "lower(slug)"]: uname_l unless user
-			user = Users\find [db.raw "lower(email)"]: uname_l unless user
+		user = @search username
 
 		unless user and user\check_password password
 			return nil, "Incorrect username or password."
@@ -100,6 +96,14 @@ class Users extends Model
 	@generate_password: (password) =>
 		config = require("lapis.config").get! -- Get the config (we don't need to load it every request)
 		bcrypt.digest password, config.bcrypt_log_rounds
+
+	@search: (username) =>
+		local user
+		with uname_l = username\lower!
+			user = Users\find [db.raw "lower(username)"]: uname_l
+			user = Users\find [db.raw "lower(slug)"]: uname_l unless user
+			user = Users\find [db.raw "lower(email)"]: uname_l unless user
+		user
 
 	rename: (newName) =>
 		if Users\check_unique_constraint "username", newName	

@@ -6,10 +6,6 @@ class MTAResourceManageSettings extends Widget
 	name: "Settings"
 	content: =>
 		div class: "card", ->
-			div class: "card-header", "Manage managers"
-			div class: "card-block", ->
-
-		div class: "card", ->
 			div class: "card-header", "Transfer ownership"
 			div class: "card-block", -> form action: @url_for("resources.manage.transfer_ownership", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input!
@@ -22,7 +18,7 @@ class MTAResourceManageSettings extends Widget
 
 				div class: "form-group row", ->
 					div class: "col-sm-offset-2 col-sm-10", ->
-						button type: "submit", class: "btn btn-secondary", onclick: "return confirm('Are you sure you want to change transfer owernship?')", "Transfer ownership..."
+						button type: "submit", class: "btn btn-secondary", onclick: "return confirm('Are you sure you want to change transfer ownership?')", "Transfer ownership..."
 
 		div class: "card", ->
 			div class: "card-header", "Rename resource"
