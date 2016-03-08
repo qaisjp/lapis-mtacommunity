@@ -8,7 +8,9 @@ class MTAResourceManageLayout extends Widget
 				div class: "card-header", "Manage"
 				div class: "card-block", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						for name in *{"Dashboard", "Details", "Settings"}
+
+						-- see applications.manage_resource to make these sections work properly for everyone
+						for name in *{"Dashboard", "Details", "Managers", "Settings"}
 							if @tabs[name\lower!]
 								li role: "presentation", class: "nav-item", ->
 									a {

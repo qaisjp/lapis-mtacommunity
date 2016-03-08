@@ -25,16 +25,18 @@ class Resources extends Model
     url_params: (reg, ...) => "resources.view", { resource_slug: @ }, ...
 
 
-    get_authors: (fields = "users.*") =>
+    -- all authors
+    get_authors: (fields = "users.*", include_creator = true) =>
     	Users\select [[
     		-- The columns we're looking through...
     		, resources, resource_admins
 
     		WHERE
     		(
-    			-- Is the user the creator
-	    		(resources.creator = users.id)
-
+    		]] .. (
+                -- Is the user the creator?
+	    		include_creator and "(resources.creator = users.id)" or "0 = 1"
+            ) .. [[
 	    		OR
 	    		(
 	    			(resource_admins.user = users.id) -- Make sure they are an admin...

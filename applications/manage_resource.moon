@@ -35,10 +35,12 @@ class ManageResourceApplication extends lapis.Application
 		unless @rights
 			return @write error_not_authorized @
 
+		-- see views.resources.manage.layout to add sections
 		@tabs = {
 			dashboard: true,
 			details: @rights.can_configure
-			settings: @resource.creator == @active_user.id,
+			settings: @resource.creator == @active_user.id
+			managers: @rights.can_manage_managers
 		}
 
 	[".update_description": "/update_description"]: capture_errors respond_to {
