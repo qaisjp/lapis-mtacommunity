@@ -11,7 +11,7 @@ class MTAResourceManageSettings extends Widget
 
 		div class: "card", ->
 			div class: "card-header", "Transfer ownership"
-			div class: "card-block", -> --form action: @url_for("resource.manage.transfer_ownership"), method: "POST", ->
+			div class: "card-block", -> form action: @url_for("resources.manage.transfer_ownership", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input!
 
 				p "You will no longer have access to the management section of this resource. You will have to contact the new owner to be given permissions."
@@ -26,7 +26,7 @@ class MTAResourceManageSettings extends Widget
 
 		div class: "card", ->
 			div class: "card-header", "Rename resource"
-			div class: "card-block", -> form action: @url_for("settings.rename_account"), method: "POST", ->
+			div class: "card-block", -> form action: @url_for("resources.manage.rename", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input!
 
 				p "The old resource name becomes available for other people to register. No redirections will be set up."
@@ -47,7 +47,6 @@ class MTAResourceManageSettings extends Widget
 			div class: "card-block", ->
 				p "Deleting your resources removes all comments, screenshots and packages. The resource also becomes available for other people to register."
 
-				form ->--action: @url_for("resource.manage.delete"), method: "POST", ->
+				form action: @url_for("resources.manage.delete", resource_slug: @resource), method: "POST", ->
 					@write_csrf_input!
 					button class: "btn btn-primary btn-danger", type: "submit", onclick: "return confirm('Are you sure you want to delete this resource? This is permanent.')", " Delete resource..."
-				

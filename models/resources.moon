@@ -21,6 +21,10 @@ class Resources extends Model
     	map: 3
     	misc: 4
 
+    url_key: (route_name) => @slug
+    url_params: (reg, ...) => "resources.view", { resource_slug: @ }, ...
+
+
     get_authors: (fields = "users.*") =>
     	Users\select [[
     		-- The columns we're looking through...
