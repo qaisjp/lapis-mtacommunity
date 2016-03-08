@@ -55,39 +55,26 @@ class MTAResourceManageAuthors extends Widget
 
 
 		else
-			div class: "card", ->
-				div class: "card-header", "List of authors"
-				div class: "card-block", ->
-					element "table", class: "table table-href table-hover table-bordered mta-card-table", ->
-						thead ->
-							th "username"
-							th "since"
-						tbody ->
-							for manager in *@resource\get_authors nil, false
-								url = @url_for "resources.manage.authors", resource_slug: @resource, author: manager.slug
-								tr ["data-href"]: url, ->
-									td ->
-										a href: @url_for(manager), manager.username
-									td ->
-										text date(manager.created_at)\fmt "${rfc1123} "
-										a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
+			list_authors = (headerText, rows) ->
+				div class: "card", ->
+					div class: "card-header", headerText
+					div class: "card-block", ->
+						element "table", class: "table table-href table-hover table-bordered mta-card-table", ->
+							thead ->
+								th "username"
+								th "since"
+							tbody ->
+								for manager in *rows
+									url = @url_for "resources.manage.authors", resource_slug: @resource, author: manager.slug
+									tr ["data-href"]: url, ->
+										td ->
+											a href: @url_for(manager), manager.username
+										td ->
+											text date(manager.created_at)\fmt "${rfc1123} "
+											a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
 
-			div class: "card", ->
-				div class: "card-header", "Invited authors"
-				div class: "card-block", ->
-					element "table", class: "table table-href table-hover table-bordered mta-card-table", ->
-						thead ->
-							th "username"
-							th "since"
-						tbody ->
-							for manager in *@resource\get_authors nil, false, false
-								url = @url_for "resources.manage.authors", resource_slug: @resource, author: manager.slug
-								tr ["data-href"]: url, ->
-									td ->
-										a href: @url_for(manager), manager.username
-									td ->
-										text date(manager.created_at)\fmt "${rfc1123} "
-										a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
+			list_authors "List of authors", @resource\get_authors nil, false, true
+			list_authors "Invited authors", @resource\get_authors nil, false, false
 
 			div class: "card", ->
 				div class: "card-header", "Invite author"
