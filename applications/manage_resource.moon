@@ -31,7 +31,7 @@ class ManageResourceApplication extends lapis.Application
 		if not check_logged_in @
 			return
 
-		@rights = @resource\get_rights @active_user
+		@rights = @resource\get_rights @active_user, true
 		unless @rights
 			return @write error_not_authorized @
 
@@ -83,7 +83,7 @@ class ManageResourceApplication extends lapis.Application
 						@errors = {"Cannot find author \"#{author_slug}\""}
 						break -- continue to render
 
-					@author_rights = @resource\get_rights @author, false
+					@author_rights = @resource\get_rights @author, nil
 					if (not @author_rights) or (@author.id == @resource.creator)
 						@author_rights = nil
 						@author = nil

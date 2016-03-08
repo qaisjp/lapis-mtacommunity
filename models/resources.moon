@@ -77,7 +77,7 @@ class Resources extends Model
             )]],  tostring(is_confirmed), @id, user.id
         )[1].exists
 
-    get_rights: (user, user_confirmed = true) =>
+    get_rights: (user, user_confirmed) =>
         return trueTable if @creator == user.id
         import ResourceAdmins from require "models"
         ResourceAdmins\find resource: @id, user: user.id, :user_confirmed

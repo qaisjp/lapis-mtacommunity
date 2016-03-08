@@ -16,7 +16,7 @@ class MTAResourceManageLayout extends Widget
 					if name == viewWidget.name
 						li name
 						break
-				viewWidget\breadcrumb! if viewWidget.breadcrumb
+				--viewWidget.breadcrumb @ if viewWidget.breadcrumb
 
 		div class: "row", ->
 			div class: "col-md-2", ->
