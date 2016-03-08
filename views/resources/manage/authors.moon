@@ -50,7 +50,7 @@ class MTAResourceManageManagers extends Widget
 
 		else
 			div class: "card", ->
-				div class: "card-header", "can_List of authors"
+				div class: "card-header", "List of authors"
 				div class: "card-block", ->
 					element "table", class: "table table-href table-hover table-bordered mta-card-table", ->
 						thead ->
