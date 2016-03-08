@@ -177,10 +177,8 @@ CREATE TABLE comment_reports (
     id integer NOT NULL,
     reporter integer NOT NULL,
     reported_comment integer NOT NULL,
-    closed boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    status comment_report_resolution DEFAULT 'new'::comment_report_resolution NOT NULL
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -309,12 +307,12 @@ CREATE TABLE resource_admins (
     "user" integer NOT NULL,
     can_configure boolean DEFAULT false NOT NULL,
     can_moderate boolean DEFAULT false NOT NULL,
-    can_manage boolean DEFAULT false NOT NULL,
-    can_upload_packages boolean DEFAULT false NOT NULL,
+    can_manage_packages boolean DEFAULT false NOT NULL,
     can_upload_screenshots boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
-    user_confirmed boolean DEFAULT false NOT NULL
+    user_confirmed boolean DEFAULT false NOT NULL,
+    can_manage_authors boolean DEFAULT false NOT NULL
 );
 
 
@@ -421,7 +419,7 @@ CREATE TABLE resources (
     name character varying(255) NOT NULL,
     longname character varying(255) NOT NULL,
     rating real DEFAULT 0 NOT NULL,
-    description text DEFAULT ''::text NOT NULL,
+    description text NOT NULL,
     creator integer NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     downloads integer DEFAULT 0 NOT NULL,
