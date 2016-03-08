@@ -31,13 +31,10 @@ class ManageResourceApplication extends lapis.Application
 		if not check_logged_in @
 			return
 
-		if not @resource\is_user_admin @active_user
-			return @write error_not_authorized @
-
 		@rights = @resource\get_rights @active_user
 		unless @rights
-			return error_not_authorized @
-			
+			return @write error_not_authorized @
+
 		@tabs = {
 			dashboard: true,
 			settings: @rights.can_configure,
