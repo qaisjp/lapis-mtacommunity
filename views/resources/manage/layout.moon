@@ -3,9 +3,13 @@ import Widget from require "lapis.html"
 class MTAResourceManageLayout extends Widget
 	content: =>
 		viewWidget = require "views." .. @route_name
+
 		div class: "col-md-2", ->
 			div class: "card", ->
-				div class: "card-header", "Manage"
+				a class: "btn btn-secondary", href: @url_for(@resource), ->
+					i class: "fa fa-arrow-left"
+					text " Back"
+			div class: "card", ->
 				div class: "card-block", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
 

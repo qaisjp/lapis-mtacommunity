@@ -2,6 +2,11 @@
 -- @include "widgets.utils"
 
 class WidgetUtils
+	output_errors: =>
+		if @errors and #@errors > 0
+			div class: "alert alert-danger", role: "alert", ->
+				ul -> for err in *@errors do li err
+				
 	write_csrf_input: =>
 		input type: "hidden", name: "csrf_token", value: @csrf_token, ["aria-hidden"]: "true"
 

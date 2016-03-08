@@ -10,20 +10,22 @@ class MTAResourceManageManagers extends Widget
 			strong "Warning!"
 			text " Unless you are the owner of this resource, you can remove your own access to this page. Be careful."
 
+		@output_errors!
+
 		if @author
 			div class: "card", ->
 				div class: "card-header", ->
-					text "Their permissions"
+					text "#{@author.username}'s permissions"
 
 				div class: "card-block", ->
 					-- for now just use our rights
-					rights = @rights
+					rights = @author_rights
 					element "table table-bordered table-hover mta-card-table", class: "table", ->
 						thead ->
 							th "right"
 							th "value"
 						tbody ->
-							for right in *{"configure", "moderate", "manage_managers", "manage_packages", "upload_screenshots"}							
+							for right in *{"configure", "moderate", "manage_authors", "manage_packages", "upload_screenshots"}							
 								tr ->
 									td "can_#{right}"
 									td tostring rights["can_#{right}"]

@@ -4,6 +4,7 @@ import time_ago_in_words from require "lapis.util"
 date = require "date"
 
 class MTAResourcesUpload extends Widget
+	@include "widgets.utils"
 	content: =>
 		h1 "Upload a new resource"
 		div class: "alert alert-info", role: "alert", "If you'd like to update an existing resource, visit the manager for the resource."
@@ -14,9 +15,7 @@ class MTAResourcesUpload extends Widget
 			li -> raw "name - for the 'descriptive name'" 
 			li -> raw "type (<code>gamemode</code>, <code>script</code>, <code>map</code>, or <code>misc</code>)"
 
-		if @errors and #@errors > 0
-			div class: "alert alert-danger", role: "alert", ->
-				ul -> for err in *@errors do li err
+		@output_errors!
 
 		form method: "POST", enctype: "multipart/form-data", ->
 			div class: "card", ->

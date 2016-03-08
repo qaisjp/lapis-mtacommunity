@@ -70,7 +70,24 @@ class ManageResourceApplication extends lapis.Application
 	[authors: "/authors"]: capture_errors {
 		before: => @check_tab @
 		on_error: error_500
-		=> render: "resources.manage.layout"
+		=>
+			if author_slug = @params.author
+				while true do
+					@author = Users\find slug: author_slug
+					unless @author
+						@errors = {"Cannot find author \"#{author_slug}\""}
+						break -- continue to render
+
+					@author_rights = @resource\get_rights @author
+					if (not @author_rights) or (@author.id == @resource.creator)
+						@author_rights = nil
+						@author = nil
+						@errors = {"\"#{author_slug}\" is not an existing author"}
+						break
+
+					break -- always continue to render, no loop!
+
+			render: "resources.manage.layout"
 	}
 
 	["update_description": "/update_description"]: capture_errors respond_to {
