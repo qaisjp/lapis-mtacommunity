@@ -11,10 +11,10 @@ class MTAResourceManageSettings extends Widget
 				@write_csrf_input!
 
 				p "You will no longer have access to the management section of this resource. You will have to contact the new owner to be given permissions."
-				div class: "form-group row", ->
-					label class: "col-sm-2", "New owner"
+				fieldset class: "form-group row", ->
+					label class: "col-sm-2", for: "settingsNewOwner", "New owner"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", name: "settingsNewOwner"
+						input type: "text", class: "form-control", id: "settingsNewOwner", name: "settingsNewOwner"
 
 				div class: "form-group row", ->
 					div class: "col-sm-offset-2 col-sm-10", ->
@@ -29,10 +29,10 @@ class MTAResourceManageSettings extends Widget
 				p "Any existing resources that include your resource will still include your resource for download. These resources will need to be updated to include the new name."
 				p "Any newly uploaded resources should have the updated name."
 
-				div class: "form-group row", ->
-					label class: "col-sm-2", "Name"
+				fieldset class: "form-group row", ->
+					label class: "col-sm-2", for: "settingsNewResourceName", "Name"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", name: "settingsNewResourceName", value: @resource.name
+						input type: "text", class: "form-control", name: "settingsNewResourceName", id: "settingsNewResourceName", value: @resource.name
 
 				div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->

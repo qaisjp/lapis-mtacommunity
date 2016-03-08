@@ -80,10 +80,10 @@ class MTAResourceManageAuthors extends Widget
 				div class: "card-header", "Invite author"
 				div class: "card-block", -> form action: @url_for("resources.manage.invite_author", resource_slug: @resource), method: "POST", ->
 					@write_csrf_input!
-					div class: "form-group row", ->
-						label class: "col-sm-2", "Username"
+					fieldset class: "form-group row", ->
+						label class: "col-sm-2", for: "inviteAuthor", "Username"
 						div class: "col-sm-10", ->
-							input type: "text", class: "form-control", name: "author"
+							input type: "text", class: "form-control", id: "inviteAuthor", name: "author"
 
 					div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->
