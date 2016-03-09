@@ -55,10 +55,11 @@ class MTAResourceManageAuthors extends Widget
 
 
 		else
-			list_authors = (headerText, rows) ->
+			list_authors = (headerText, missingText, rows) ->
 				div class: "card", ->
 					div class: "card-header", headerText
 					div class: "card-block", ->
+						return text missingText if #rows == 0
 						element "table", class: "table table-href table-hover table-bordered mta-card-table", ->
 							thead ->
 								th "username"
@@ -73,8 +74,8 @@ class MTAResourceManageAuthors extends Widget
 											text date(manager.created_at)\fmt "${rfc1123} "
 											a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
 
-			list_authors "List of authors", @resource\get_authors include_creator: false, is_confirmed: true
-			list_authors "Invited authors", @resource\get_authors include_creator: false, is_confirmed: false
+			list_authors "List of authors", "This resource has no co-authors.", @resource\get_authors include_creator: false, is_confirmed: true
+			list_authors "Invited authors", "This resource has no pending invites for authorship.", @resource\get_authors include_creator: false, is_confirmed: false
 
 			div class: "card", ->
 				div class: "card-header", "Invite author"

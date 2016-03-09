@@ -80,6 +80,14 @@ class AdminApplication extends lapis.Application
 			render: "admin.layout"
 	}
 
+	[new_ban: "/bans/new"]: capture_errors {
+		on_error: => error_500 @, @errors[1]
+		=> 
+			@title = "Bans - Admin"
+			
+			render: "admin.layout"
+	}
+
 	[update_bans: "/bans/update"]: respond_to
 		POST: capture_errors =>
 			Bans.refresh_bans tonumber(@params.id)

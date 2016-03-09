@@ -18,6 +18,10 @@ main = class MTAAdminBans extends Widget
 				Users\include_in bans, "banner", as: "banner"--, fields: "username"
 				bans
 
+		a href: @url_for("admin.new_ban"), class: "btn btn-secondary", ->
+			i class: "fa fa-plus"
+			text " New"
+
 		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->
 				tr ->
