@@ -162,7 +162,7 @@ class ResourceApplication extends lapis.Application
 		on_error: error_500
 		=>
 			-- Get all the authors of the resource
-			@authors = @resource\get_authors "users.username, users.slug, users.id"
+			@authors = @resource\get_authors fields: "users.username, users.slug, users.id", is_confirmed: true, include_creator: true
 			
 			-- If we're logged in...			
 			if @active_user

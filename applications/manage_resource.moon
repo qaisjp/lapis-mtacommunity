@@ -235,7 +235,7 @@ class ManageResourceApplication extends lapis.Application
 			author = Users\search @params.author
 			yield_error "Cannot find author \"#{@params.author}\"" unless author
 
-			if @resource\is_user_admin author, false
+			if @resource\is_user_admin author, nil
 				yield_error "\"#{author.slug}\" is already an author"
 
 			ResourceAdmins\create resource: @resource.id, user: author.id

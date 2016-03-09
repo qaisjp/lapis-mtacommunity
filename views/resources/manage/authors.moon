@@ -73,8 +73,8 @@ class MTAResourceManageAuthors extends Widget
 											text date(manager.created_at)\fmt "${rfc1123} "
 											a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
 
-			list_authors "List of authors", @resource\get_authors nil, false, true
-			list_authors "Invited authors", @resource\get_authors nil, false, false
+			list_authors "List of authors", @resource\get_authors include_creator: false, is_confirmed: true
+			list_authors "Invited authors", @resource\get_authors include_creator: false, is_confirmed: false
 
 			div class: "card", ->
 				div class: "card-header", "Invite author"
