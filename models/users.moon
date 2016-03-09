@@ -93,6 +93,10 @@ class Users extends Model
 
 		user -- return user
 
+	logout: =>
+		-- clear session user id
+		@session.user_id = nil
+
 	@generate_password: (password) =>
 		config = require("lapis.config").get! -- Get the config (we don't need to load it every request)
 		bcrypt.digest password, config.bcrypt_log_rounds

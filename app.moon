@@ -20,7 +20,12 @@ class MTAApp extends lapis.Application
 	
 	@before_filter =>
 		-- load a logged in user from the db
-		@active_user = Users\find @session.user_id if @session.user_id
+
+		@active_user = Users\find @session.user_id	if @session.user_id
+			
+		if @active_user and @active_user\is_banned!
+			@session.user_id = nil
+			@active_user = nil
 
 		-- this must be after @active_user
 		@csrf_token = generate_csrf_token @

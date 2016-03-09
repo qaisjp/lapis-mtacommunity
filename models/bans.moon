@@ -1,5 +1,5 @@
 import Model from require "lapis.db.model"
-
+db = require "lapis.db"
 class Bans extends Model
     -- Has created_at and modified_at
     @timestamp: true
@@ -13,6 +13,8 @@ class Bans extends Model
     -- refresh all the bans ever (or just for the given user)
     @refresh_bans: (user) =>
         -- todo: just use an update query rather than selecting and then updating. use db.query
-    	bans = Bans\select "where active = true AND now() > expires_at" .. (if user then " AND banned_user = ?" else ""), user and user.id or nil
-    	for ban in *bans
-    		ban\update active: false
+        db.query [[
+            UPDATE bans SET active = false WHERE
+                (active = true)
+                AND (now() > expires_at)
+        ]] .. (user and "AND banned_user = #{user.id}" or "")

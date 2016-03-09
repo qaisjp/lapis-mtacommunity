@@ -1,15 +1,15 @@
 lapis = require "lapis"
 db    = require "lapis.db"
+date  = require "date"
 import assert_csrf_token from require "utils"
 import assert_valid from require "lapis.validate"
 import
 	capture_errors
 	assert_error
 	respond_to
+	yield_error
 from require "lapis.application"
-import
-	to_json
-from require "lapis.util"
+
 import
 	Users
 	Resources
@@ -80,19 +80,8 @@ class AdminApplication extends lapis.Application
 			render: "admin.layout"
 	}
 
-	[new_ban: "/bans/new"]: capture_errors {
-		on_error: => error_500 @, @errors[1]
-		=> 
-			@title = "Bans - Admin"
-
-			if username = @params.search_user
-				return redirect_to: @url_for "admin.new_ban" if (username == "") or (username == true)
-
-				if user = Users\search username
-					return redirect_to: @url_for "admin.new_ban", nil, user_id: user.id
-				
-				@errors = {"Could not find user \"username\""}
-
+	[new_ban: "/bans/new"]: capture_errors respond_to {
+		before: =>
 			if user_id = @params.user_id
 				assert_valid @params, {
 					{"user_id", is_integer: true, exists: true}
@@ -103,12 +92,44 @@ class AdminApplication extends lapis.Application
 					@user = user
 				else
 					@errors = {"User does not exist"}
+					return @write render: "admin.layout"
+
+		on_error: => render: "admin.layout"
+		POST: =>
+			assert_valid @params, {
+				{"ban_expiry_date", exists: true}
+				{"ban_expiry_time", exists: true}
+				{"ban_reason"     , exists: true}
+			}
+
+			success, expiry_date = pcall -> (date @params.ban_expiry_date) + (date @params.ban_expiry_time)
+			yield_error "Date or time is in the incorrect format" unless success
+
+			assert_error (expiry_date > date!), "Ban must be in the future"
+			
+			ban = Bans\create banner: @active_user.id, banned_user: @user.id, reason: @params.ban_reason, active: true, expires_at: expiry_date\fmt "${http}"
+			assert_error ban, "Failed to create ban"
+			redirect_to: @url_for "admin.view_ban", ban_id: ban.id
+
+		GET: => 
+			@title = "Bans - Admin"
+
+			if username = @params.search_user
+				return redirect_to: @url_for "admin.new_ban" if (username == "") or (username == true)
+
+				if user = Users\search username
+					return redirect_to: @url_for "admin.new_ban", nil, user_id: user.id
+				
+				@errors = {"Could not find user \"username\""}
+
+			
 
 			render: "admin.layout"
 	}
 
-	[update_bans: "/bans/update"]: respond_to
+	[update_bans: "/bans/update_bans"]: respond_to
 		POST: capture_errors =>
+			assert_csrf_token @
 			Bans.refresh_bans tonumber(@params.id)
 			redirect_to: @params.redirect_to or @url_for "admin.bans"
 
