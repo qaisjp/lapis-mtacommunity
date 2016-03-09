@@ -1,6 +1,7 @@
 import Widget from require "lapis.html"
 import Bans, Users from require "models"
 import to_json from require "lapis.util"
+date = require "date"
 
 breadcrumb = class extends Widget
 	content: =>
@@ -18,7 +19,10 @@ main = class MTAAdminBan extends Widget
 			text " was banned by "
 			a href: @url_for("user.profile", username: @banner.slug), @banner.username
 			p "This user was banned for this reason: #{@ban.reason}"
-			p "The ban was created at: #{@ban.created_at}" 
+			p "The ban was created at: #{@ban.created_at}"
+			p date(@ban.created_at)\fmt "This ban was created at: ${rfc1123} "
+			p date(@ban.expires_at)\fmt "This ban expires/will expire at: ${rfc1123} "
+
 			text "The ban is currently "
 				
 			if @ban.active

@@ -16,5 +16,5 @@ class Bans extends Model
         db.query [[
             UPDATE bans SET active = false WHERE
                 (active = true)
-                AND (now() > expires_at)
+                AND (now() at time zone 'utc' > expires_at)
         ]] .. (user and "AND banned_user = #{user.id}" or "")
