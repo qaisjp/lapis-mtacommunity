@@ -15,6 +15,12 @@ check_logged_in = =>
 		return false
 	true
 
+error_bad_request = (err) =>
+	@title = "Bad Request"
+	status: 400, @html ->
+		h1 "400: Bad Request"
+		h3 err or "This is not the right page you're looking for."
+
 error_not_authorized = (err) =>
 	@title = "Not Authorized"
 	status: 403, @html ->
@@ -88,4 +94,4 @@ denest_table = (nested, index=1) ->
 		table.insert tab, obj[index]
 	tab
 
-{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :error_not_authorized, :get_gravatar_url, :serve_file, :denest_table}
+{:generate_csrf_token, :assert_csrf_token, :check_logged_in, :error_404, :error_405, :error_500, :error_not_authorized, :error_bad_request, :get_gravatar_url, :serve_file, :denest_table}

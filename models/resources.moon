@@ -55,7 +55,7 @@ class Resources extends Model
 			GROUP BY users.id
 		]], @id, fields: opts.fields or "users.*"
 
-	is_user_admin: (user, is_confirmed) =>
+	is_user_admin: (user, opts={}) =>
 		(db.select [[
 			EXISTS(
 				SELECT 1 FROM users, resources, resource_admins
@@ -68,7 +68,9 @@ class Resources extends Model
 					(
 						(resource_admins.user = users.id) -- Make sure they are an admin...
 						AND (resource_admins.resource = resources.id) -- ... of the correct resource...
-						AND (resource_admins.user_confirmed = ?) -- but make sure they've confirmed the request!
+						AND ]] .. (
+							(opts.is_confirmed == nil) and "(1 = 1)" or "(resource_admins.user_confirmed = #{db.escape_literal opts.is_confirmed})"
+						) .. [[ -- but make sure they've confirmed the request!
 					)
 				)
 
@@ -77,7 +79,7 @@ class Resources extends Model
 
 				-- And checking the right person
 				AND (users.id = ?)
-			)]], tostring(is_confirmed), @id, user.id
+			)]], @id, user.id
 		)[1].exists
 
 	get_rights: (user, user_confirmed) =>

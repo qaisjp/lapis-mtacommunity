@@ -12,6 +12,7 @@ import
 	error_405
 	error_500
 	error_not_authorized
+	error_bad_request
 	assert_csrf_token
 	check_logged_in
 from require "utils"
@@ -31,9 +32,14 @@ class ManageResourceApplication extends lapis.Application
 		if not check_logged_in @
 			return
 
-		@rights = @resource\get_rights @active_user, true
+		-- get the user rights
+		@rights = @resource\get_rights @active_user, nil
+		
 		unless @rights
 			return @write error_not_authorized @
+
+		if (@route_name != "resources.manage.accept_invite") and (not @rights.confirmed)
+			return @write error_not_authorized @, "Please accept your invite first"
 
 		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
 
@@ -95,7 +101,7 @@ class ManageResourceApplication extends lapis.Application
 			render: "resources.manage.layout"
 	}
 
-	["update_description": "/update_description"]: capture_errors respond_to {
+	[update_description: "/update_description"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -111,7 +117,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage.details", resource_slug: @resource
 	}
 
-	["transfer_ownership": "/transfer_ownership"]: capture_errors respond_to {
+	[transfer_ownership: "/transfer_ownership"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -133,7 +139,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for @resource
 	}
 
-	["rename": "/rename"]: capture_errors respond_to {
+	[rename: "/rename"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -149,7 +155,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage.settings", resource_slug: @resource
 	}
 
-	["delete": "/delete"]: capture_errors respond_to {
+	[delete: "/delete"]: capture_errors respond_to {
 		on_error: error_500
 		GET: error_405
 		POST: =>
@@ -164,7 +170,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.overview"
 	}
 
-	["delete_author": "/delete_author"]: capture_errors respond_to {
+	[delete_author: "/delete_author"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
@@ -193,7 +199,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource
 	}
 
-	["update_author_rights": "/update_author_rights"]: capture_errors respond_to {
+	[update_author_rights: "/update_author_rights"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
@@ -220,7 +226,7 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
 	}
 
-	["invite_author": "/invite_author"]: capture_errors respond_to {
+	[invite_author: "/invite_author"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
@@ -235,10 +241,24 @@ class ManageResourceApplication extends lapis.Application
 			author = Users\search @params.author
 			yield_error "Cannot find author \"#{@params.author}\"" unless author
 
-			if @resource\is_user_admin author, nil
+			if @resource\is_user_admin author
 				yield_error "\"#{author.slug}\" is already an author"
 
 			ResourceAdmins\create resource: @resource.id, user: author.id
 
 			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
+	}
+
+	[accept_invite: "/accept_invite"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			if @rights.confirmed
+				return error_bad_request @, "You have already accepted your invite"
+
+			assert_csrf_token @
+
+			@rights\update confirmed: true
+
+			redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
 	}

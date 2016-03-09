@@ -86,9 +86,10 @@ class ResourceApplication extends lapis.Application
 		if @params.resource_slug
 			-- try to find the resource by slugname
 			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_slug\lower!
-
+			
 			-- no resource? 404 it.
 			return @write error_404 unless @resource
+
 
 	@include "applications.manage_resource"
 
@@ -166,11 +167,8 @@ class ResourceApplication extends lapis.Application
 			
 			-- If we're logged in...			
 			if @active_user
-				-- ... are we an author?
-				for author in *@authors do
-					if author.id == @active_user.id then
-						@active_user_is_author = true
-						break
+				-- get the user rights
+				@rights = @resource\get_rights @active_user, nil
 
 			-- Paginator for comments
 			@commentsPaginator = @resource\get_comments_paginated {

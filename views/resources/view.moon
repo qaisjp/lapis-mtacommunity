@@ -14,7 +14,7 @@ class MTAResourcePage extends Widget
 						span class: "label label-primary", Resources.types[@resource.type]
 
 						span class: "pull-xs-right", ->
-							if @active_user_is_author
+							if @rights.confirmed
 								a class: "btn btn-secondary", href: @url_for("resources.manage.dashboard", resource_slug: @resource), ->
 									i class: "fa fa-cogs"
 									text " Manage"
