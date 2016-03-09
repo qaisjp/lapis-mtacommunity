@@ -84,7 +84,26 @@ class AdminApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1]
 		=> 
 			@title = "Bans - Admin"
-			
+
+			if username = @params.search_user
+				return redirect_to: @url_for "admin.new_ban" if (username == "") or (username == true)
+
+				if user = Users\search username
+					return redirect_to: @url_for "admin.new_ban", nil, user_id: user.id
+				
+				@errors = {"Could not find user \"username\""}
+
+			if user_id = @params.user_id
+				assert_valid @params, {
+					{"user_id", is_integer: true, exists: true}
+				}
+
+				user = Users\find user_id
+				if user
+					@user = user
+				else
+					@errors = {"User does not exist"}
+
 			render: "admin.layout"
 	}
 
