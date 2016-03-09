@@ -38,7 +38,7 @@ class ManageResourceApplication extends lapis.Application
 		unless @rights
 			return @write error_not_authorized @
 
-		if (@route_name != "resources.manage.accept_invite") and (not @rights.confirmed)
+		if (@route_name != "resources.manage.invite_reply") and (not @rights.user_confirmed)
 			return @write error_not_authorized @, "Please accept your invite first"
 
 		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
@@ -249,16 +249,23 @@ class ManageResourceApplication extends lapis.Application
 			redirect_to: @url_for "resources.manage.authors", resource_slug: @resource, author: author.slug
 	}
 
-	[accept_invite: "/accept_invite"]: capture_errors respond_to {
+	[invite_reply: "/invite_reply"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
-			if @rights.confirmed
+			if @rights.user_confirmed
 				return error_bad_request @, "You have already accepted your invite"
 
 			assert_csrf_token @
+			assert_valid @params, {
+				{"accept_state", exists: true}
+			}
+			yield_error "Invalid accept state" unless (@params.accept_state == "true") or (@params.accept_state == "false")
 
-			@rights\update confirmed: true
+			if @params.accept_state == "true"
+				@rights\update user_confirmed: true
+				return redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
 
-			redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
+			@rights\delete!
+			redirect_to: @url_for "resources.view", resource_slug: @resource
 	}
