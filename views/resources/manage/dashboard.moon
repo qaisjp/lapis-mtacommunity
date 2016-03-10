@@ -11,34 +11,30 @@ class MTAResourceManageDashboard extends Widget
 			div class: "card-block", ->
 				p "Downloads: #{@resource.downloads}"
 
-		div class: "card", ->
-			div class: "card-header", "Included by"
-			div class: "card-block", ->
-				
-				rows = db.select [[
+
+				depended_on = db.select [[
 					DISTINCT ON (resources.id) resources.name
 		  
-		  FROM (
+		  			FROM (
 		  
-				SELECT DISTINCT ON (resource_packages.id) resource_packages.id as package_id
+						SELECT DISTINCT ON (resource_packages.id) resource_packages.id as package_id
+			  			FROM resources, package_dependencies, resource_packages
 			  
-			  FROM resources, package_dependencies, resource_packages
-			  
-			  WHERE
-				package_dependencies.package = resource_packages.id
-				AND resource_packages.resource = 7
+			  			WHERE package_dependencies.package = resource_packages.id
+						AND resource_packages.resource = ?
 		  
-		  ) as sub, resource_packages, package_dependencies, resources  WHERE
-		  package_dependencies.package = package_id
-		  
-		  AND resources.id = resource_packages.resource
-		  AND package_dependencies.source_package = resource_packages.id
-				]]
-				ul ->
-					for row in *rows
-						li row.name
+		  			) as sub, resource_packages, package_dependencies, resources 
 
-				-- Future design:
-				-- hedit:
-					-- v4 requires latest
-					-- v3 requires hedit v2
+		  			WHERE package_dependencies.package = package_id
+		  
+					AND resources.id = resource_packages.resource
+					AND package_dependencies.source_package = resource_packages.id
+				]], @resource.id
+
+				if #depended_on == 0
+					p "This resource is not included by any other resource."
+				else
+					p "This resource is included by: "
+					ul ->
+						for row in *depended_on
+							li row.name
