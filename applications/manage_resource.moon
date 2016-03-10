@@ -44,44 +44,57 @@ class ManageResourceApplication extends lapis.Application
 		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
 
 		-- see views.resources.manage.layout to add sections
+		@tab_names = {"Dashboard", "Details", "Packages", "Authors", "Settings"}
 		@tabs = {
 			dashboard: true,
 			details: @rights.can_configure
+			packages: @rights.can_manage_packages
 			settings: @resource.creator == @active_user.id
 			authors: @rights.can_manage_authors
 		}
 
-	check_tab: =>
-		unless @tabs[@params.tab]
-			return error_404 @, "Nothing to manage here..."
+		@check_tab = (tab) =>
+			assert tab
+			unless @tabs[tab]
+				return @write error_not_authorized @, "Nothing to manage here..."
+
 
 	["":""]: => redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
 	
-	[dashboard: "/dashboard"]: capture_errors {
-		before: => @check_tab @
+	[dashboard: "/dashboard"]: capture_errors respond_to {
+		before: => @check_tab "dashboard"
 		on_error: error_500
-		=> render: "resources.manage.layout"
+		GET: => render: "resources.manage.layout"
 	}
 
-	[details: "/details"]: capture_errors {
-		before: => @check_tab @
+	[details: "/details"]: capture_errors respond_to {
+		before: => @check_tab "details"
 		on_error: error_500
-		=> render: "resources.manage.layout"
+		GET: => render: "resources.manage.layout"
 	}
 
-	[settings: "/settings"]: capture_errors {
-		before: => @check_tab @
+	[packages: "/packages"]: capture_errors respond_to {
+		before: => @check_tab "packages"
 		on_error: error_500
-		=> render: "resources.manage.layout"
+		GET: => render: "resources.manage.layout"
 	}
 
-	[authors: "/authors(/:author)"]: capture_errors {
-		before: => @check_tab @
+	[view_package: "/packages/:id"]: capture_errors respond_to {
+		before: => @check_tab "packages"
 		on_error: error_500
-		=>
-			unless @tabs.authors
-				return error_not_authorized @
+		GET: => render: "resources.manage.layout"
+	}
 
+	[settings: "/settings"]: capture_errors respond_to {
+		before: => @check_tab "settings"
+		on_error: error_500
+		GET: => render: "resources.manage.layout"
+	}
+
+	[authors: "/authors(/:author)"]: capture_errors respond_to {
+		before: => @check_tab "authors"
+		on_error: error_500
+		GET: =>
 			if author_slug = @params.author
 				while true do
 					@author = Users\find slug: author_slug
@@ -102,12 +115,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[update_description: "/update_description"]: capture_errors respond_to {
+		before: => @check_tab "details"
 		on_error: error_500
 		GET: error_405
 		POST: =>
-			unless @tabs.details
-				return error_not_authorized @
-
 			assert_csrf_token @
 
 			@resource.description = @params.resDescription
@@ -118,12 +129,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[transfer_ownership: "/transfer_ownership"]: capture_errors respond_to {
+		before: => @check_tab "settings"
 		on_error: error_500
 		GET: error_405
 		POST: =>
-			unless @tabs.settings
-				return error_not_authorized @
-
 			assert_csrf_token @
 
 			-- check if new owner exists
@@ -140,12 +149,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[rename: "/rename"]: capture_errors respond_to {
+		before: => @check_tab "settings"
 		on_error: error_500
 		GET: error_405
 		POST: =>
-			unless @tabs.settings
-				return error_not_authorized @
-
 			assert_csrf_token @
 
 			-- check if new resource name exists
@@ -156,12 +163,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[delete: "/delete"]: capture_errors respond_to {
+		before: => @check_tab "settings"
 		on_error: error_500
 		GET: error_405
 		POST: =>
-			unless @tabs.settings
-				return error_not_authorized @
-
 			assert_csrf_token @
 
 			-- check if new resource name exists
@@ -171,12 +176,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[delete_author: "/delete_author"]: capture_errors respond_to {
+		before: => @check_tab "authors"
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
-			unless @tabs.authors
-				return error_not_authorized @
-
 			assert_csrf_token @
 			assert_valid @params, {
 				{ "author", exists: true }
@@ -200,12 +203,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[update_author_rights: "/update_author_rights"]: capture_errors respond_to {
+		before: => @check_tab "authors"
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
-			unless @tabs.authors
-				return error_not_authorized @
-
 			assert_csrf_token @
 			assert_valid @params, {
 				{ "author", exists: true }
@@ -227,12 +228,10 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[invite_author: "/invite_author"]: capture_errors respond_to {
+		before: => @check_tab "authors"
 		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
-			unless @tabs.authors
-				return error_not_authorized @
-
 			assert_csrf_token @
 			assert_valid @params, {
 				{ "author", exists: true }

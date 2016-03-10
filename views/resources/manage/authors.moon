@@ -26,7 +26,7 @@ class MTAResourceManageAuthors extends Widget
 
 					rights = @author_rights
 					form class: "mta-inline-form form-inline", method: "POST", action: @url_for("resources.manage.update_author_rights", resource_slug: @resource), ->
-						element "table", class: "table table-hover table-bordered mta-card-table", ->
+						element "table", class: "table table-hover table-bordered table-sm mta-card-table", ->
 							thead ->
 								th "right"
 								th "value"

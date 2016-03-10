@@ -12,7 +12,7 @@ class MTAResourceManageLayout extends Widget
 			
 			div class: "col-md-10", -> ol class: "breadcrumb", ->
 				li "Manage \"#{@resource.name}\""
-				for name in *{"Dashboard", "Details", "Authors", "Settings"}
+				for name in *@tab_names
 					if name == viewWidget.name
 						li name
 						break
@@ -25,7 +25,7 @@ class MTAResourceManageLayout extends Widget
 						ul class: "nav nav-pills nav-stacked", role: "tablist", ->
 
 							-- see applications.manage_resource to make these sections work properly for everyone
-							for name in *{"Dashboard", "Details", "Authors", "Settings"}
+							for name in *@tab_names
 								if @tabs[name\lower!]
 									li role: "presentation", class: "nav-item", ->
 										a {
