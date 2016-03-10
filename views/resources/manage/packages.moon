@@ -1,5 +1,6 @@
 import Widget from require "lapis.html"
-import Comments from require "models"
+import ResourcePackages from require "models"
+date = require "date"
 db = require "lapis.db"
 
 class MTAResourceManagePackages extends Widget
@@ -7,7 +8,9 @@ class MTAResourceManagePackages extends Widget
 
 	name: "Packages"
 	content: =>
-		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: "false", ["aria-controls"]: "upload", "Show upload form"
+		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: "false", ["aria-controls"]: "upload", ->
+			i class: "fa fa-chevron-circle-down"
+			text " Update resource"
 	
 		div class: "collapse", id: "upload", ->
 			div class: "card card-block", ->
@@ -28,9 +31,17 @@ class MTAResourceManagePackages extends Widget
 			div class: "card-header", ->
 				text "Packages"
 			div class: "card-block", ->
-				element "table", class: "table table-hover table-bordered table-href", ->
+				element "table", class: "table table-hover table-bordered table-href mta-card-table", ->
 					thead ->
-						th "version"
-						th "tools"
+						th "Version"
+						th "Publish Date"
+						th "Changes"
+						th "Tools"
 					tbody ->
-						
+						packages = ResourcePackages\select "where resource = ? order by created_at desc", @resource.id, fields: "id, version, description, created_at"
+						for package in *packages
+							tr ->
+								td package.version
+								td date(package.created_at)\fmt "${http}"
+								td package.description
+								td " "
