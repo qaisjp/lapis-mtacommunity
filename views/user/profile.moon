@@ -42,33 +42,38 @@ class MTAUserLayout extends Widget
 				div class: "media-body", ->
 					h1 class: "media-heading", "#{@user.username}"
 					
-					p ->
-						i class: "fa fa-fw fa-clock-o"
-						text "Member for #{time_ago_in_words @user.created_at, nil, ''}"
+					
+					i class: "fa fa-fw fa-clock-o"
+					raw " "
+					text "Member for #{time_ago_in_words @user.created_at, nil, ''}"
 
 					if protectedMode
 						p "This user's profile is private."
 						return 
 
 					if loc = @data.location
-						p ->
-							i class: "fa fa-fw fa-map-marker"
-							text loc
+						br!
+						i class: "fa fa-fw fa-map-marker"
+						raw " "
+						text loc
 
 					if url = @data.website
-						p ->
-							i class: "fa fa-fw fa-link"
-							a href: url, url
+						br!
+						i class: "fa fa-fw fa-link"
+						raw " "
+						a href: @build_url(url), "Website"
 
 					if gang = @data.gang
-						p ->
-							i class: "fa fa-fw fa-users"
-							text "Gang: #{gang}"
+						br!
+						i class: "fa fa-fw fa-users"
+						raw " "
+						text "Gang: #{gang}"
 
 					if birthday = @data.birthday
-						p ->
-							i class: "fa fa-fw fa-birthday-cake"
-							text: "Birthday: #{birthday}"
+						br!
+						i class: "fa fa-fw fa-birthday-cake"
+						raw " "
+						text "Birthday: #{birthday}"
 
 				div class: "media-right", ->
 					div class: "btn-group-vertical", role: "group", ["aria-label"]: "Profile Buttons", ->
