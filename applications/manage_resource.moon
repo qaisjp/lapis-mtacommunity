@@ -79,10 +79,12 @@ class ManageResourceApplication extends lapis.Application
 		GET: => render: "resources.manage.layout"
 	}
 
-	[view_package: "/packages/:id"]: capture_errors respond_to {
+	[view_package: "/packages/:pkg_id[%d]"]: capture_errors respond_to {
 		before: => @check_tab "packages"
-		on_error: error_500
-		GET: => render: "resources.manage.layout"
+		on_error: => error_500 @, @errors[1]
+		GET: =>
+			@package = assert_error (ResourcePackages\find resource: @resource.id, id: @params.pkg_id), "That's not your package."
+			render: "resources.manage.layout"
 	}
 
 	[settings: "/settings"]: capture_errors respond_to {
@@ -109,7 +111,7 @@ class ManageResourceApplication extends lapis.Application
 						@errors = {"\"#{author_slug}\" is not an existing author"}
 						break
 
-					break -- always continue to render, no loop!
+					break -- always continue to render, don't iterate.
 
 			render: "resources.manage.layout"
 	}
