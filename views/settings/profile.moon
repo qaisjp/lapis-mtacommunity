@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+db = require "lapis.db"
 
 class MTASettingsProfile extends Widget
 	@include "widgets.utils"
@@ -24,22 +25,22 @@ class MTASettingsProfile extends Widget
 					div class: "form-group row", ->
 						label class: "col-sm-2", "Birthday"
 						div class: "col-sm-10", ->
-							input type: "date", class: "form-control", name: "settingsDate", value: @data.birthday
+							input type: "date", class: "form-control", name: "settingsDate", value: (@data.birthday == db.NULL) and "" or @data.birthday
 
 					div class: "form-group row", ->
 						label class: "col-sm-2", "Gang"
 						div class: "col-sm-10", ->
-							input type: "text", class: "form-control", name: "settingsGang", maxlength: 255, value: @data.gang
+							input type: "text", class: "form-control", name: "settingsGang", maxlength: 255, value: (@data.gang == db.NULL) and "" or @data.gang
 
 					div class: "form-group row", ->
 						label class: "col-sm-2", "Location"
 						div class: "col-sm-10", ->
-							input type: "text", class: "form-control", name: "settingsLocation", maxlength: 255, value: @data.location
+							input type: "text", class: "form-control", name: "settingsLocation", maxlength: 255, value: (@data.location == db.NULL) and "" or @data.location
 
 					div class: "form-group row", ->
 						label class: "col-sm-2", "Website"
 						div class: "col-sm-10", ->
-							input type: "text", class: "form-control", name: "settingsWebsite", maxlength: 255, value: @data.website
+							input type: "text", class: "form-control", name: "settingsWebsite", maxlength: 255, value: (@data.website == db.NULL) and "" or @data.website
 
 					div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->

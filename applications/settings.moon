@@ -41,12 +41,12 @@ class SettingsApplication extends lapis.Application
 			@data = @active_user\get_userdata!
 
 			success, birthday = pcall date, @params.settingsDate
-			@data.birthday = success and birthday\fmt("%Y-%m-%d") or nil
+			@data.birthday = success and birthday\fmt("%Y-%m-%d") or db.NULL
 
 			@data.privacy_mode = (tonumber(@params.settingsPrivacy) == 2) and 2 or 1
-			@data.gang = @params.settingsGang
-			@data.location = @params.settingsLocation
-			@data.website = @params.settingsWebsite
+			@data.gang = (@params.settingsGang == "") and db.NULL or @params.settingsGang
+			@data.location = (@params.settingsLocation == "") and db.NULL or @params.settingsLocation
+			@data.website = (@params.settingsWebsite == "") and db.NULL or @params.settingsWebsite
 			assert_error @data\update "birthday", "privacy_mode", "gang", "location", "website"
 			render: "settings.layout"
 
