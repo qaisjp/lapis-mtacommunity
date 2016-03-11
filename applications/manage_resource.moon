@@ -150,15 +150,14 @@ class ManageResourceApplication extends lapis.Application
 
 	[rename: "/rename"]: capture_errors respond_to {
 		before: => @check_tab "settings"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
-
-			-- check if new resource name exists
-			-- update resource name
-
-			-- refresh
+			assert_valid @params, {
+				{"settingsNewResourceName", exists: true, min_length: 1, max_length: 255}
+			}
+			assert_error @resource\rename @params.settingsNewResourceName
 			redirect_to: @url_for "resources.manage.settings", resource_slug: @resource
 	}
 
@@ -168,10 +167,7 @@ class ManageResourceApplication extends lapis.Application
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
-
-			-- check if new resource name exists
-
-			-- refresh
+			assert_error @resource\delete!
 			redirect_to: @url_for "resources.overview"
 	}
 

@@ -40,7 +40,11 @@ class Users extends Model
 
 	-- Checks if username can be used, and returns a usable username/slug
 	@is_username_available: (username) =>
+		assert username, "no name in is_username_available"
 		username = trim(username)
+
+		if username == ""
+			return nil, "Invalid username"
 
 		-- First check if the username is unique
 		if @check_unique_constraint [db.raw "lower(username)"]: username\lower!
@@ -57,6 +61,8 @@ class Users extends Model
 		username, slug
 
 	@is_email_available: (email) =>
+		assert email, "no email in is_email_available"
+
 		-- We should also check if a case-insensitive
 		-- version of the email is available
 		-- We kinda want to treat emails case-insensitively,

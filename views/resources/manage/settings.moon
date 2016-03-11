@@ -14,7 +14,7 @@ class MTAResourceManageSettings extends Widget
 				fieldset class: "form-group row", ->
 					label class: "col-sm-2", for: "settingsNewOwner", "New owner"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", id: "settingsNewOwner", name: "settingsNewOwner"
+						input type: "text", class: "form-control", id: "settingsNewOwner", name: "settingsNewOwner", required: true
 
 				div class: "form-group row", ->
 					div class: "col-sm-offset-2 col-sm-10", ->
@@ -32,7 +32,7 @@ class MTAResourceManageSettings extends Widget
 				fieldset class: "form-group row", ->
 					label class: "col-sm-2", for: "settingsNewResourceName", "Name"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", name: "settingsNewResourceName", id: "settingsNewResourceName", value: @resource.name
+						input type: "text", class: "form-control", name: "settingsNewResourceName", id: "settingsNewResourceName", value: @resource.name, required: true
 
 				div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->

@@ -2,6 +2,12 @@ db = require "lapis.db"
 import Model, enum from require "lapis.db.model"
 import Users from require "models"
 
+import trim from require "lapis.util"
+
+slugify_resource_name = (name) ->
+	import slugify from require "lapis.util"
+	slugify name
+
 trueTable = setmetatable {},
 	__index: -> true
 	__newindex: -> error("attempting to change readonly trueTable", 2)
@@ -24,6 +30,28 @@ class Resources extends Model
 	url_key: (route_name) => @slug
 	url_params: (reg, ...) => "resources.view", { resource_slug: @ }, ...
 
+	@is_name_available: (name) =>
+		assert name, "no name in is_name_available"
+		name = trim name
+		
+		if name == ""
+			return nil, "Invalid resource name"
+
+		if @check_unique_constraint [db.raw "lower(name)"]: name\lower!
+			return nil, "Resource already exists"	
+			
+		slug = slugify_resource_name name
+		if @check_unique_constraint [db.raw "lower(slug)"]: slug\lower!
+			return nil, "Resource already exists"
+		
+		name, slug
+
+	rename: (name) =>
+		name, slug = Resources\is_name_available name
+		return nil, slug unless name
+
+		@update :name, :slug
+		true
 
 	-- all authors
 	get_authors: (opts = {}) =>

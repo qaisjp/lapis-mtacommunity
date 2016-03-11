@@ -95,7 +95,6 @@ class ResourceApplication extends lapis.Application
 
 	[overview: ""]: => render: true
 
-	-- TODO
 	[upload: "/upload"]: capture_errors respond_to {
 		before: => check_logged_in @
 		GET: => render: true
@@ -108,14 +107,15 @@ class ResourceApplication extends lapis.Application
 
 			yield_error "Max filesize is 20mb" if #@params.resUpload.content > 20 * 1000 * 1000
 
+			-- check if the resource already exists
+			name, slug = Resources\is_name_available @params.resName
+			yield_error "Resource already exists" unless name
+
 			resource = 
-				name: @params.resName
-				slug: slugify @params.resName
+				:name 
+				:slug
 				description: @params.resDescription
 				creator: @active_user.id
-
-			-- check if the resource already exists
-			assert_error not (db.select "EXISTS(SELECT 1 FROM resources WHERE (name = ?) or (slug = ?))", @params.resName, slugify @params.resName)[1].exists, "Resource already exists"
 
 			filename = os.tmpname!			
 			file = io.open filename, "w"
