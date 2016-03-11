@@ -1,5 +1,5 @@
 import Model, enum from require "lapis.db.model"
-
+import trim from require "lapis.util"
 slugify_username = (username) ->
 	import slugify from require "lapis.util"
 	slugify username
@@ -38,37 +38,50 @@ class Users extends Model
 	url_key: (route_name) => @slug
 	url_params: (reg, ...) => "user.profile", { username: @ }, ...
 
-	-- Create a new user, given the following:
-	@register: (username, password, email) =>
+	-- Checks if username can be used, and returns a usable username/slug
+	@is_username_available: (username) =>
+		username = trim(username)
+
 		-- First check if the username is unique
-		if @check_unique_constraint "username", username 
+		if @check_unique_constraint [db.raw "lower(username)"]: username\lower!
 			return nil, "Username already exists"
 
-		-- For some reason, people might use their email as a username too
-		-- We don't like that. At all.
-		if @check_unique_constraint "username", email
-			return nil, "Username already exists"
-
+		-- All these checks are case insensitive
+		if @check_unique_constraint [db.raw "lower(email)"]: username\lower!
+			return nil, "Account already exists"
+			
 		slug = slugify_username username
-		if @check_unique_constraint "slug", slug
+		if @check_unique_constraint [db.raw "lower(slug)"]: slug\lower!
 			return nil, "Username already exists"
 
-		-- Now check email
-		if @check_unique_constraint "email", email
-			return nil, "Account already exists"
+		username, slug
 
-		-- I'm not even sure if we even need this...
-		if @check_unique_constraint "email", username
-			return nil, "Account already exists"
-
+	@is_email_available: (email) =>
 		-- We should also check if a case-insensitive
 		-- version of the email is available
 		-- We kinda want to treat emails case-insensitively,
 		-- but store the email sensitively in the unlikely
 		-- case that their email is actually case-sensitive
 		-- ^ no pun intended
-		if Users\find [db.raw "lower(email)"]: email\lower!
+
+		-- Now check email
+		if @check_unique_constraint [db.raw "lower(email)"]: email\lower!
 			return nil, "Account already exists"
+
+		-- For some reason, people might use their email as a username too
+		-- We have to deal with emails formatted as usernames...
+		if @check_unique_constraint [db.raw "lower(username)"]: email\lower!
+			return nil, "Username already exists"
+
+		true
+
+	-- Create a new user, given the following:
+	@register: (username, password, email) =>
+		username, slug = Users\is_username_available username
+		return nil, slug unless username
+
+		success, err = Users\is_email_available email
+		return nil, err unless success
 
 		-- Generate the password
 		password = Users\generate_password password
@@ -109,18 +122,11 @@ class Users extends Model
 			user = Users\find [db.raw "lower(email)"]: uname_l unless user
 		user
 
-	rename: (newName) =>
-		if Users\check_unique_constraint "username", newName	
-			return nil, "Username already exists"
+	rename: (username) =>
+		username, slug = Users\is_username_available username
+		return nil, slug unless username
 
-		slug = slugify_username newName	
-		if Users\check_unique_constraint "slug", slug
-			return nil, "Username already exists"
-
-		-- i think lapis sanitises this
-		@username = newName
-		@slug = slug
-		@update "username", "slug"
+		@update :username, :slug
 		true
 
 	check_password: (password) => bcrypt.verify password, @password
