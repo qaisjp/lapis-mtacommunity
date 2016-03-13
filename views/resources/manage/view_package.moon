@@ -13,6 +13,7 @@ class MTAResourceManageSinglePackage extends Widget
 				text "Managing v#{@package.version}"
 			div class: "card-block", ->
 				form method: "POST", class: "mta-inline-form", ->
+					@write_csrf_input!
 					fieldset class: "form-group", ->
 						label for: "updateDescription", ->
 							text "Description "

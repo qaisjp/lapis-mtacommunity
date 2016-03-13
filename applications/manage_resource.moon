@@ -80,11 +80,17 @@ class ManageResourceApplication extends lapis.Application
 	}
 
 	[view_package: "/packages/:pkg_id[%d]"]: capture_errors respond_to {
-		before: => @check_tab "packages"
-		on_error: => error_500 @, @errors[1]
-		GET: =>
+		before: =>
+			@check_tab "packages"
 			@package = assert_error (ResourcePackages\find resource: @resource.id, id: @params.pkg_id), "That's not your package."
+
+		on_error: => error_500 @, @errors[1]
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {{"updateDescription", exists: true}}
+			@package\update description: @params.updateDescription
 			render: "resources.manage.layout"
+		GET: =>	render: "resources.manage.layout"
 	}
 
 	[settings: "/settings"]: capture_errors respond_to {
@@ -122,9 +128,8 @@ class ManageResourceApplication extends lapis.Application
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
-
-			@resource.description = @params.resDescription
-			@resource\update "description"
+			assert_valid @params, {{"resDescription", exists: true}}
+			@resource\update description: @params.resDescription
 
 			-- refresh
 			redirect_to: @url_for "resources.manage.details", resource_slug: @resource

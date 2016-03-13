@@ -15,6 +15,7 @@ class MTAResourceManagePackages extends Widget
 		div class: "collapse", id: "upload", ->
 			div class: "card card-block", ->
 				form method: "POST", enctype: "multipart/form-data", ->
+					@write_csrf_input!
 					fieldset class: "form-group", ->
 						label for: "uploadChangelog", ->
 							text "Changelog "
@@ -36,12 +37,13 @@ class MTAResourceManagePackages extends Widget
 						th "Version"
 						th "Publish Date"
 						th "Changes"
-						th "Tools"
 					tbody ->
 						packages = ResourcePackages\select "where resource = ? order by created_at desc", @resource.id, fields: "id, version, description, created_at"
 						for package in *packages
-							tr ["data-href"]: @url_for("resources.manage.view_package", resource_slug: @resource, pkg_id: package.id), ->
+							manage_url = @url_for("resources.manage.view_package", resource_slug: @resource, pkg_id: package.id)
+							tr ["data-href"]: manage_url, ->
 								td package.version
 								td date(package.created_at)\fmt "${http}"
-								td package.description
-								td " "
+								td ->
+									text package.description
+									a href: manage_url, class: "btn btn-sm btn-secondary pull-xs-right", -> i class: "fa fa-cogs"
