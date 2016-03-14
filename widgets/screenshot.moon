@@ -8,10 +8,10 @@ class ScreenshotWidget extends Widget
 		if not @screenshot then
 			return p "Internal error: no screenshot passed to widget!"
 
-		screenie_url = @url_for "resources.view_screenshot", resource_slug: @resource, screenie_id: @screenshot.id
-		screenie_url_image = @url_for "resources.view_screenshot_image", resource_slug: @resource, screenie_id: @screenshot.id
+		screenie_url = @url_for "resources.view_screenshot", resource_slug: @screenshot.resource, screenie_id: @screenshot.id
+		screenie_url_image = @url_for "resources.view_screenshot_image", resource_slug: @screenshot.resource, screenie_id: @screenshot.id
 
-		li class: "media", ->					
+		element (@type or "div"), class: "media", ->					
 			div class: "media-body", ->
 				h4 class: "media-heading", ->
 					a href: screenie_url, @screenshot.title
@@ -20,5 +20,7 @@ class ScreenshotWidget extends Widget
 					small class: "text-muted", " uploaded #{date_created}"
 				text @screenshot.description
 
-			div class: "media-right", -> a href: screenie_url, ->
+
+			screenie_href = (@route_name == "resources.view_screenshot") and screenie_url_image or screenie_url
+			div class: "media-right", -> a href: screenie_href, ->
 				img class: "media-object", width: 512, height: 256, src: screenie_url_image, alt: @screenshot.title

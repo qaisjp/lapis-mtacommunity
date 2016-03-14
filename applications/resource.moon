@@ -50,7 +50,7 @@ class ResourceApplication extends lapis.Application
 			@resource = Resources\find [db.raw "lower(slug)"]: @params.resource_slug\lower!
 			
 			-- no resource? 404 it.
-			return @write error_404 unless @resource
+			return @write error_404 @ unless @resource
 
 
 	@include "applications.manage_resource"
@@ -157,6 +157,7 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- Get all the authors of the resource
 			@screenshot = ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id
+			@screenshot.resource = @resource
 			yield_error "That screenshot doesn't exist" unless @screenshot
 
 			render: "resources.layout"

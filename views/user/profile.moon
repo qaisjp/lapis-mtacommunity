@@ -2,10 +2,13 @@ import Widget from require "lapis.html"
 import get_gravatar_url from require "utils"
 import Users, UserFollowings from require "models"
 import time_ago_in_words from require "lapis.util"
+
+ScreenshotWidget = require "widgets.screenshot"
+
 db = require "lapis.db"	
 
 build_cards = {
-	following: 1, followers: 1, comments: true
+	following: 1, followers: 1, comments: true, screenshots: true
 	follow: (user) => ->
 		div class: "card-header", ->
 			img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
@@ -21,7 +24,6 @@ build_cards = {
 			text " Downloads: #{resource.downloads}"
 			br!
 			text " Rating: #{resource.rating}"
-	screenshots: => "screen"
 }
 
 class MTAUserLayout extends Widget
@@ -135,7 +137,12 @@ class MTAUserLayout extends Widget
 						for _, comment in ipairs @comments
 							div class: "row", ->
 								widget CommentWidget :comment
-						
+					elseif tab == "screenshots"
+						ScreenshotWidget = require "widgets.screenshot"
+						for _, screenshot in ipairs @screenshots
+							widget ScreenshotWidget :screenshot
+							br!
+					
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"

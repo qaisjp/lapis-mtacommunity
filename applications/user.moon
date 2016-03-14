@@ -64,6 +64,10 @@ class UserApplication extends lapis.Application
 				@following_count = UserFollowings\count "follower  = ?", @user.id
 
 			if tab == "screenshots"
+				@screenshots = @user\get_screenshots!
+				Resources\include_in @screenshots, "resource", as: "resource"
+
+				@screenshots_count = #@screenshots
 				accessed = true
 			else
 				@screenshots_count = ResourceScreenshots\count "uploader = ?", @user.id

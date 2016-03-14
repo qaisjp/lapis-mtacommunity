@@ -91,4 +91,5 @@ class MTAResourcePage extends Widget
 
 		ul class: "media-list", ->
 			for screenshot in *screenshots
-				widget ScreenshotWidget :screenshot, resource: @resource
+				screenshot.resource = @resource
+				widget ScreenshotWidget :screenshot

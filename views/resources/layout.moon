@@ -17,7 +17,6 @@ class MTAResourceLayout extends Widget
 					button type: "submit", class: "btn btn-secondary btn-sm", name: "accept_state", value: "false", ->
 						text "decline"
 
-
 		div class: "row", ->
 			div class: "card", ->
 				div class: "card-header", ->
@@ -35,6 +34,13 @@ class MTAResourceLayout extends Widget
 							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
 								i class: "fa fa-download"
 								text " Download"
+
+							unless @route_name == "resources.view"
+								raw " "
+								a class: "btn btn-secondary", href: @url_for("resources.view", resource_slug: @resource), ->
+									i class: "fa fa-arrow-left"
+									text " View resource"
+
 
 				
 				viewWidget = require "views." .. @route_name

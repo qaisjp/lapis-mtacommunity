@@ -20,6 +20,7 @@ class Users extends Model
 		{"bans", has_many: "Bans", key: "banned_user"}
 		{"active_bans", has_many: "Bans", key: "banned_user", where: active: true}
 		{"comments", has_many: "Comments", key: "author"}
+		{"screenshots", has_many: "ResourceScreenshots", key: "uploader"}
 		{"userdata", has_one: "UserData"}
 		{"follows", has_many: "UserFollowings", key: "follower", order: "created_at desc"}
 		{"followed_by", has_many: "UserFollowings", key: "following", order: "created_at desc"}
