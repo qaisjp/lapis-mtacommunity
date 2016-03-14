@@ -1,5 +1,5 @@
 import Widget from require "lapis.html"
-import Comments from require "models"
+import Comments, ResourceScreenshots from require "models"
 db = require "lapis.db"
 
 class MTAResourceManageDashboard extends Widget
@@ -11,6 +11,8 @@ class MTAResourceManageDashboard extends Widget
 			div class: "card-header", "Statistics"
 			div class: "card-block", ->
 				text "Downloads: #{@resource.downloads}"
+				br!
+				text "Screenshots: " .. tostring(ResourceScreenshots\count "resource = ?", @resource.id)
 
 				num_parent_comments = Comments\count "(resource = ?) and (parent IS NULL)", @resource.id
 				num_total_comments = Comments\count "resource = ?", @resource.id

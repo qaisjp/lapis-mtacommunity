@@ -18,16 +18,20 @@ class MTAResourceManageSinglePackage extends Widget
 						label for: "screenieTitle", ->
 							text "Title "
 							small class: "text-muted", "Summarise your screenshot"
-						input type: "text", class: "form-control", id: "screenieTitle", name: "screenieTitle", required: true, value: @screenshot.title
+						input type: "text", class: "form-control", id: "screenieTitle", name: "screenieTitle", value: @screenshot.title
 					fieldset class: "form-group", ->
-						label for: "updateDescription", ->
+						label for: "screenieDescription", ->
 							text "Description "
 							small class: "text-muted", "optional"
-						textarea class: "form-control", id: "updateDescription", name: "updateDescription", rows: 3, @screenshot.description
+						textarea class: "form-control", id: "screenieDescription", name: "screenieDescription", rows: 3, @screenshot.description
 
 					button type: "submit", class: "btn btn-secondary btn-sm", ->
 						i class: "fa fa-pencil"
 						text " Update"
+					raw " "
+					button type: "submit", name: "deleteScreenie", formnovalidate: true, class: "btn btn-secondary btn-danger btn-sm", ->
+						i class: "fa fa-remove"
+						text " Delete"
 
 				raw " "
 				--a href: @url_for("resources.get", resource_slug: @resource), class: "btn btn-secondary btn-sm", ->

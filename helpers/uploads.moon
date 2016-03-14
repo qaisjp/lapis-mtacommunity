@@ -42,8 +42,8 @@ build_package_filepath = (resource, pkg, file) ->
 	"uploads/#{resource}/packages/#{pkg}.#{file}"
 
 -- general function to build a path relative to the web root for screenshots
-build_screenshot_filepath = (resource, pkg, file) ->
-	"uploads/#{resource}/packages/#{pkg}.#{file}"
+build_screenshot_filepath = (resource, screenie_id, file) ->
+	"uploads/#{resource}/screenshots/#{screenie_id}.#{file}"
 
 -- generate statements for renaming in zipnote comments
 build_rename_comment = (oldname, newname) ->

@@ -111,8 +111,7 @@ class ResourceApplication extends lapis.Application
 			success = clean_assert lfs.mkdir "uploads/#{resource.id}/packages"
 			success = clean_assert lfs.mkdir "uploads/#{resource.id}/screenshots"
 
-			success, file = clean_assert pcall io.open, build_package_filepath(resource.id, package.id, package.file), "w"
-			
+			_, file = clean_assert pcall io.open, build_package_filepath(resource.id, package.id, package.file), "w"
 
 			file\write @params.resUpload.content
 			file\close!

@@ -1,5 +1,6 @@
 lapis = require "lapis"
 db    = require "lapis.db"
+date  = require "date"
 import
 	Resources
 	ResourcePackages
@@ -24,6 +25,7 @@ import
 	respond_to
 from require "lapis.application"
 import assert_valid from require "lapis.validate"
+import build_screenshot_filepath from require "helpers.uploads"
 
 class ManageResourceApplication extends lapis.Application
 	path: "/:resource_slug/manage"
@@ -99,6 +101,36 @@ class ManageResourceApplication extends lapis.Application
 		before: => @check_tab "screenshots"
 		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
+		POST: =>
+			assert_valid @params, {
+				{"screenieFile", is_file: true, exists: true}
+				{"screenieTitle", exists: true }
+			}
+
+			yield_error "Max filesize is 600KB" if #@params.screenieFile.content > 600 * 1000
+
+			screenshot = 
+				resource: @resource.id
+				title: @params.screenieTitle
+				description: @params.screenieDescription
+				uploader: @active_user.id
+				file: date!\spanseconds!
+			
+			screenshot = assert_error ResourceScreenshots\create(screenshot), "Could not create screenshot"
+
+			clean_assert = (success, err, ...) ->
+				return success, err, ... if success
+				screenshot\delete!
+				yield_error err
+
+			filename = build_screenshot_filepath @resource.id, screenshot.id, screenshot.file
+			_, file, err  = clean_assert pcall io.open, filename, "w"
+			assert_error file, err
+
+			file\write @params.screenieFile.content
+			file\close!
+
+			redirect_to: @url_for "resources.view", resource_slug: @resource.slug
 	}
 
 	[view_screenshot: "/screenshots/:screenie_id[%d]"]: capture_errors respond_to {
@@ -109,13 +141,18 @@ class ManageResourceApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1]
 		POST: =>
 			assert_csrf_token @
+
+			if @params.deleteScreenie
+				assert_error @screenshot\delete!
+				return redirect_to: @url_for("resources.manage.screenshots", resource_slug: @resource)
+		
 			assert_valid @params, {
-				{"updateTitle", exists: true}
-				{"updateDescription", exists: true}
+				{"screenieTitle", exists: true}
 			}
 			@screenshot\update
-				title: @params.updateTitle
-				description: @params.updateDescription
+				title: @params.screenieTitle
+				description: @params.screenieDescription or ""
+
 			render: "resources.manage.layout"
 		GET: =>	render: "resources.manage.layout"
 	}

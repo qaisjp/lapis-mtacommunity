@@ -28,7 +28,7 @@ class MTAResourceManageScreenies extends Widget
 							small class: "text-muted", "optional"
 						textarea class: "form-control", id: "screenieDescription", name: "screenieDescription", rows: 3
 
-					input type: "file", id: "uploadScreenieFile", required: true
+					input type: "file", name: "screenieFile", required: true
 					button type: "submit", class: "btn btn-secondary btn-sm", ->
 						i class: "fa fa-upload"
 						text " Upload screenshot"
@@ -38,16 +38,18 @@ class MTAResourceManageScreenies extends Widget
 			div class: "card-header", ->
 				text "Screenshots"
 			div class: "card-block", ->
+				screenshots = ResourceScreenshots\select "where resource = ? order by created_at desc", @resource.id, fields: "id, title, created_at"
+				if #screenshots == 0
+					return p "No screenshots are currently uploaded."
 				element "table", class: "table table-hover table-bordered table-href mta-card-table", ->
 					thead ->
 						th "Title"
 						th "Creation Date"
 					tbody ->
-						screenshots = ResourceScreenshots\select "where resource = ? order by created_at desc", @resource.id, fields: "id, title, created_at"
 						for screenshot in *screenshots
 							manage_url = @url_for("resources.manage.view_screenshot", resource_slug: @resource, screenie_id: screenshot.id)
 							tr ["data-href"]: manage_url, ->
 								td screenshot.title
 								td ->
-									date(screenshot.created_at)\fmt "${http}"
+									text date(screenshot.created_at)\fmt "${http}"
 									a href: manage_url, class: "btn btn-sm btn-secondary pull-xs-right", -> i class: "fa fa-cogs"
