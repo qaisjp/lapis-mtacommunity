@@ -6,7 +6,7 @@ db = require "lapis.db"
 class MTAResourceManagePackages extends Widget
 	@include "widgets.utils"
 
-	name: "Packages"
+	name: "Screenshots"
 	content: =>
 		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: "false", ["aria-controls"]: "upload", ->
 			i class: "fa fa-chevron-circle-down"
