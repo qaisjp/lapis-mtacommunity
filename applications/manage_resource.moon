@@ -107,7 +107,8 @@ class ManageResourceApplication extends lapis.Application
 				{"screenieTitle", exists: true }
 			}
 
-			yield_error "Max filesize is 600KB" if #@params.screenieFile.content > 600 * 1000
+			filesize = #@params.screenieFile.content 
+			yield_error "Max filesize is 2Mb. Your file is #{filesize} bytes" if filesize > 2 * 1000 * 1000
 
 			screenshot = 
 				resource: @resource.id

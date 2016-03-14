@@ -14,7 +14,7 @@ class ScreenshotWidget extends Widget
 		li class: "media", ->					
 			div class: "media-body", ->
 				h4 class: "media-heading", ->
-					text @screenshot.title
+					a href: screenie_url, @screenshot.title
 
 					date_created = time_ago_in_words @screenshot.created_at
 					small class: "text-muted", " uploaded #{date_created}"
