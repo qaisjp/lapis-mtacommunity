@@ -111,7 +111,6 @@ class ResourceApplication extends lapis.Application
 				yield_error err
 
 			package = clean_assert ResourcePackages\create(package), "Could not create package"
-				
 
 			success = clean_assert lfs.mkdir "uploads/#{resource.id}"
 

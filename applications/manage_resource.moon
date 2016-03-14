@@ -44,13 +44,14 @@ class ManageResourceApplication extends lapis.Application
 		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
 
 		-- see views.resources.manage.layout to add sections
-		@tab_names = {"Dashboard", "Details", "Packages", "Authors", "Settings"}
+		@tab_names = {"Dashboard", "Details", "Packages", "Authors", "Settings", "Screenshots"}
 		@tabs = {
 			dashboard: true,
 			details: @rights.can_configure
 			packages: @rights.can_manage_packages
 			settings: @resource.creator == @active_user.id
 			authors: @rights.can_manage_authors
+			screenshots: @rights.can_upload_screenshots
 		}
 
 		@check_tab = (tab) =>
@@ -75,6 +76,12 @@ class ManageResourceApplication extends lapis.Application
 
 	[packages: "/packages"]: capture_errors respond_to {
 		before: => @check_tab "packages"
+		on_error: error_500
+		GET: => render: "resources.manage.layout"
+	}
+
+	[screenshots: "/screenshots"]: capture_errors respond_to {
+		before: => @check_tab "screenshots"
 		on_error: error_500
 		GET: => render: "resources.manage.layout"
 	}
