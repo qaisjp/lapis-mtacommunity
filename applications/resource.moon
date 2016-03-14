@@ -30,6 +30,7 @@ import
 from require "lapis.util"
 import decode_base64 from require "lapis.util.encoding"
 import assert_valid from require "lapis.validate"
+import check_file from require "helpers.package_uploads"
 
 lfs = require "lfs"
 
@@ -40,42 +41,6 @@ build_filepath_upload_package = (resource, pkg, file) ->
 -- generate statements for renaming in zipnote comments
 build_rename_comment = (oldname, newname) ->
 	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
-
-check_file = (file) ->
-	-- open up a feed
-	output, err = io.popen "../mtacommunity-cli/mtacommunity-cli check --file=#{file}"
-
-	-- if it failed to open...
-	return false, {"Internal error..."} unless output
-
-	-- read all the possible errors...
-	errors = {}
-	success = true	
-	for line in output\lines! do
-		-- did we have a reportable error?
-		if line\sub(1, 7) == "error: "
-			success = false
-			table.insert errors, line\sub 8
-
-		-- are we done? is everything okay?
-		elseif line\sub(1, 2) == "ok"
-			success, decoded = pcall from_json, line\sub 3
-
-			if not success	
-				errors = {"Internal error. Give the following information to a codemonkey:", decoded, line\sub 3}
-			else
-				success = decoded
-
-			break
-
-		-- we got something else...
-		else
-			success = false
-			errors  = {"Internal error..."}
-			break
-	
-	output\close!
-	return success, errors
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
