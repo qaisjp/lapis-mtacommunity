@@ -64,25 +64,25 @@ class ManageResourceApplication extends lapis.Application
 	
 	[dashboard: "/dashboard"]: capture_errors respond_to {
 		before: => @check_tab "dashboard"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
 	}
 
 	[details: "/details"]: capture_errors respond_to {
 		before: => @check_tab "details"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
 	}
 
 	[packages: "/packages"]: capture_errors respond_to {
 		before: => @check_tab "packages"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
 	}
 
 	[screenshots: "/screenshots"]: capture_errors respond_to {
 		before: => @check_tab "screenshots"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
 	}
 
@@ -102,13 +102,13 @@ class ManageResourceApplication extends lapis.Application
 
 	[settings: "/settings"]: capture_errors respond_to {
 		before: => @check_tab "settings"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
 	}
 
 	[authors: "/authors(/:author)"]: capture_errors respond_to {
 		before: => @check_tab "authors"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: =>
 			if author_slug = @params.author
 				while true do
@@ -131,7 +131,7 @@ class ManageResourceApplication extends lapis.Application
 
 	[update_description: "/update_description"]: capture_errors respond_to {
 		before: => @check_tab "details"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
@@ -144,7 +144,7 @@ class ManageResourceApplication extends lapis.Application
 
 	[transfer_ownership: "/transfer_ownership"]: capture_errors respond_to {
 		before: => @check_tab "settings"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
@@ -177,7 +177,7 @@ class ManageResourceApplication extends lapis.Application
 
 	[delete: "/delete"]: capture_errors respond_to {
 		before: => @check_tab "settings"
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
