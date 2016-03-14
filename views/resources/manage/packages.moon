@@ -38,7 +38,7 @@ class MTAResourceManagePackages extends Widget
 						th "Publish Date"
 						th "Changes"
 					tbody ->
-						packages = ResourcePackages\select "where resource = ? order by created_at desc", @resource.id, fields: "id, version, description, created_at"
+						packages = ResourcePackages\select "where resource = ? order by version desc", @resource.id, fields: "id, version, description, created_at"
 						for package in *packages
 							manage_url = @url_for("resources.manage.view_package", resource_slug: @resource, pkg_id: package.id)
 							tr ["data-href"]: manage_url, ->
