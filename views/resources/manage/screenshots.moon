@@ -48,8 +48,12 @@ class MTAResourceManageScreenies extends Widget
 					tbody ->
 						for screenshot in *screenshots
 							manage_url = @url_for("resources.manage.view_screenshot", resource_slug: @resource, screenie_id: screenshot.id)
+							view_url = @url_for("resources.view_screenshot", resource_slug: @resource, screenie_id: screenshot.id)
 							tr ["data-href"]: manage_url, ->
 								td screenshot.title
 								td ->
 									text date(screenshot.created_at)\fmt "${http}"
-									a href: manage_url, class: "btn btn-sm btn-secondary pull-xs-right", -> i class: "fa fa-cogs"
+									div class: "pull-xs-right", ->
+										a href: view_url  , class: "btn btn-sm btn-secondary", -> i class: "fa fa-globe"
+										raw " "
+										a href: manage_url, class: "btn btn-sm btn-secondary", -> i class: "fa fa-cogs"

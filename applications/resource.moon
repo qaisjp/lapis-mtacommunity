@@ -5,6 +5,7 @@ lfs   = require "lfs"
 import
 	Resources
 	ResourcePackages
+	ResourceScreenshots
 	PackageDependencies
 	Users
 	Comments
@@ -107,9 +108,10 @@ class ResourceApplication extends lapis.Application
 
 			package = clean_assert ResourcePackages\create(package), "Could not create package"
 
-			success = clean_assert lfs.mkdir "uploads/#{resource.id}"
-			success = clean_assert lfs.mkdir "uploads/#{resource.id}/packages"
-			success = clean_assert lfs.mkdir "uploads/#{resource.id}/screenshots"
+			-- create folders...
+			clean_assert lfs.mkdir "uploads/#{resource.id}"
+			clean_assert lfs.mkdir "uploads/#{resource.id}/packages"
+			clean_assert lfs.mkdir "uploads/#{resource.id}/screenshots"
 
 			_, file = clean_assert pcall io.open, build_package_filepath(resource.id, package.id, package.file), "w"
 
@@ -132,7 +134,7 @@ class ResourceApplication extends lapis.Application
 
 			-- Paginator for comments
 			@commentsPaginator = @resource\get_comments_paginated {
-				per_page: 65536 -- postpone pagination code
+				per_page: 65536 -- no pagination (yet)
 				prepare_results: (comments) ->
 					-- Allows comment authors to be loaded in one query
 					-- (this is much much faster than a query in a loop)
@@ -141,13 +143,25 @@ class ResourceApplication extends lapis.Application
 
 			-- Paginator for packages
 			@packagesPaginator = @resource\get_packages_paginated {
-				per_page: 65536 -- postpone pagination code
+				per_page: 65536 -- no pagination (yet)
 			}
 
-			render: true
+			@screenshotsPaginator = @packagesPaginator
+
+			render: "resources.layout"
 	}
 
-	[comment: "/:resource_slug/comment"]: capture_errors respond_to {
+	[view_screenshot: "/:resource_slug/screenshots/:screenie_id[%d]"]: capture_errors {
+		on_error: error_500
+		=>
+			-- Get all the authors of the resource
+			@screenshot = ResourceScreenshots resource: @resource.id, id: @params.screenie_id
+			yield_error "That screenshot doesn't exist" unless @screenshot
+
+			render: "resources.layout"
+	}
+
+	[post_comment: "/:resource_slug/comment"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make that comment for you."
 		GET: error_405
 		POST: =>

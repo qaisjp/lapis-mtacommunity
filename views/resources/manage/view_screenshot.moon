@@ -25,15 +25,20 @@ class MTAResourceManageSinglePackage extends Widget
 							small class: "text-muted", "optional"
 						textarea class: "form-control", id: "screenieDescription", name: "screenieDescription", rows: 3, @screenshot.description
 
+					a href: @url_for("resources.view_screenshot", resource_slug: @resource, screenie_id: @screenshot.id), class: "btn btn-secondary btn-sm", ->
+						i class: "fa fa-globe"
+						text " View"
+					
+					raw " "
+
 					button type: "submit", class: "btn btn-secondary btn-sm", ->
 						i class: "fa fa-pencil"
 						text " Update"
+					
 					raw " "
+					
 					button type: "submit", name: "deleteScreenie", formnovalidate: true, class: "btn btn-secondary btn-danger btn-sm", ->
 						i class: "fa fa-remove"
 						text " Delete"
 
-				raw " "
-				--a href: @url_for("resources.get", resource_slug: @resource), class: "btn btn-secondary btn-sm", ->
-				--	i class: "fa fa-download"
-				--	text " View"
+				

@@ -33,7 +33,7 @@ class CommentWidget extends Widget
 
 			if can_show_reply
 				div class: "card-footer", id: "commentreply-#{@comment.id}", style: "display:none;", ->
-					form action: @url_for("resources.comment", resource_slug: @resource.slug), method: "POST", ->
+					form action: @url_for("resources.post_comment", resource_slug: @resource.slug), method: "POST", ->
 						@write_csrf_input @
 
 						input type: "hidden", name: "comment_parent", value: @comment.id, ["aria-hidden"]: "true"

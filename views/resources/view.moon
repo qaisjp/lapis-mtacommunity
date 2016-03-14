@@ -6,60 +6,34 @@ date = require "date"
 class MTAResourcePage extends Widget
 	@include "widgets.utils"
 	content: =>
-		if @rights and not @rights.confirmed
-			div class: "alert alert-info", role: "alert", ->
-				strong "You have an invite to moderate this resource! "
-				form class: "mta-inline-form", method: "POST", action: @url_for("resources.manage.invite_reply", resource_slug: @resource), ->
-					@write_csrf_input!
-					button type: "submit", class: "btn btn-secondary btn-sm", name: "accept_state", value: "true", ->
-						text "accept"
-					raw " "
-					button type: "submit", class: "btn btn-secondary btn-sm", name: "accept_state", value: "false", ->
-						text "decline"
+		div class: "card-block", ->
+			ul ->
+				li ->
+					text "Authors: "
+					for i, author in ipairs @authors
+						text ", " unless i == 1
+						a href: @url_for(author), author.username
 
+			text @resource.description
 
-		div class: "row", ->
-			div class: "card", ->
-				div class: "card-header", ->
-					h2 ->
-						text "#{@resource.longname} (#{@resource.name}) "
-						span class: "label label-primary", Resources.types[@resource.type]
-
-						span class: "pull-xs-right", ->
-							if @rights and @rights.confirmed
-								a class: "btn btn-secondary", href: @url_for("resources.manage.dashboard", resource_slug: @resource), ->
-									i class: "fa fa-cogs"
-									text " Manage"
-								raw " "
-
-							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
-								i class: "fa fa-download"
-								text " Download"
-
-				div class: "card-block", ->
-					ul ->
-						li ->
-							text "Authors: "
-							for i, author in ipairs @authors
-								text ", " unless i == 1
-								a href: @url_for(author), author.username
-
-					text @resource.description
-
-				div class: "card-block", ->
-					div class: "container", ->
-						div class: "row", ->
-							ul class: "nav nav-tabs mta-tablinks", role: "tablist", ->
-								li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
-									text "Comments "
-									span class: "label label-pill label-default", @commentsPaginator\total_items!
-								li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#changelog", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "changelog", ->
-									text "Changelog "
-									span class:"label label-pill label-default", @packagesPaginator\total_items!
-						div class: "row", ->
-							div class: "tab-content", ->
-								div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments @commentsPaginator
-								div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog @packagesPaginator
+		div class: "card-block", ->
+			div class: "container", ->
+				div class: "row", ->
+					ul class: "nav nav-tabs mta-tablinks", role: "tablist", ->
+						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
+							text "Comments "
+							span class: "label label-pill label-default", @commentsPaginator\total_items!
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#changelog", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "changelog", ->
+							text "Changelog "
+							span class:"label label-pill label-default", @packagesPaginator\total_items!
+						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
+							text "Screenshots "
+							span class:"label label-pill label-default", @screenshotsPaginator\total_items!
+				div class: "row", ->
+					div class: "tab-content", ->
+						div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments @commentsPaginator
+						div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog @packagesPaginator
+						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", -> @write_changelog @screenshotsPaginator
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"
@@ -70,7 +44,7 @@ class MTAResourcePage extends Widget
 			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
 		if @active_user
-			form action: @url_for("resources.comment", resource_slug: @resource), method: "POST", ->
+			form action: @url_for("resources.post_comment", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input @
 				label class: "sr-only", ["for"]: "comment_text", "Comment message:"
 				textarea class: "form-control", name: "comment_text", id: "comment_text", required: true, placeholder: "markdown comment..."
