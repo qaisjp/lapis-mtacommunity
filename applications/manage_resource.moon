@@ -135,7 +135,7 @@ class ManageResourceApplication extends lapis.Application
 
 	[view_screenshot: "/screenshots/:screenie_id[%d]"]: capture_errors respond_to {
 		before: =>
-			@check_tab "packages"
+			@check_tab "screenshots"
 			@screenshot = assert_error (ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id), "That's not your screenshot."
 
 		on_error: => error_500 @, @errors[1]
