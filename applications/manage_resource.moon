@@ -149,6 +149,7 @@ class ManageResourceApplication extends lapis.Application
 			assert_valid @params, {
 				{"screenieTitle", exists: true}
 			}
+
 			@screenshot\update
 				title: @params.screenieTitle
 				description: @params.screenieDescription or ""
@@ -205,8 +206,12 @@ class ManageResourceApplication extends lapis.Application
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
+			assert_valid @params, {
+				{"settingsNewOwner", exists: true, min_length: 1, max_length: 255}
+			}
 
 			-- check if new owner exists
+			new_owner = Users\search @params.settingsNewOwner
 
 			-- future: 
 				-- send email to existing owner
@@ -214,6 +219,7 @@ class ManageResourceApplication extends lapis.Application
 				-- newOwner accepts request to become owner
 
 			-- make new owner the owner
+			@resource\update creator: new_owner.id	
 
 			-- redirect to main resource page (we no longer have permissions)
 			redirect_to: @url_for @resource
