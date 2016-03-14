@@ -1,6 +1,6 @@
 import from_json from require "lapis.util"
 
-check_file = (file) ->
+check_resource_file = (file) ->
 	-- open up a feed
 	output, err = io.popen "../mtacommunity-cli/mtacommunity-cli check --file=#{file}"
 
@@ -36,4 +36,17 @@ check_file = (file) ->
 	output\close!
 	return success, errors
 
-{:check_file}
+
+-- general function to build a path relative to the web root for packages
+build_package_filepath = (resource, pkg, file) ->
+	"uploads/#{resource}/packages/#{pkg}.#{file}"
+
+-- general function to build a path relative to the web root for screenshots
+build_screenshot_filepath = (resource, pkg, file) ->
+	"uploads/#{resource}/packages/#{pkg}.#{file}"
+
+-- generate statements for renaming in zipnote comments
+build_rename_comment = (oldname, newname) ->
+	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
+
+{:check_resource_file, :build_package_filepath, :build_screenshot_filepath, :build_rename_comment}

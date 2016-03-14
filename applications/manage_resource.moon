@@ -3,6 +3,7 @@ db    = require "lapis.db"
 import
 	Resources
 	ResourcePackages
+	ResourceScreenshots
 	ResourceAdmins
 	Users
 	Comments
@@ -80,12 +81,6 @@ class ManageResourceApplication extends lapis.Application
 		GET: => render: "resources.manage.layout"
 	}
 
-	[screenshots: "/screenshots"]: capture_errors respond_to {
-		before: => @check_tab "screenshots"
-		on_error: => error_500 @, @errors[1]
-		GET: => render: "resources.manage.layout"
-	}
-
 	[view_package: "/packages/:pkg_id[%d]"]: capture_errors respond_to {
 		before: =>
 			@check_tab "packages"
@@ -96,6 +91,31 @@ class ManageResourceApplication extends lapis.Application
 			assert_csrf_token @
 			assert_valid @params, {{"updateDescription", exists: true}}
 			@package\update description: @params.updateDescription
+			render: "resources.manage.layout"
+		GET: =>	render: "resources.manage.layout"
+	}
+
+	[screenshots: "/screenshots"]: capture_errors respond_to {
+		before: => @check_tab "screenshots"
+		on_error: => error_500 @, @errors[1]
+		GET: => render: "resources.manage.layout"
+	}
+
+	[view_screenshot: "/screenshots/:screenie_id[%d]"]: capture_errors respond_to {
+		before: =>
+			@check_tab "packages"
+			@screenshot = assert_error (ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id), "That's not your screenshot."
+
+		on_error: => error_500 @, @errors[1]
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {
+				{"updateTitle", exists: true}
+				{"updateDescription", exists: true}
+			}
+			@screenshot\update
+				title: @params.updateTitle
+				description: @params.updateDescription
 			render: "resources.manage.layout"
 		GET: =>	render: "resources.manage.layout"
 	}

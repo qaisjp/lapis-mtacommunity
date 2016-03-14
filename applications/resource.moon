@@ -30,17 +30,12 @@ import
 from require "lapis.util"
 import decode_base64 from require "lapis.util.encoding"
 import assert_valid from require "lapis.validate"
-import check_file from require "helpers.package_uploads"
-
+import
+	check_resource_file
+	build_package_filepath
+	build_rename_comment
+from require "helpers.uploads"
 lfs = require "lfs"
-
--- general function to build a path relative to the web root
-build_filepath_upload_package = (resource, pkg, file) ->
-	"uploads/#{resource}/#{pkg}.#{file}"
-
--- generate statements for renaming in zipnote comments
-build_rename_comment = (oldname, newname) ->
-	"@ #{oldname}\n@=#{newname}\n@ (comment above this line)\n"
 
 class ResourceApplication extends lapis.Application
 	path: "/resources"
@@ -87,7 +82,7 @@ class ResourceApplication extends lapis.Application
 			file\write @params.resUpload.content
 			file\close!
 
-			metaResults, @errors = check_file filename
+			metaResults, @errors = check_resource_file filename
 			
 			if not metaResults
 				os.remove filename
@@ -113,8 +108,10 @@ class ResourceApplication extends lapis.Application
 			package = clean_assert ResourcePackages\create(package), "Could not create package"
 
 			success = clean_assert lfs.mkdir "uploads/#{resource.id}"
+			success = clean_assert lfs.mkdir "uploads/#{resource.id}/packages"
+			success = clean_assert lfs.mkdir "uploads/#{resource.id}/screenshots"
 
-			success, file = clean_assert pcall io.open, build_filepath_upload_package(resource.id, package.id, package.file), "w"
+			success, file = clean_assert pcall io.open, build_package_filepath(resource.id, package.id, package.file), "w"
 			
 
 			file\write @params.resUpload.content
@@ -198,7 +195,7 @@ class ResourceApplication extends lapis.Application
 				assert_csrf_token @
 
 				-- build the base package path as well as its filename
-				filepath = build_filepath_upload_package @package.resource, @package.id, @package.file
+				filepath = build_package_filepath @package.resource, @package.id, @package.file
 				filename = @resource.name .. ".zip"
 
 				-- Lets try and decode a deps field...
@@ -251,7 +248,7 @@ class ResourceApplication extends lapis.Application
 					cmd = {
 						"zip -0 -j"
 						filepath,
-						dir .. "/" .. build_filepath_upload_package @package.resource, @package.id, @package.file
+						dir .. "/" .. build_package_filepath @package.resource, @package.id, @package.file
 					}
 
 					-- add a renamer to the base package
@@ -262,7 +259,7 @@ class ResourceApplication extends lapis.Application
 
 					for dep in *dependencies
 						-- add the package to the zip file
-						table.insert cmd, "\"#{dir}/#{build_filepath_upload_package dep.resource, dep.id, dep.file}\""
+						table.insert cmd, "\"#{dir}/#{build_package_filepath dep.resource, dep.id, dep.file}\""
 
 						-- rename the package to something friendly
 						table.insert renameComments, build_rename_comment "#{dep.id}.#{dep.file}", dep.name .. ".zip"
