@@ -18,6 +18,7 @@ class Resources extends Model
 
 	@relations: {
 		{"comments", has_many: "Comments", key: "resource", order: "created_at desc", where: deleted: false}
+		{"screenshots", has_many: "ResourceScreenshots", key: "resource", order: "created_at desc"}
 		{"packages", has_many: "ResourcePackages", key: "resource", order: "created_at desc"}
 	}
 

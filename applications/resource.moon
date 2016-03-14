@@ -34,6 +34,7 @@ import assert_valid from require "lapis.validate"
 import
 	check_resource_file
 	build_package_filepath
+	build_screenshot_filepath
 	build_rename_comment
 from require "helpers.uploads"
 lfs = require "lfs"
@@ -122,7 +123,7 @@ class ResourceApplication extends lapis.Application
 	}
 	
 	[view: "/:resource_slug"]: capture_errors {
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		=>
 			-- Get all the authors of the resource
 			@authors = @resource\get_authors fields: "users.username, users.slug, users.id", is_confirmed: true, include_creator: true
@@ -146,19 +147,40 @@ class ResourceApplication extends lapis.Application
 				per_page: 65536 -- no pagination (yet)
 			}
 
-			@screenshotsPaginator = @packagesPaginator
+			@screenshotsPaginator = @resource\get_screenshots_paginated per_page: 66536
 
 			render: "resources.layout"
 	}
 
 	[view_screenshot: "/:resource_slug/screenshots/:screenie_id[%d]"]: capture_errors {
-		on_error: error_500
+		on_error: => error_500 @, @errors[1]
 		=>
 			-- Get all the authors of the resource
-			@screenshot = ResourceScreenshots resource: @resource.id, id: @params.screenie_id
+			@screenshot = ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id
 			yield_error "That screenshot doesn't exist" unless @screenshot
 
 			render: "resources.layout"
+	}
+
+	[view_screenshot_image: "/:resource_slug/screenshots/:screenie_id[%d].png"]: capture_errors {
+		on_error: => error_500 @, @errors[1]
+		=>
+			-- Get all the authors of the resource
+			screenshot = ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id
+			yield_error "That screenshot doesn't exist" unless screenshot
+
+			filename = screenshot.title and ("#{slugify screenshot.title}.png") or ("#{slugify resource.name}_screenshot.png")
+
+			opts = {
+				filepath: build_screenshot_filepath(@resource.id, screenshot.id, screenshot.file)
+				:filename
+				external: false -- defaults to this anyway
+				-- todo: add correct mime type
+			}
+
+			assert_error serve_file opts
+
+			yield_error "An image #{opts.filepath} should have been served. Sorry about that."
 	}
 
 	[post_comment: "/:resource_slug/comment"]: capture_errors respond_to {
@@ -300,7 +322,21 @@ class ResourceApplication extends lapis.Application
 				@resource\update "downloads"
 
 				-- throw it to the user!
-				success, err = serve_file filepath, filename, "application/zip", dependencies and true
+				success, err = serve_file {
+					:filepath
+					:filename
+					external: dependencies and true
+					header: {
+						-- set the correct mime type, so the browser doesn't display
+						-- knows how to deal with this type of file
+						content_type: "application/zip"
+
+						-- make the browser download the file instead of showing it inline
+						-- as well as set the filename for the "attachment"
+						content_disposition: "attachment; filename=\"#{filename}\""
+					}
+				}
+
 				unless success
 					yield_error! -- ,err
 

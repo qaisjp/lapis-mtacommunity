@@ -52,14 +52,12 @@ get_gravatar_url = (email, size) ->
 
 -- serves a file on the filesystem or redirect to a
 -- path internally for serving files
-serve_file = (filepath, filename, mime_type, external) ->
-	-- set the correct mime type, so the browser doesn't display
-	-- knows how to deal with this type of file
-	ngx.header.content_type = mime_type
-
-	-- make the browser download the file instead of showing it inline
-	-- set the filename
-	ngx.header.content_disposition = "attachment; filename=\"#{filename}\""
+serve_file = (opts) ->
+	filepath = opts.filepath
+	filename = opts.filename
+	external = opts.external
+	for k, v in pairs opts.header or {}
+		ngx.header[k] = v
 
 	-- if it's on an internal path
 	-- we'll let nginx deal with serving

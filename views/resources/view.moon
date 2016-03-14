@@ -33,15 +33,14 @@ class MTAResourcePage extends Widget
 					div class: "tab-content", ->
 						div role: "tabpanel", class: "tab-pane fade in active", id: "comments", -> @write_comments @commentsPaginator
 						div role: "tabpanel", class: "tab-pane fade", id: "changelog", -> @write_changelog @packagesPaginator
-						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", -> @write_changelog @screenshotsPaginator
+						div role: "tabpanel", class: "tab-pane fade", id: "screenshots", -> @write_screenshots @screenshotsPaginator
 
 		@content_for "post_body_script", ->
 			script type: "text/javascript", -> raw "check_tablinks()"
 
 	write_comments: (paginated) =>
 		comments = paginated\get_page 1
-		ul ->
-			li "#{paginated\num_pages!} pages. #{#comments} comments showing."
+		text "#{paginated\num_pages!} pages. #{#comments} comments showing."
 
 		if @active_user
 			form action: @url_for("resources.post_comment", resource_slug: @resource), method: "POST", ->
@@ -70,8 +69,7 @@ class MTAResourcePage extends Widget
 
 	write_changelog: (paginated) =>
 		packages = paginated\get_page 1
-		ul ->
-			li "#{paginated\num_pages!} pages. #{#packages} packages showing."
+		text "#{paginated\num_pages!} pages. #{#packages} packages showing."
 
 		element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 			thead -> tr ->
@@ -84,3 +82,13 @@ class MTAResourcePage extends Widget
 						td package.version
 						td time_ago_in_words package.created_at
 						td package.description
+
+	write_screenshots: (paginated) =>
+		screenshots = paginated\get_page 1
+		text "#{paginated\num_pages!} pages. #{#screenshots} screenshots showing."
+
+		ScreenshotWidget = require "widgets.screenshot"
+
+		ul class: "media-list", ->
+			for screenshot in *screenshots
+				widget ScreenshotWidget :screenshot, resource: @resource
