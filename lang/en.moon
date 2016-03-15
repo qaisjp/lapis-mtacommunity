@@ -63,3 +63,23 @@ en:
 		in_description: "Search in description"
 		results_header: "Search Results"
 		no_results: "No resources match your search query"
+
+	errors:
+		bad_request:
+			title: "Bad Request"
+			h1: "400: Bad Request"
+			h3: "This is not the right page you're looking for."
+		not_authorized:
+			title: "Not Authorized"
+			h1: "Sorry, you can't access this page."
+		not_found:
+			title: "Page not found"
+			h1: "404: Sorry, this page isn't available"
+			h3: "The page doesn't exist, but it might have in the past, and it might in the future!"
+		method_disallowed:
+			title: "Error 405"
+			h1: "405: Sorry, this page isn't available"
+			h3: "The page doesn't exist, but it might have in the past, and it might in the future!"
+		server_error:
+			title: "Oops"
+			h3: "Something went wrong."

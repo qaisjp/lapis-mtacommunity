@@ -2,6 +2,7 @@ import
 	generate_token
 	assert_token
 from require "lapis.csrf"
+i18n = require "i18n"
 
 generate_csrf_token = =>
 	generate_token @, @active_user and @active_user.id
@@ -16,33 +17,33 @@ check_logged_in = =>
 	true
 
 error_bad_request = (err) =>
-	@title = "Bad Request"
+	@title = i18n "errors.bad_request.title"
 	status: 400, @html ->
-		h1 "400: Bad Request"
-		h3 err or "This is not the right page you're looking for."
+		h1 i18n "errors.bad_request.h1"
+		h3 err or i18n "errors.bad_request.h3"
 
 error_not_authorized = (err) =>
-	@title = "Not Authorized"
+	@title = i18n "errors.not_authorized.title"
 	status: 403, @html ->
-		h1 "Sorry, you can't access this page."
+		h1 i18n "errors.not_authorized.h1"
 		h3 err if err
 
 error_404 = (err) =>
-	@title = "Page not found"
+	@title = i18n "errors.not_found.title"
 	status: 404, @html ->
-		h1 "404: Sorry, this page isn't available"
-		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
+		h1 i18n "errors.not_found.h1"
+		h3 err or i18n "errors.not_found.h3"
 
 error_405 = (err) =>
-	@title = "Error 405"
+	@title = i18n "errors.method_disallowed.title"
 	status: 405, @html ->
-		h1 "405: Sorry, this page isn't available"
-		h3 err or "The page doesn't exist, but it might have in the past, and it might in the future!"
+		h1 i18n "errors.method_disallowed.h1"
+		h3 err or i18n "errors.method_disallowed.h3"
 
 error_500 = (err) =>
-	@title = "Oops"
+	@title = i18n "errors.server_error.title"
 	status: 500, @html ->
-		h1 "Something went wrong."
+		h1 i18n "errors.server_error.h3"
 		h3 err if err
 
 get_gravatar_url = (email, size) ->
