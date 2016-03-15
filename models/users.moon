@@ -6,7 +6,7 @@ slugify_username = (username) ->
 
 bcrypt = require "bcrypt"
 db     = require "lapis.db"
-
+i18n   = require "i18n"
 import
 	Bans
 	UserData
@@ -45,19 +45,19 @@ class Users extends Model
 		username = trim(username)
 
 		if username == ""
-			return nil, "Invalid username"
+			return nil, i18n "users.errors.invalid_name"
 
 		-- First check if the username is unique
 		if @check_unique_constraint [db.raw "lower(username)"]: username\lower!
-			return nil, "Username already exists"
+			return nil, i18n "users.errors.account_exists"
 
 		-- All these checks are case insensitive
 		if @check_unique_constraint [db.raw "lower(email)"]: username\lower!
-			return nil, "Account already exists"
+			return nil, i18n "users.errors.account_exists"
 			
 		slug = slugify_username username
 		if @check_unique_constraint [db.raw "lower(slug)"]: slug\lower!
-			return nil, "Username already exists"
+			return nil, i18n "users.errors.account_exists"
 
 		username, slug
 
@@ -73,12 +73,12 @@ class Users extends Model
 
 		-- Now check email
 		if @check_unique_constraint [db.raw "lower(email)"]: email\lower!
-			return nil, "Account already exists"
+			return nil, i18n "users.errors.account_exists"
 
 		-- For some reason, people might use their email as a username too
 		-- We have to deal with emails formatted as usernames...
 		if @check_unique_constraint [db.raw "lower(username)"]: email\lower!
-			return nil, "Username already exists"
+			return nil, i18n "users.errors.account_exists"
 
 		true
 
@@ -103,13 +103,13 @@ class Users extends Model
 		user = @search username
 
 		unless user and user\check_password password
-			return nil, "Incorrect username or password."
+			return nil, i18n "users.errors.bad_credentials"
 
 		unless user.activated
-			return nil, "Your account has not been activated."
+			return nil, i18n "users.errors.not_activated"
 
 		if user\is_banned!
-			return nil, "You are banned."
+			return nil, i18n "users.errors.banned"
 
 		user -- return user
 

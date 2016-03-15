@@ -1,4 +1,5 @@
-db = require "lapis.db"
+db   = require "lapis.db"
+i18n = require "i18n"
 import Model, enum from require "lapis.db.model"
 import Users from require "models"
 
@@ -36,14 +37,14 @@ class Resources extends Model
 		name = trim name
 		
 		if name == ""
-			return nil, "Invalid resource name"
+			return nil, i18n "resources.manage.errors.invalid_name"
 
 		if @check_unique_constraint [db.raw "lower(name)"]: name\lower!
-			return nil, "Resource already exists"	
+			return nil, i18n "resources.manage.errors.already_exists"
 			
 		slug = slugify_resource_name name
 		if @check_unique_constraint [db.raw "lower(slug)"]: slug\lower!
-			return nil, "Resource already exists"
+			return nil, i18n "resources.manage.errors.already_exists"
 		
 		name, slug
 

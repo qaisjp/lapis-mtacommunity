@@ -23,6 +23,7 @@ en:
 		manage:
 			errors:
 				resource_already_exists: "Resource already exists"
+				invalid_name: "Invalid resource name"
 
 				no_package: "That's not your package."
 				not_create_package: "Could not create package"
@@ -66,6 +67,9 @@ en:
 		action_unfollow: "Unfollow"
 		errors:
 			not_exist: "User does not exist"
+			invalid_name: "Invalid username"
+			account_exists: "Account already exists"
+
 			friendly_update_profile: "We're sorry we couldn't make those changes."
 			friendly_delete_account: "We're sorry we couldn't delete your account."
 			friendly_rename_account: "We're sorry we couldn't rename your account."
@@ -75,6 +79,10 @@ en:
 			cannot_follow_self: "You cannot follow yourself"
 			already_following: "You are already following this person"
 			not_currently_following: "You are not following this person"
+
+			bad_credentials: "Incorrect username or password."
+			not_activated: "Your account has not been activated."
+			banned: "You are banned."
 
 	auth:
 		login_title: "Login"
