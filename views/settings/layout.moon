@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+i18n = require "i18n"
 
 class MTASettingsLayout extends Widget
 	content: =>
@@ -8,11 +9,11 @@ class MTASettingsLayout extends Widget
 				div class: "card-header", "Settings"
 				div class: "card-block", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						for name in *{"Profile", "Account"}
+						for name in *{"profile", "account"}
 							li role: "presentation", class: "nav-item", ->
 								a {
-									class: "nav-link" .. (if name == viewWidget.name then " active" else "")
-									href: @url_for("settings." .. name\lower!)
-								}, name
+									class: "nav-link" .. (if name == viewWidget.category then " active" else "")
+									href: @url_for("settings." .. name)
+								}, i18n "settings.#{name}"
 
 		div class: "col-md-10", -> widget viewWidget

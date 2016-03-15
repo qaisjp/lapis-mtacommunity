@@ -84,6 +84,7 @@ en:
 
 		website: "Website"
 		gang: "Gang"
+		location: "Location"
 		cakeday: "Birthday"
 		profile_buttons: "Profile Buttons"
 
@@ -106,11 +107,38 @@ en:
 			not_activated: "Your account has not been activated."
 			banned: "You are banned."
 
+	settings:
+		username: "Username"
+		profile: "Profile"
+		account: "Account"
+
+		privacy: "Privacy"
+		public: "Public"
+		privacy_note: "This only affects your profile page. Everyone will be able to see your comments and see in others' list that they follow you."
+		following_only: "Following Only"
+		update_section: "Update Section"
+
+		changepass_title: "Change your password"
+		old_pass: "Old password"
+		new_pass: "New password"
+		confirm_new_pass: "Confirm new password"
+		changepass_button: "Change password"
+		
+		rename_title: "Change username"
+		rename_info: "Your old username becomes available for other people to register. No redirections will be set up."
+		rename_button: "Change username..."
+		rename_confirm: "Are you sure you want to change your username?"
+
+		delete_info: "Deleting your account removes all resources, names from your comments, and screenshots. The username also becomes available for other people to register."
+		delete_button: "Delete account..."
+		delete_confirm: "Are you sure you want to delete your account? This is permanent."
+
+
 	auth:
 		login_title: "Login"
 		register_title: "Register"
 		reset_title: "Reset your password"
-
+		
 		username_placeholder: "username"
 		password_placeholder: "password"
 		confirm_password_placeholder: "confirm"
