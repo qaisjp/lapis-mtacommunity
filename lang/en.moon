@@ -65,6 +65,28 @@ en:
 	users:
 		action_follow: "Follow"
 		action_unfollow: "Unfollow"
+		confirm_follow: "Are you sure you want to follow \"%{name}\"?"
+		confirm_unfollow: "Are you sure you want to unfollow \"%{name}\"?"
+
+		member_for_duration: "Member for %{duration}"
+		card_follow_time: "Following for %{duration}"
+		private_profile: "This user's profile is private."
+		gravatar_alt: "%{name}'s avatar"
+
+		tab_resources: "Resources"
+		tab_followers: "Followers"
+		tab_following: "Following"
+		tab_comments: "Comments"
+		tab_screenshots: "Screenshots"
+
+		manage_user: "Manage user"
+		edit_profile: "Edit profile"
+
+		website: "Website"
+		gang: "Gang"
+		cakeday: "Birthday"
+		profile_buttons: "Profile Buttons"
+
 		errors:
 			not_exist: "User does not exist"
 			invalid_name: "Invalid username"
@@ -76,7 +98,7 @@ en:
 			friendly_change_password: "We're sorry we couldn't change your password."
 			old_password_mismatch: "Your old password is incorrect."
 
-			cannot_follow_self: "You cannot follow yourself"
+			cannot_follow_self: "You cannot follow yourself."
 			already_following: "You are already following this person"
 			not_currently_following: "You are not following this person"
 

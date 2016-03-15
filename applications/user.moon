@@ -96,7 +96,7 @@ class UserApplication extends lapis.Application
 		on_error: error_500
 		before: =>
 			if @active_user.id == @user.id
-				@write error_bad_request i18n "users.errors.cannot_follow_self"
+				@write error_bad_request @, i18n "users.errors.cannot_follow_self"
 			@isFollowing = @active_user\is_following @user
 
 		GET: =>	render: true
@@ -106,13 +106,13 @@ class UserApplication extends lapis.Application
 
 			if @params.intent == "follow"
 				if @isFollowing
-					return error_bad_request i18n "users.errors.already_following"
+					return error_bad_request @, i18n "users.errors.already_following"
 
 				UserFollowings\create {follower: @active_user.id, following: @user.id}
 
 			elseif @params.intent == "unfollow"
 				unless @isFollowing
-					return error_bad_request i18n "users.errors.not_currently_following"
+					return error_bad_request @, i18n "users.errors.not_currently_following"
 
 				uf = UserFollowings\find {follower: @active_user.id, following: @user.id}
 				uf\delete! if uf

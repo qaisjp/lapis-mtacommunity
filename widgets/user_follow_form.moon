@@ -1,6 +1,6 @@
 import Widget from require "lapis.html"
 import write_csrf_input from require "utils"
-
+i18n = require "i18n"
 
 class FollowForm extends Widget
 	@include "widgets.utils"

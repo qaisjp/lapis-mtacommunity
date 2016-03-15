@@ -5,25 +5,27 @@ import time_ago_in_words from require "lapis.util"
 
 ScreenshotWidget = require "widgets.screenshot"
 
-db = require "lapis.db"	
+db   = require "lapis.db"	
+i18n = require "i18n"
 
 build_cards = {
 	following: 1, followers: 1, comments: true, screenshots: true
 	follow: (user) => ->
 		div class: "card-header", ->
-			img src: get_gravatar_url(user.email, 75), alt: "#{user.username}'s email"
+			img src: get_gravatar_url(user.email, 75), alt: i18n("users.gravatar_alt", name: user.username)
 			raw " "
 			a href: @url_for("user.profile", username: user.username), user.username
 		div class: "card-block", ->
-			text " Following for #{time_ago_in_words user.followed_at, nil, ''}"
+			text " "
+			text i18n "users.card_follow_time", duration: time_ago_in_words user.followed_at, nil, ''
 
 	resources: (resource) => ->
 		div class: "card-header", ->
 			a href: @url_for("resources.view", resource_slug: resource.slug), resource.name
 		div class: "card-block", ->
-			text " Downloads: #{resource.downloads}"
+			text " #{i18n 'resources.table.downloads'}: #{resource.downloads}"
 			br!
-			text " Rating: #{resource.rating}"
+			text " #{i18n 'resources.table.rating'}: #{resource.rating}"
 }
 
 class MTAUserLayout extends Widget
@@ -47,10 +49,10 @@ class MTAUserLayout extends Widget
 					
 					i class: "fa fa-fw fa-clock-o"
 					raw " "
-					text "Member for #{time_ago_in_words @user.created_at, nil, ''}"
+					text i18n "users.member_for_duration", duration: time_ago_in_words @user.created_at, nil, ''
 
 					if protectedMode
-						p "This user's profile is private."
+						p i18n "users.private_profile"
 						return 
 
 					if loc = @data.location
@@ -63,32 +65,34 @@ class MTAUserLayout extends Widget
 						br!
 						i class: "fa fa-fw fa-link"
 						raw " "
-						a href: @build_url(url), "Website"
+						a href: @build_url(url), i18n "users.website"
 
 					if gang = @data.gang
 						br!
 						i class: "fa fa-fw fa-users"
 						raw " "
-						text "Gang: #{gang}"
+						text "#{i18n 'users.gang'}: #{gang}"
 
 					if birthday = @data.birthday
 						br!
 						i class: "fa fa-fw fa-birthday-cake"
 						raw " "
-						text "Birthday: #{birthday}"
+						text "#{i18n 'users.cakeday'}: #{birthday}"
 
 				div class: "media-right", ->
-					div class: "btn-group-vertical", role: "group", ["aria-label"]: "Profile Buttons", ->
+					div class: "btn-group-vertical", role: "group", ["aria-label"]: i18n("users.profile_buttons"), ->
 						if @active_user							
 							if @active_user\can_manage @user
 								a href: @url_for("admin.manage_user", user_id: @user.id), class: "btn btn-secondary", ->
 									i class: "fa fa-cogs"
-									text " Manage user"
+									raw  " "
+									text i18n "users.manage_user"
 
 							if (@active_user.id == @user.id)
 								a href: @url_for("settings.profile"), class: "btn btn-secondary" , ->
 									i class: "fa fa-pencil"
-									text " Edit profile"
+									raw " "
+									text i18n "users.edit_profile"
 							else
 								-- We follow them
 								widget require "widgets.user_follow_form"
@@ -102,15 +106,13 @@ class MTAUserLayout extends Widget
 
 				div class: "col-md-2 ", ->
 					ul class: "nav nav-pills nav-stacked", role: "tablist", ->
-						for name in *{"Resources", "Followers", "Following", "Screenshots", "Comments"}
-							lowerName = string.lower name
-
+						for name in *{"resources", "followers", "following", "screenshots", "comments"}
 							-- make the "resources" page not really need ?tab=resources
-							href = (name == "Resources") and @user.slug or "?tab=#{lowerName}"
+							href = (name == "resources") and @user.slug or "?tab=#{name}"
 
-							li role: "presentation", class: "nav-item", -> a class: {"nav-link", active: tab == lowerName}, :href, ->
-								text name .. " "
-								span class: "label label-pill label-default", @[lowerName .. "_count"]
+							li role: "presentation", class: "nav-item", -> a class: {"nav-link", active: tab == name}, :href, ->
+								text i18n("users.tab_#{name}") .. " "
+								span class: "label label-pill label-default", @[name .. "_count"]
 						
 				div class: "col-md-10", ->
 					if build_cards[tab] and (build_cards[tab] != true)
