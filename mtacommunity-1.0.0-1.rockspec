@@ -14,7 +14,8 @@ dependencies = {
 	"luafilesystem",
 	"date",
 	"mailgun",
-	"bcrypt"
+	"bcrypt",
+	"i18n"
 }
 
 build = {
