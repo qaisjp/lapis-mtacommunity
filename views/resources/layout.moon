@@ -6,7 +6,7 @@ date = require "date"
 class MTAResourceLayout extends Widget
 	@include "widgets.utils"
 	content: =>
-		if @rights and not @rights.confirmed
+		if @rights and not @rights.user_confirmed
 			div class: "alert alert-info", role: "alert", ->
 				strong "You have an invite to moderate this resource! "
 				form class: "mta-inline-form", method: "POST", action: @url_for("resources.manage.invite_reply", resource_slug: @resource), ->
@@ -25,7 +25,7 @@ class MTAResourceLayout extends Widget
 						span class: "label label-primary", Resources.types[@resource.type]
 
 						span class: "pull-xs-right", ->
-							if @rights and @rights.confirmed
+							if @rights and @rights.user_confirmed
 								a class: "btn btn-secondary", href: @url_for("resources.manage.dashboard", resource_slug: @resource), ->
 									i class: "fa fa-cogs"
 									text " Manage"

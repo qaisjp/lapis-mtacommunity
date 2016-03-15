@@ -1,4 +1,8 @@
 en:
+	are_you_sure: "Are you sure?"
+	warning: "Warning!"
+	since: "Since"
+
 	layout:
 		logout: "logout"
 
@@ -19,8 +23,25 @@ en:
 		table:
 			name: "Name"
 			description: "Description"
+			downloads: "Downloads"
 			rating: "Rating"
 		manage:
+			author_delete_self: "If you delete yourself as an author, you won't be able to use this page anymore. Be careful."
+			author_make_invite: "Invite author"
+			author_own_permissions: "%{name}'s permissions"
+			author_perm_dashboard_note: "All authors can view the resource dashboard"
+			author_right: "right"
+			author_right_value: "value"
+			author_update_perms_button: "Update permissions"
+			author_delete_button: "Delete author"
+			author_delete_confirm: "Are you sure you want to remove this user as an author?"
+			author_invite_button: "Invite..."
+
+			authors_list: "List of authors"
+			authors_list_empty: "This resource has no co-authors."
+			authors_invited: "Invited authors"
+			authors_invited_empty: "This resource has no pending invites for authorship."
+
 			errors:
 				resource_already_exists: "Resource already exists"
 				invalid_name: "Invalid resource name"
