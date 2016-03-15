@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+i18n = require "i18n"
 
 -- This is the widget for the search card used on the
 -- resources listing page and the search results page
@@ -8,7 +9,7 @@ class SearchCard extends Widget
 	content: =>
 		div class: "card", id: "mta-search-widget", ->
 			div class: "card-header", ->
-				text " Search"
+				text " #{i18n 'search.title'}"
 
 				-- We won't show the quick search fields if we're on the search page
 				unless @onSearchPage
@@ -37,7 +38,7 @@ class SearchCard extends Widget
 						div class: "checkbox", ->
     						label ->
     							input type: "checkbox", name: "description", value: "true", checked: @params.description
-    							text " Search in description"
+    							text " #{i18n 'search.in_description'}"
 
 					div class: "row", ->
 						div class: "form-group", ->
@@ -61,26 +62,26 @@ class SearchCard extends Widget
 
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
-							text " Search"
+							text " #{i18n 'search.title'}"
 
 	-- Creating the "name" form group
 	form_group_name: (advancedMode) =>
 		div class: "form-group", ->
-			label class: "sr-only", ["for"]: "searchGreedyName", "Name"
+			label class: "sr-only", ["for"]: "searchGreedyName", i18n "search.sr_field_name"
 			text " " if advancedMode
 			input 
 				type: "text"
 				class: {"form-control", ["form-control-sm"]: not advancedMode}
 				name: "name"
 				id: "searchGreedyName"
-				placeholder: "short or long name"
+				placeholder: i18n 'search.field_placeholder'
 				required: true
 				value: @params.name
 
 	-- Creating the "type" form group
 	form_group_type: (advancedMode) =>
 		div class: "form-group", ->
-			label class: "sr-only", ["for"]: "searchType", "Type"
+			label class: "sr-only", ["for"]: "searchType", i18n "resources.type"
 			element "select", name: "type", class: {"form-control", ["form-control-sm"]: not advancedMode, "c-select"}, ->
 				option value: "any", selected: not @params.type, "any type"
 

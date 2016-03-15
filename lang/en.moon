@@ -11,6 +11,7 @@ en:
 	
 	resources:
 		latest_resources: "Latest resources"
+		type: "Type"
 
 		cards:
 			last_updated: "Last updated"
@@ -23,6 +24,42 @@ en:
 			description: "Description"
 			rating: "Rating"
 
+	comment:
+		title:
+			one: "Comment"
+			many: "Comments"
+		deleted: "deleted"
+		reply_message: "Comment reply message"
+		message_placeholder: "Place your comment here"
+		user_replied: "replied"
+		user_commented: "commented"
+		user_modified: "modified"
+
+	screenshots:
+		uploaded_since: "uploaded"
+
+	users:
+		action_follow: "Follow"
+		action_unfollow: "Unfollow"
+
+	auth:
+		username_placeholder: "username"
+		password_placeholder: "password"
+		confirm_password_placeholder: "confirm"
+		email_placeholder: "email address"
+
+		register_button: "register"
+		login_button: "login"
+
+		register_title: "Register an account"
+		register_success: "Account successfully created. Your account has been automatically activated."
+
 	search:
+		title: "Search"
+		
+		field_placeholder: "short or long name"
+		sr_field_name: "Name"
+
+		in_description: "Search in description"
 		results_header: "Search Results"
 		no_results: "No resources match your search query"

@@ -1,5 +1,6 @@
 import Widget from require "lapis.html"
 import time_ago_in_words from require "lapis.util"
+i18n = require "i18n"
 
 class CommentWidget extends Widget
 	@include "widgets.utils"
@@ -16,13 +17,13 @@ class CommentWidget extends Widget
 				if @comment.author
 					a style: "color: inherit;", href: @url_for("user.profile", username: @comment.author.slug), -> strong @comment.author.username
 				else
-					span "[deleted]"
-				span class: "text-muted", @comment.parent and " replied " or " commented "
+					span "[#{i18n 'comment.deleted'}]"
+				span class: "text-muted", @comment.parent and " #{i18n 'comment.user_replied'} " or " #{i18n 'comment.user_commented'} "
 				a class: "text-muted", href: "#"..anchor, ->
 					text time_ago_in_words @comment.created_at
 
 					if @comment.edited_at
-						text " (modified "
+						text " (#{i18n 'comment.user_modified'} "
 						text time_ago_in_words @comment.edited_at
 						text ")"
 
@@ -37,9 +38,10 @@ class CommentWidget extends Widget
 						@write_csrf_input @
 
 						input type: "hidden", name: "comment_parent", value: @comment.id, ["aria-hidden"]: "true"
-						label class: "sr-only", ["for"]: "comment_text", "Comment reply message:"
-						textarea class: "form-control", rows: 1, placeholder: "place your comment here", required: true, id: "comment_text", name: "comment_text"
-						button class: "btn btn-sm btn-secondary", type: "submit", " Comment"
+						label class: "sr-only", ["for"]: "comment_text", "#{i18n 'comment.reply_message'}:"
+
+						textarea class: "form-control", rows: 1, placeholder: i18n("comment.message_placeholder"), required: true, id: "comment_text", name: "comment_text"
+						button class: "btn btn-sm btn-secondary", type: "submit", " #{i18n 'comment.title.one'}"
 
 			if @childComments
 				for comment in *@childComments

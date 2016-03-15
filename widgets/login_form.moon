@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+i18n = require "i18n"
 
 -- This is the login form that is used throughout the website
 -- It can be used in the fixed position "popover" login as well as
@@ -25,7 +26,7 @@ class LoginForm extends Widget
 					type: "text"
 					id: "mta-widget-login-username"
 					class: "form-control"
-					placeholder: "username"
+					placeholder: i18n "auth.username_placeholder"
 					autocomplete: "on"
 					name: "username"
 					value: @params.username
@@ -36,7 +37,7 @@ class LoginForm extends Widget
 				input
 					type: "password"
 					class: "form-control"
-					placeholder: "password"
+					placeholder: i18n "auth.password_placeholder"
 					autocomplete: "on"
 					name: "password"
 					required: true
@@ -48,4 +49,4 @@ class LoginForm extends Widget
 				div class: "col-md-8", ->
 					div class: "input-group", ->
 						span class: "input-group-addon", -> input type: "checkbox", name: "remember", value: "true"
-						button type: "submit", class: "form-control btn btn-secondary", "login"
+						button type: "submit", class: "form-control btn btn-secondary", i18n "auth.login_button"

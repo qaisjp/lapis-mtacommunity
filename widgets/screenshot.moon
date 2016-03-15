@@ -1,5 +1,6 @@
 import Widget from require "lapis.html"
 import time_ago_in_words from require "lapis.util"
+i18n = require "i18n"
 
 class ScreenshotWidget extends Widget
 	@include "widgets.utils"
@@ -17,7 +18,7 @@ class ScreenshotWidget extends Widget
 					a href: screenie_url, @screenshot.title
 
 					date_created = time_ago_in_words @screenshot.created_at
-					small class: "text-muted", " uploaded #{date_created}"
+					small class: "text-muted", " #{i18n 'screenshots.uploaded_since'} #{date_created}"
 				text @screenshot.description
 
 
