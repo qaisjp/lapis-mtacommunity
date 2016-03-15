@@ -59,7 +59,6 @@ class SearchCard extends Widget
 								placeholder: "show (1 - 100)"
 								value: @params.showAmount
 
-						@write_csrf_input!
 						button type: "submit", class: "btn btn-primary btn-sm pull-xs-right", ->
 							i class: "fa fa-search"
 							text " Search"
