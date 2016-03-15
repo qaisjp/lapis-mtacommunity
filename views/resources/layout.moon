@@ -31,11 +31,20 @@ class MTAResourceLayout extends Widget
 									text " Manage"
 								raw " "
 
-							a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
-								i class: "fa fa-download"
-								text " Download"
-
-							unless @route_name == "resources.view"
+							if @route_name == "resources.view"
+								form method: "POST", action: @urL_for("resources.cast_vote", resource_slug: @resource), class: "mta-inline-form", ->
+									span class: "btn-group", role: "group", ["aria-label"]: "Cast vote", ->
+										button type: "button", name: "vote", value: "down", class: "btn btn-secondary", ->
+											i class: "fa fa-thumbs-down"
+											text: "-1"
+										button type: "button", name: "vote", value: "up", class: "btn btn-secondary", ->
+											i class: "fa fa-thumbs-up"
+											text: "+1"
+								raw " "
+								a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
+									i class: "fa fa-download"
+									text " Download"
+							else
 								raw " "
 								a class: "btn btn-secondary", href: @url_for("resources.view", resource_slug: @resource), ->
 									i class: "fa fa-arrow-left"

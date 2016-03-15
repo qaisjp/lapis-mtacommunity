@@ -89,7 +89,24 @@ class MTAResourcePage extends Widget
 
 		ScreenshotWidget = require "widgets.screenshot"
 
-		ul class: "media-list", ->
-			for screenshot in *screenshots
-				screenshot.resource = @resource
-				widget ScreenshotWidget :screenshot
+		div id: "screenshots-carousel", class: "carousel slide", ["data-ride"]: "carousel", ->
+			ol class: "carousel-indicators", ->
+				li ["data-target"]: "#screenshots-carousel", ["data-slide-to"]: "0", class: "active"
+				for i = 1, #screenshots - 1
+					li ["data-target"]: "#screenshots-carousel", ["data-slide-to"]: tostring i
+			div class: "carousel-inner", role: "listbox", ->
+				for i, screenshot in ipairs screenshots
+					screenshot.resource = @resource
+					div class: ("carousel-item screenshots-carousel-item " .. ((i==1) and "active" or "")), ->
+						a href: @url_for(screenshot), -> img src: screenshot\get_direct_url(@), alt: screenshot.title
+						div class: "carousel-caption", ->
+							h3 screenshot.title
+							p screenshot.description
+		
+			a class: "left carousel-control", href: "#screenshots-carousel", role: "button", ["data-slide"]: "prev", ->
+				span class: "icon-prev", ["aria-hidden"]: "true"
+				span class: "sr-only", "Previous"
+
+			a class: "right carousel-control", href: "#screenshots-carousel", role: "button", ["data-slide"]: "next", ->
+				span class: "icon-next", ["aria-hidden"]: "true"
+				span class: "sr-only", "Next"

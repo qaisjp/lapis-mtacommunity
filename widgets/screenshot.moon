@@ -9,7 +9,7 @@ class ScreenshotWidget extends Widget
 			return p "Internal error: no screenshot passed to widget!"
 
 		screenie_url = @url_for "resources.view_screenshot", resource_slug: @screenshot.resource, screenie_id: @screenshot.id
-		screenie_url_image = @url_for "resources.view_screenshot_image", resource_slug: @screenshot.resource, screenie_id: @screenshot.id
+		screenie_url_image = @screenshot\get_direct_url @
 
 		element (@type or "div"), class: "media", ->					
 			div class: "media-body", ->

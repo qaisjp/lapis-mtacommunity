@@ -8,7 +8,7 @@ class MTAResourceManageLayout extends Widget
 
 			div class: "col-md-2", -> a class: "btn btn-secondary", href: @url_for(@resource), ->
 				i class: "fa fa-arrow-left"
-				text " Back to resource"
+				text " View resource"
 			
 			div class: "col-md-10", -> ol class: "breadcrumb", ->
 				li "Manage \"#{@resource.name}\""
