@@ -1,6 +1,7 @@
 lapis = require "lapis"
 nginx = require("lapis.nginx.http")
 date  = require "date"
+i18n  = require "i18n"
 
 import assert_csrf_token from require "utils"
 import assert_valid from require "lapis.validate"
@@ -19,7 +20,7 @@ class AuthApplication extends lapis.Application
 	name: "auth."
 
 	[login: "/login"]: capture_errors respond_to
-		before: => @title = "Login"
+		before: => @title = i18n "auth.login_title"
 		GET: => render: true
 		POST: =>
 			assert_csrf_token @
@@ -43,7 +44,7 @@ class AuthApplication extends lapis.Application
 
 	[register: "/register"]: capture_errors respond_to
 		on_error: => render: true
-		before: => @title = "Register"
+		before: => @title = i18n "auth.register_title"
 
 		GET: => render: true
 		POST: =>
@@ -82,8 +83,8 @@ class AuthApplication extends lapis.Application
 
 	-- TODO
 	[forgot: "/password_reset"]: capture_errors respond_to
-		before: => @title = "Reset your password"
+		before: => @title = i18n "auth.reset_title"
 
-		GET: => @html -> h1 "Reset your password"
+		GET: => @html -> h1 i18n "auth.reset_title"
 		POST: =>
 			assert_csrf_token @

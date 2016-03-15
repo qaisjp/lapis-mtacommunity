@@ -2,6 +2,7 @@ lapis = require "lapis"
 db    = require "lapis.db"
 date  = require "date"
 lfs   = require "lfs"
+i18n  = require "i18n"
 import
 	Resources
 	ResourcePackages
@@ -68,11 +69,11 @@ class ResourceApplication extends lapis.Application
 				{"resDescription", exists: true }
 			}
 
-			yield_error "Max filesize is 20mb" if #@params.resUpload.content > 20 * 1000 * 1000
+			yield_error i18n "errors.max_filesize", max: "20Mb", ours: #@params.resUpload.content if #@params.resUpload.content > 20 * 1000 * 1000
 
 			-- check if the resource already exists
 			name, slug = Resources\is_name_available @params.resName
-			yield_error "Resource already exists" unless name
+			yield_error i18n "resources.manage.resource_already_exists" unless name
 
 			resource = 
 				:name 
@@ -108,7 +109,7 @@ class ResourceApplication extends lapis.Application
 				resource\delete!
 				yield_error err
 
-			package = clean_assert ResourcePackages\create(package), "Could not create package"
+			package = clean_assert ResourcePackages\create(package), i18n "resources.manage.not_create_package"
 
 			-- create folders...
 			clean_assert lfs.mkdir "uploads/#{resource.id}"
@@ -159,7 +160,7 @@ class ResourceApplication extends lapis.Application
 			-- Get all the authors of the resource
 			@screenshot = ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id
 			@screenshot.resource = @resource
-			yield_error "That screenshot doesn't exist" unless @screenshot
+			yield_error i18n "resources.manage.errors.no_screenshot" unless @screenshot
 
 			render: "resources.layout"
 	}
@@ -169,7 +170,7 @@ class ResourceApplication extends lapis.Application
 		=>
 			-- Get all the authors of the resource
 			screenshot = ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id
-			yield_error "That screenshot doesn't exist" unless screenshot
+			yield_error i18n "resources.manage.errors.no_screenshot" unless screenshot
 
 			filename = screenshot.title and ("#{slugify screenshot.title}.png") or ("#{slugify resource.name}_screenshot.png")
 
@@ -182,15 +183,15 @@ class ResourceApplication extends lapis.Application
 
 			assert_error serve_file opts
 
-			yield_error "An image #{opts.filepath} should have been served. Sorry about that."
+			yield_error i18n "resources.manage.errors.image_not_served"
 	}
 
 	[post_comment: "/:resource_slug/comment"]: capture_errors respond_to {
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make that comment for you."
+		on_error: => error_500 @, @errors[1] or i18n "resources.comment.errors.friendly_create"
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
-			assert_error @active_user, "You need to be logged in to do that."
+			assert_error @active_user, i18n "auth.need_logged_in"
 			assert_valid @params, {
 				{"comment_text", exists: true}
 			}
@@ -199,11 +200,11 @@ class ResourceApplication extends lapis.Application
 			if parent
 				parentObj = Comments\find parent
 				if (not parentObj)
-					yield_error "Parent comment not found"
+					yield_error i18n "resources.comment.errors.parent_missing"
 				else if parentObj.parent
 					-- tell them we can't find a parent comment if the comment
 					-- they tried to reply to is a child comment
-					yield_error "Cannot reply to a replycomment"
+					yield_error i18n "resources.comment.errors.cannot_reply_to_reply"
 
 
 			Comments\create {
@@ -216,11 +217,11 @@ class ResourceApplication extends lapis.Application
 	}
 
 	[cast_vote: "/:resource_slug/cast_vote"]: capture_errors respond_to {
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't cast that vote for you."
+		on_error: => error_500 @, @errors[1] or i18n "resources.errors.friendly_cast_vote"
 		GET: error_405
 		POST: =>
 			assert_csrf_token @				
-			assert_error @active_user, "You need to be logged in to do that."
+			assert_error @active_user, i18n "auth.need_logged_in"
 			assert_valid @params, {
 				{"vote", one_of: {"up", "down", "none"}}
 			}
@@ -247,7 +248,7 @@ class ResourceApplication extends lapis.Application
 	}
 
 	[get: "/:resource_slug/get(/:version)"]: capture_errors {
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't serve you that file."
+		on_error: => error_500 @, @errors[1] or i18n "resources.errors.friendly_serve_file"
 		=>
 			-- We already know we're a resource
 			fields = "id, file, resource, download_count, version"
@@ -304,7 +305,7 @@ class ResourceApplication extends lapis.Application
 					_, dependencies = assert_error pcall -> db.select query
 
 					unless #dependencies == expectedLength
-						return error_500 @, "One of the resource dependencies you tried to download was unavailable."
+						return error_500 @, i18n "resources.errors.dependencies_unavailable"
 
 					dir = lfs.currentdir!
 

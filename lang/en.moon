@@ -12,17 +12,36 @@ en:
 	resources:
 		latest_resources: "Latest resources"
 		type: "Type"
-
 		cards:
 			last_updated: "Last updated"
-
 		overview:
 			most_downloaded: "Most Downloaded"
-
 		table:
 			name: "Name"
 			description: "Description"
 			rating: "Rating"
+		manage:
+			errors:
+				resource_already_exists: "Resource already exists"
+
+				no_package: "That's not your package."
+				not_create_package: "Could not create package"
+
+				no_screenshot: "That screenshot does not exist"
+				invalid_file_type: "Invalid file type"
+				not_create_screenshot: "Could not create screenshot"
+				image_not_served: "An image should have been served. Sorry about that."
+
+				not_find_author: "Cannot find author \"%{name}\""
+				not_existing_author: "\"%{name}\" is not an existing author"
+				already_author: "\"%{name}\" is already an author"
+
+				invite_accept_first: "Please accept your invite first"
+				invite_already_accepted: "You have already accepted your invite"
+		errors:
+			friendly_cast_vote: "We're sorry we couldn't cast that vote for you."
+			friendly_serve_file: "We're sorry we couldn't serve you that file."
+			dependencies_unavailable: "One of the resource dependencies you tried to download was unavailable."
 
 	comment:
 		title:
@@ -34,6 +53,10 @@ en:
 		user_replied: "replied"
 		user_commented: "commented"
 		user_modified: "modified"
+		errors:
+			friendly_create: "We're sorry we couldn't make that comment for you."
+			parent_missing: "Parent comment not found"
+			cannot_reply_to_reply: "Cannot reply to a comment reply"
 
 	screenshots:
 		uploaded_since: "uploaded"
@@ -41,8 +64,23 @@ en:
 	users:
 		action_follow: "Follow"
 		action_unfollow: "Unfollow"
+		errors:
+			not_exist: "User does not exist"
+			friendly_update_profile: "We're sorry we couldn't make those changes."
+			friendly_delete_account: "We're sorry we couldn't delete your account."
+			friendly_rename_account: "We're sorry we couldn't rename your account."
+			friendly_change_password: "We're sorry we couldn't change your password."
+			old_password_mismatch: "Your old password is incorrect."
+
+			cannot_follow_self: "You cannot follow yourself"
+			already_following: "You are already following this person"
+			not_currently_following: "You are not following this person"
 
 	auth:
+		login_title: "Login"
+		register_title: "Register"
+		reset_title: "Reset your password"
+
 		username_placeholder: "username"
 		password_placeholder: "password"
 		confirm_password_placeholder: "confirm"
@@ -53,6 +91,8 @@ en:
 
 		register_title: "Register an account"
 		register_success: "Account successfully created. Your account has been automatically activated."
+
+		need_logged_in: "You need to be logged in to do that."
 
 	search:
 		title: "Search"
@@ -65,6 +105,7 @@ en:
 		no_results: "No resources match your search query"
 
 	errors:
+		max_filesize: "Max filesize is %{max}. Your file is %{ours} bytes"
 		bad_request:
 			title: "Bad Request"
 			h1: "400: Bad Request"
@@ -83,3 +124,4 @@ en:
 		server_error:
 			title: "Oops"
 			h3: "Something went wrong."
+		internal_error_output: "Internal error. Give the following information to a codemonkey:"

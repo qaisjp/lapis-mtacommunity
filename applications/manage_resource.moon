@@ -1,6 +1,7 @@
 lapis = require "lapis"
 db    = require "lapis.db"
 date  = require "date"
+i18n  = require "i18n"
 import
 	Resources
 	ResourcePackages
@@ -42,7 +43,7 @@ class ManageResourceApplication extends lapis.Application
 			return @write error_not_authorized @
 
 		if (@route_name != "resources.manage.invite_reply") and (not @rights.user_confirmed)
-			return @write error_not_authorized @, "Please accept your invite first"
+			return @write error_not_authorized @, i18n "resources.manage.errors.invite_accept_first"
 
 		@right_names = {"can_configure", "can_moderate", "can_manage_authors", "can_manage_packages", "can_upload_screenshots"}
 
@@ -60,7 +61,7 @@ class ManageResourceApplication extends lapis.Application
 		@check_tab = (tab) =>
 			assert tab
 			unless @tabs[tab]
-				return @write error_not_authorized @, "Nothing to manage here..."
+				return @write error_not_authorized @
 
 
 	["":""]: => redirect_to: @url_for "resources.manage.dashboard", resource_slug: @resource
@@ -86,7 +87,7 @@ class ManageResourceApplication extends lapis.Application
 	[view_package: "/packages/:pkg_id[%d]"]: capture_errors respond_to {
 		before: =>
 			@check_tab "packages"
-			@package = assert_error (ResourcePackages\find resource: @resource.id, id: @params.pkg_id), "That's not your package."
+			@package = assert_error (ResourcePackages\find resource: @resource.id, id: @params.pkg_id), i18n "resources.manage.errors.no_package"
 
 		on_error: => error_500 @, @errors[1]
 		POST: =>
@@ -111,10 +112,10 @@ class ManageResourceApplication extends lapis.Application
 				title = @params.screenieFile.filename\lower!
 				endsWith = (ext) -> title\sub(-#ext) == ext\lower!
 				unless endsWith("jpg") or endsWith("png") or endsWith("jpeg") or endsWith("gif")
-					yield_error "Invalid file type #{title}"
+					yield_error i18n "resources.manage.errors.invalid_file_type"
 
 			filesize = #@params.screenieFile.content 
-			yield_error "Max filesize is 2Mb. Your file is #{filesize} bytes" if filesize > 2 * 1000 * 1000
+			yield_error i18n "errors.max_filesize", max: "2Mb", ours: filesize if filesize > 2 * 1000 * 1000
 
 			screenshot = 
 				resource: @resource.id
@@ -123,7 +124,7 @@ class ManageResourceApplication extends lapis.Application
 				uploader: @active_user.id
 				file: date!\spanseconds!
 			
-			screenshot = assert_error ResourceScreenshots\create(screenshot), "Could not create screenshot"
+			screenshot = assert_error ResourceScreenshots\create(screenshot), i18n "resources.manage.errors.not_create_screenshot"
 
 			clean_assert = (success, err, ...) ->
 				return success, err, ... if success
@@ -143,7 +144,7 @@ class ManageResourceApplication extends lapis.Application
 	[view_screenshot: "/screenshots/:screenie_id[%d]"]: capture_errors respond_to {
 		before: =>
 			@check_tab "screenshots"
-			@screenshot = assert_error (ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id), "That's not your screenshot."
+			@screenshot = assert_error (ResourceScreenshots\find resource: @resource.id, id: @params.screenie_id), i18n "resources.manage.errors.no_screenshot"
 
 		on_error: => error_500 @, @errors[1]
 		POST: =>
@@ -179,14 +180,14 @@ class ManageResourceApplication extends lapis.Application
 				while true do
 					@author = Users\find slug: author_slug
 					unless @author
-						@errors = {"Cannot find author \"#{author_slug}\""}
+						@errors = {i18n "resources.manage.errors.not_find_author", name: author_slug}
 						break -- continue to render
 
 					@author_rights = @resource\get_rights @author, nil
 					if (not @author_rights) or (@author.id == @resource.creator)
 						@author_rights = nil
 						@author = nil
-						@errors = {"\"#{author_slug}\" is not an existing author"}
+						@errors = {i18n "resources.manage.errors.not_existing_author", name: author_slug}
 						break
 
 					break -- always continue to render, don't iterate.
@@ -293,11 +294,11 @@ class ManageResourceApplication extends lapis.Application
 			}
 
 			author = Users\find slug: @params.author
-			yield_error "Cannot find author \"#{@params.author}\"" unless author
+			yield_error i18n "resources.manage.errors.not_find_author", name: @params.author unless author
 
 			rightsObj = ResourceAdmins\find resource: @resource.id, user: author.id
 			if (not rightsObj) or (author.id == @resource.creator)
-				yield_error "\"#{author_slug}\" is not an existing author"
+				yield_error i18n "resources.manage.errors.not_existing_author", name: author_slug
 
 			for right in *@right_names
 				rightsObj[right] = (@params[right] == "true")
@@ -318,10 +319,10 @@ class ManageResourceApplication extends lapis.Application
 			}
 
 			author = Users\search @params.author
-			yield_error "Cannot find author \"#{@params.author}\"" unless author
+			yield_error i18n "resources.manage.errors.not_find_author", name: @params.author unless author
 
 			if @resource\is_user_admin author
-				yield_error "\"#{author.slug}\" is already an author"
+				yield_error i18n "resources.manage.errors.already_author", name: author.slug
 
 			ResourceAdmins\create resource: @resource.id, user: author.id
 
@@ -333,13 +334,12 @@ class ManageResourceApplication extends lapis.Application
 		GET: error_405
 		POST: =>
 			if @rights.user_confirmed
-				return error_bad_request @, "You have already accepted your invite"
+				return error_bad_request @, i18n "resources.manage.errors.invite_already_accepted"
 
 			assert_csrf_token @
 			assert_valid @params, {
-				{"accept_state", exists: true}
+				{"accept_state", exists: true, one_of: {"true", "false"}}
 			}
-			yield_error "Invalid accept state" unless (@params.accept_state == "true") or (@params.accept_state == "false")
 
 			if @params.accept_state == "true"
 				@rights\update user_confirmed: true

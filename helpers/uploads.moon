@@ -1,4 +1,5 @@
 import from_json from require "lapis.util"
+i18n = require "i18n"
 
 check_resource_file = (file) ->
 	-- open up a feed
@@ -21,7 +22,7 @@ check_resource_file = (file) ->
 			couldDecode, decoded = pcall from_json, line\sub 3
 
 			if not couldDecode
-				errors = {"Internal error. Give the following information to a codemonkey:", decoded, line\sub 3}
+				errors = {"#{i18n 'errors.internal_error_output'}:", decoded, line\sub 3}
 			elseif success != false
 				success = decoded
 

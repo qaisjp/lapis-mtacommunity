@@ -2,6 +2,7 @@ lapis = require "lapis"
 Users = require "models.users"
 db    = require "lapis.db"
 date  = require "date"
+i18n  = require "i18n"
 import assert_csrf_token from require "utils"
 import
 	capture_errors
@@ -26,7 +27,7 @@ class SettingsApplication extends lapis.Application
 	[main: ""]: => redirect_to: @url_for "settings.profile"
 		
 	[profile: "/profile"]: capture_errors respond_to
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't make those changes."
+		on_error: => error_500 @, @errors[1] or i18n "users.errors.friendly_update_profile"
 		GET: =>
 			@data = @active_user\get_userdata!
 			render: "settings.layout"
@@ -53,7 +54,7 @@ class SettingsApplication extends lapis.Application
 	[account: "/account"]: => render: "settings.layout"
 
 	[delete_account: "/delete_account"]: capture_errors respond_to
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't delete your account."
+		on_error: => error_500 @, @errors[1] or i18n "users.errors.friendly_delete_account"
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
@@ -63,7 +64,7 @@ class SettingsApplication extends lapis.Application
 			redirect_to: @url_for "home"
 
 	[rename_account: "/rename_account"]: capture_errors respond_to
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't rename your account."
+		on_error: => error_500 @, @errors[1] or i18n "users.errors.friendly_rename_account"
 		GET: error_405
 		POST: => 
 			assert_csrf_token @
@@ -74,7 +75,7 @@ class SettingsApplication extends lapis.Application
 			redirect_to: @url_for "settings.account"
 
 	[change_password: "/change_password"]: capture_errors respond_to
-		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't change your password."
+		on_error: => error_500 @, @errors[1] or i18n "users.errors.friendly_change_password"
 		GET: error_405
 		POST: =>
 			assert_csrf_token @
@@ -85,7 +86,7 @@ class SettingsApplication extends lapis.Application
 			}
 
 			unless @active_user\check_password @params.settingsOldPassword
-				return yield_error "Your old password is incorrect."
+				return yield_error i18n "users.errors.old_password_mismatch"
 				-- note: yield_error kills the function i think but put "return" to make it obvious
 
 			@active_user\update_password @params.settingsNewPassword

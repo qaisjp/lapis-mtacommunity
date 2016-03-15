@@ -1,6 +1,7 @@
 lapis = require "lapis"
 db    = require "lapis.db"
 date  = require "date"
+i18n  = require "i18n"
 import to_json from require "lapis.util"
 import
 	capture_errors
@@ -12,6 +13,7 @@ import
 	error_404
 	error_500
 	assert_csrf_token
+	error_bad_request
 from require "utils"
 
 import
@@ -94,7 +96,7 @@ class UserApplication extends lapis.Application
 		on_error: error_500
 		before: =>
 			if @active_user.id == @user.id
-				@write status:400, "<h1>You cannot follow yourself</h1>"
+				@write error_bad_request i18n "users.errors.cannot_follow_self"
 			@isFollowing = @active_user\is_following @user
 
 		GET: =>	render: true
@@ -104,13 +106,13 @@ class UserApplication extends lapis.Application
 
 			if @params.intent == "follow"
 				if @isFollowing
-					return status: 400, "<h1>You are already following this person</h1>"
+					return error_bad_request i18n "users.errors.already_following"
 
 				UserFollowings\create {follower: @active_user.id, following: @user.id}
 
 			elseif @params.intent == "unfollow"
 				unless @isFollowing
-					return status: 400, "<h1>You are not following this person</h1>"
+					return error_bad_request i18n "users.errors.not_currently_following"
 
 				uf = UserFollowings\find {follower: @active_user.id, following: @user.id}
 				uf\delete! if uf
