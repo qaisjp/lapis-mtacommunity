@@ -7,13 +7,18 @@ class MTAResourcePage extends Widget
 	@include "widgets.utils"
 	content: =>
 		div class: "card-block", ->
-			ul ->
-				li ->
-					text "Authors: "
-					for i, author in ipairs @authors
-						text ", " unless i == 1
-						a href: @url_for(author), author.username
-
+			text "Rating: #{@resource.rating}"
+			br!
+			if #@authors == 1
+				text "Author: "
+				author = @authors[1]
+				a href: @url_for(author), author.username
+			else
+				text "Authors: "
+				for i, author in ipairs @authors
+					text ", " unless i == 1
+					a href: @url_for(author), author.username
+			br!
 			text @resource.description
 
 		div class: "card-block", ->

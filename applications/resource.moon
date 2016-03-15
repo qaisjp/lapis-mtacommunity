@@ -5,6 +5,7 @@ lfs   = require "lfs"
 import
 	Resources
 	ResourcePackages
+	ResourceRatings
 	ResourceScreenshots
 	PackageDependencies
 	Users
@@ -211,6 +212,37 @@ class ResourceApplication extends lapis.Application
 				message: @params.comment_text
 				:parent
 			}
+			redirect_to: @url_for "resources.view", resource_slug: @resource.slug
+	}
+
+	[cast_vote: "/:resource_slug/cast_vote"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1] or "We're sorry we couldn't cast that vote for you."
+		GET: error_405
+		POST: =>
+			assert_csrf_token @				
+			assert_error @active_user, "You need to be logged in to do that."
+			assert_valid @params, {
+				{"vote", one_of: {"up", "down", "none"}}
+			}
+			local increment
+
+			existingRating = ResourceRatings\find resource: @resource.id, user: @active_user.id
+			if (@params.vote == "none") and existingRating
+				increment = -(existingRating.rating and 1 or -1)
+				assert_error existingRating\delete!
+			elseif @params.vote != "none"
+				isUpvoting = @params.vote == "up"
+				increment = isUpvoting and 1 or -1
+
+				
+				if existingRating
+					increment -= existingRating.rating and 1 or -1
+					existingRating\update rating: isUpvoting
+				else
+					ResourceRatings\create resource: @resource.id, user: @active_user.id, rating: isUpvoting
+
+			if increment
+				@resource\update rating: @resource.rating + increment
 			redirect_to: @url_for "resources.view", resource_slug: @resource.slug
 	}
 

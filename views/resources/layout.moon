@@ -1,5 +1,5 @@
 import Widget from require "lapis.html"
-import Users, Resources, ResourcePackages from require "models"
+import Users, Resources, ResourcePackages, ResourceRatings from require "models"
 import time_ago_in_words from require "lapis.util"
 date = require "date"
 
@@ -32,15 +32,21 @@ class MTAResourceLayout extends Widget
 								raw " "
 
 							if @route_name == "resources.view"
-								form method: "POST", action: @urL_for("resources.cast_vote", resource_slug: @resource), class: "mta-inline-form", ->
-									span class: "btn-group", role: "group", ["aria-label"]: "Cast vote", ->
-										button type: "button", name: "vote", value: "down", class: "btn btn-secondary", ->
-											i class: "fa fa-thumbs-down"
-											text: "-1"
-										button type: "button", name: "vote", value: "up", class: "btn btn-secondary", ->
-											i class: "fa fa-thumbs-up"
-											text: "+1"
-								raw " "
+								if @active_user
+									form method: "POST", action: @url_for("resources.cast_vote", resource_slug: @resource), class: "mta-inline-form", ->
+										@write_csrf_input!
+										rating = ResourceRatings\find resource: @resource.id, user: @active_user.id
+										rating = rating.rating if rating
+
+										span class: "btn-group", role: "group", ["aria-label"]: "Cast vote", ->
+											button type: "submit", name: "vote", value: "down", class: {"btn btn-secondary", active: (rating == false)}, ->
+												i class: "fa fa-thumbs-down"
+											button type: "submit", name: "vote", value: "none", class: {"btn btn-secondary", active: (rating == nil)}, ->
+												i class: "fa fa-circle"
+											button type: "submit", name: "vote", value: "up", class: {"btn btn-secondary", active: (rating == true)}, ->
+												i class: "fa fa-thumbs-up"
+									raw " "
+
 								a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
 									i class: "fa fa-download"
 									text " Download"
