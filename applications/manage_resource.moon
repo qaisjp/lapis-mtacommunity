@@ -107,6 +107,12 @@ class ManageResourceApplication extends lapis.Application
 				{"screenieTitle", exists: true }
 			}
 
+			do
+				title = @params.screenieFile.filename\lower!
+				endsWith = (ext) -> title\sub(-#ext) == ext\lower!
+				unless endsWith("jpg") or endsWith("png") or endsWith("jpeg") or endsWith("gif")
+					yield_error "Invalid file type #{title}"
+
 			filesize = #@params.screenieFile.content 
 			yield_error "Max filesize is 2Mb. Your file is #{filesize} bytes" if filesize > 2 * 1000 * 1000
 
