@@ -75,7 +75,7 @@ class MTAResourceManageAuthors extends Widget
 											a class: "btn btn-sm btn-secondary pull-xs-right", href: url, -> i class: "fa fa-cogs"
 
 			list_authors i18n("resources.manage.authors_list"), i18n("resources.manage.authors_list_empty"), @resource\get_authors include_creator: false, is_confirmed: true
-			list_authors i18n("resources.manage.authors_invited"), i18n("resources.manage.authors_list_empty"), @resource\get_authors include_creator: false, is_confirmed: false
+			list_authors i18n("resources.manage.authors_invited"), i18n("resources.manage.authors_invited_empty"), @resource\get_authors include_creator: false, is_confirmed: false
 
 			div class: "card", ->
 				div class: "card-header", i18n("resources.manage.author_make_invite")
