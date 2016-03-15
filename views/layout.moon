@@ -1,5 +1,6 @@
 import Widget from require "lapis.html"
 Users = require "models.users"
+i18n = require "i18n"
 
 
 class Layout extends Widget
@@ -82,7 +83,7 @@ class Layout extends Widget
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("user.profile", username: @active_user.slug), @active_user.username
 					if @active_user\can_open_admin_panel!
 						li class: "nav-item", -> a class: "nav-link", href: @url_for("admin.dashboard"), "admin"
-					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), "logout"
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), i18n "layout.logout"
 				else
 					li class: "nav-item", -> a class: "nav-link", id: "login-btn", href: @url_for("auth.login"), "login"
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.register"), "register"
@@ -90,14 +91,12 @@ class Layout extends Widget
 				-- languages!
 				li class: "nav-item form-inline btn-group", ->
 					button type: "button", class: "btn btn-secondary btn-sm dropdown-toggle", id: "languagesDropdown", ["data-toggle"]: "dropdown", ["aria-haspopup"]: "true", ["aria-expanded"]: "false", ->
-						raw "en-gb "
+						raw "language (#{i18n.getLocale()}) "
 						span class: "caret"
 					
 					div class: "dropdown-menu", ->
-						a class: "dropdown-item", "languages"
-						div class: "dropdown-divider"
-						a class: "dropdown-item active", href: "#", "english (en-gb)"
-						a class: "dropdown-item", href: "#", "pirate (en-pi)"
+						a class: {"dropdown-item", active: i18n.getLocale() == "en"}, href: "?set_locale=en", "english (en)"
+						a class: {"dropdown-item", active: i18n.getLocale() == "pi"}, href: "?set_locale=pi", "pirate (pi)"
 			
 			div class: "row", ->
 				div class: "col-md-3 col-md-offset-9", ->					
