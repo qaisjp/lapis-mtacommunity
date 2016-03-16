@@ -155,6 +155,27 @@ class ResourceApplication extends lapis.Application
 			render: "resources.layout"
 	}
 
+	[delete_comment: "/:resource_slug/delete_comment/:comment[%d]"]: capture_errors respond_to {
+		before: => check_logged_in
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {
+				{"comment", exists: true, is_integer: true}
+			}
+
+			comment = Comments\find id: @params.comment
+			yield_error i18n "resources.manage.errors.comment_not_exist" unless comment
+
+			if comment.author != @active_user.id
+				@rights = (@resource\get_rights @active_user, nil) or {}
+				return error_not_authorized @ if not (@rights.can_moderate or @active_user\can_open_admin_panel!)
+
+			assert_error comment\delete!
+			redirect_to: @url_for @resource
+	}
+
 	[view_screenshot: "/:resource_slug/screenshots/:screenie_id[%d]"]: capture_errors {
 		on_error: => error_500 @, @errors[1]
 		=>

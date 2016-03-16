@@ -50,7 +50,7 @@ class MTAResourceManageAuthors extends Widget
 					form class: "mta-inline-form", method: "POST", action: @url_for("resources.manage.delete_author", resource_slug: @resource), ->
 						@write_csrf_input!
 						input type: "hidden", name: "author", value: @author.slug, ["aria-hidden"]: "true"
-						button type: "submit", class: "btn btn-secondary btn-danger", onclick: "return confirm(\"#{i18n 'author_delete_confirm'}\")", ->
+						button type: "submit", class: "btn btn-secondary btn-danger", onclick: "return confirm(\"#{i18n 'resources.manage.author.delete_confirm'}\")", ->
 							text i18n "resources.manage.author.delete_button"
 
 
