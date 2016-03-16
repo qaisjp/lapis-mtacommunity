@@ -12,6 +12,12 @@ en:
 	next: "Next"
 	previous: "Previous"
 
+	email:
+		reset:
+			subject: "Reset community password"
+			h1: "Reset your password"
+			note: "Someone requested a password reset. Simply ignore this email if you didn't request this."
+
 	layout:
 		logout: "logout"
 
@@ -240,12 +246,15 @@ en:
 			not_exist: "User does not exist"
 			invalid_name: "Invalid username"
 			account_exists: "Account already exists"
+			token_not_exist: "Cannot reset password - invalid token"
+			token_expired: "Password reset token has expired"
 
 			friendly_update_profile: "We're sorry we couldn't make those changes."
 			friendly_delete_account: "We're sorry we couldn't delete your account."
 			friendly_rename_account: "We're sorry we couldn't rename your account."
 			friendly_change_password: "We're sorry we couldn't change your password."
 			old_password_mismatch: "Your old password is incorrect."
+			password_confirm_mismatch: "Password confirmation incorrect"
 
 			cannot_follow_self: "You cannot follow yourself."
 			already_following: "You are already following this person"
@@ -285,7 +294,10 @@ en:
 	auth:
 		login_title: "Login"
 		register_title: "Register"
+
 		reset_title: "Reset your password"
+		reset_send_email: "Send confirmation email"
+		reset_email_sent: "An confirmation email has been sent to your address."
 		
 		username_placeholder: "username"
 		password_placeholder: "password"

@@ -1,8 +1,8 @@
 lapis = require "lapis"
-nginx = require("lapis.nginx.http")
+db    = require "lapis.db"
+nginx = require "lapis.nginx.http"
 date  = require "date"
 i18n  = require "i18n"
-
 import assert_csrf_token from require "utils"
 import assert_valid from require "lapis.validate"
 import
@@ -14,6 +14,7 @@ from require "lapis.application"
 import error_500 from require "utils"
 import
 	Users
+	UserTokens
 from require "models"
 
 class AuthApplication extends lapis.Application
@@ -81,10 +82,64 @@ class AuthApplication extends lapis.Application
 		@session.user_id = nil
 		redirect_to: @url_for "home"
 
-	-- TODO
-	[forgot: "/password_reset"]: capture_errors respond_to
-		before: => @title = i18n "auth.reset_title"
+	[forgot: "/password_reset(/*)"]: capture_errors respond_to
+		before: =>
+			@title = i18n "auth.reset_title"
+			@token_type = UserTokens.token_type\for_db "reset_password"
 
-		GET: => @html -> h1 i18n "auth.reset_title"
+			if @params.splat
+				token = UserTokens\find id: @params.splat, type: @token_type
+				 
+				if not token
+					yield_error	i18n "users.errors.token_not_exist"
+					@params.splat = nil
+				elseif (token.expires_at != 0) and ( date(token.expires_at) < date! )
+					token\delete!
+					@params.splat = nil
+					yield_error	i18n "users.errors.token_expired"
+				@token = token
+		GET: => render: true
 		POST: =>
 			assert_csrf_token @
+
+			if @token
+				assert_valid @params, {
+					{"password", exists: true},
+					{"password_confirm", exists: true, equals: @params.password, i18n "users.errors.password_confirm_mismatch"}
+				}
+				@token\delete!
+				user = Users\find @token.owner
+				user\update_password @params.password
+				return redirect_to: @url_for "home"
+
+			assert_valid @params, {
+				{"email", exists: true}
+			}
+
+			user = assert_error Users\select("where lower(email) = ? limit 1", @params.email)[1], i18n "users.errors.not_exist"
+
+			config = require("lapis.config").get! -- Get the config (we don't need to load it every request)
+			bcrypt = require "bcrypt"
+			
+			db.delete "user_tokens", owner: user.id, type: @token_type
+			local token
+			while not token
+				token = bcrypt.digest(user.email, config.bcrypt_log_rounds)\sub(-20)
+				if UserTokens\find id: token, type: @token_type
+					token = nil
+
+			assert_error UserTokens\create id: token, type: @token_type, owner: user.id, expires_at: (date! + date hour: 6)\fmt "${http}"
+
+			secrets = require "secrets"
+			import Mailgun from require "mailgun"
+
+			url = @build_url @url_for "auth.forgot", splat: token
+			gunner = Mailgun secrets.mailgun
+			assert_error gunner\send_email
+			    to: "me@qaisjp.com"
+			    subject: "#{i18n 'email.reset.subject'}"
+			    html: true
+			    body: "<h1>#{i18n 'email.reset.h1'}</h1><p>#{i18n 'email.reset.note'}<p><p><a href=\"#{url}\">#{url}</a></p>"
+
+			@success = true
+			render: true

@@ -44,7 +44,7 @@ class LoginForm extends Widget
 			
 			row class: "no-gutter", ->
 				div class: "col-md-4", ->
-					button type: "button", class: "btn btn-secondary pull-left", -> i class: "fa fa-fw fa-question"
+					a href: @url_for("auth.forgot"), class: "btn btn-secondary pull-left", -> i class: "fa fa-fw fa-question"
 				
 				div class: "col-md-8", ->
 					div class: "input-group", ->
