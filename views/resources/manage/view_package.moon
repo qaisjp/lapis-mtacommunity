@@ -37,10 +37,14 @@ class MTAResourceManageSinglePackage extends Widget
 			  			FROM resources, package_dependencies, resource_packages
 			  
 			  			WHERE
-			  				package_dependencies.source_package = ?
+			  				-- get all dependencies for our current package
+			  				(package_dependencies.source_package = ?)
 			  				
-			  				AND resource_packages.id = package_dependencies.package
-			  				AND resources.id = resource_packages.resource
+			  				-- get all packages for all the dependencies
+			  				AND (resource_packages.id = package_dependencies.package)
+
+			  				-- get all the resources for all the packages
+			  				AND (resources.id = resource_packages.resource)
 				]], @package.id
 
 				if #depended_on == 0
