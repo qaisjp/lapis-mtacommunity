@@ -27,8 +27,15 @@ class CommentWidget extends Widget
 						text time_ago_in_words @comment.edited_at
 						text ")"
 
-				if can_show_reply
-					a style: "cursor:pointer;", class: "pull-xs-right", onclick:"$('#commentreply-#{@comment.id}').toggle()", "reply"
+				div class: "pull-xs-right", ->
+					if can_show_reply
+						a class: "btn btn-secondary btn-sm", onclick:"$('#commentreply-#{@comment.id}').toggle()", i18n "comment.reply"
+					raw " "
+					if @rights and @rights.can_moderate
+						form method: "POST", action: @url_for("resources.manage.delete_comment", resource_slug: @resource, comment: @comment.id), class: "mta-inline-form", ->
+							@write_csrf_input!
+							button type: "submit", class: "btn btn-secondary btn-sm", -> i class: "fa fa-remove"
+
 			div class: "card-block", ->
 				text @comment.message
 

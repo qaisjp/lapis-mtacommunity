@@ -269,6 +269,22 @@ class ManageResourceApplication extends lapis.Application
 			render: "resources.manage.layout"
 	}
 
+	[delete_comment: "/delete_comment/:comment[%d]"]: capture_errors respond_to {
+		before: => @write error_not_authorized @ unless @rights.can_moderate
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {
+				{"comment", exists: true, is_integer: true}
+			}
+
+			comment = Comments\find id: @params.comment
+			yield_error i18n "resources.manage.errors.comment_not_exist" unless comment
+			assert_error comment\delete!
+			redirect_to: @url_for @resource
+	}
+
 	[update_description: "/update_description"]: capture_errors respond_to {
 		before: => @check_tab "details"
 		on_error: => error_500 @, @errors[1]

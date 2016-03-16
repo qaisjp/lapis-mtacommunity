@@ -162,6 +162,7 @@ en:
 				delete_confirm: "Are you sure you want to delete this resource? This is permanent."
 
 			errors:
+				comment_not_exist: "Comment does not exist"
 				resource_already_exists: "Resource already exists"
 				invalid_name: "Invalid resource name"
 				version_search_fail: "Couldn't find that version with that resource"
@@ -198,6 +199,7 @@ en:
 		user_replied: "replied"
 		user_commented: "commented"
 		user_modified: "modified"
+		reply: "reply"
 		errors:
 			friendly_create: "We're sorry we couldn't make that comment for you."
 			parent_missing: "Parent comment not found"
