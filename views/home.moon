@@ -35,8 +35,6 @@ class Home extends Widget
 						div class: "card-header", ->
 							a href: @url_for(resource), "#{resource.longname}"
 							text " v#{package.version}"
-							
-						img  ["data-src"]: "/static/favicon.ico", alt: "Card image cap"
 						div class: "card-footer", -> small class: "text-muted", " #{i18n 'resources.cards.last_updated'} " .. time_ago_in_words package.created_at
 					
 					if (i-1)%2 == 1
