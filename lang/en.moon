@@ -1,5 +1,9 @@
 en:
 	are_you_sure: "Are you sure?"
+	view: "View"
+	update: "Update"
+	delete: "Delete"
+	download: "Download"
 	warning: "Warning!"
 	since: "Since"
 
@@ -15,17 +19,33 @@ en:
 	
 	resources:
 		latest_resources: "Latest resources"
+		view_resource: "View resource"
 		type: "Type"
+
 		cards:
 			last_updated: "Last updated"
 		overview:
 			most_downloaded: "Most Downloaded"
+		
 		table:
 			name: "Name"
 			description: "Description"
 			downloads: "Downloads"
 			rating: "Rating"
+			version: "Version"
+			publish_date: "Publish Date"
+			changes: "Changes"
+			title: "Title" -- pretty much just for screenshots
+
 		manage:
+			title: "Manage"
+			tab_dashboard: "Dashboard"
+			tab_details: "Details"
+			tab_packages: "Packages"
+			tab_authors: "Authors"
+			tab_settings: "Settings"
+			tab_screenshots: "Screenshots"
+
 			author:
 				delete_self: "If you delete yourself as an author, you won't be able to use this page anymore. Be careful."
 				make_invite: "Invite author"
@@ -42,6 +62,57 @@ en:
 				authors_list_empty: "This resource has no co-authors."
 				authors_invited: "Invited authors"
 				authors_invited_empty: "This resource has no pending invites for authorship."
+
+			dashboard:
+				statistics: "Statistics"
+				parent_comments: "Parent comments: %{num}"
+				comment_replies: "Comment replies: %{num}"
+				not_included_by: "This resource is not included by any other resource."
+				is_included_by: "This resource is included by: "
+
+				screenshot_count: "Screenshots: %{num}"
+				download_count: "Downloads: %{num}"
+
+			details:
+				change_description: "Change description"
+				description: "Description"
+				description_info: "This will be displayed whenever people visit your resource."
+				description_button: "Update description"
+
+			packages:
+				update_resource: "Update resource"
+				description: "Description"
+				description_info: "What does this update do? What has changed?"
+				changelog: "Change log"
+				changelog_info: "What does this update do? What has changed?"
+				upload: "Upload"
+
+
+			screenshots:
+				upload: "Upload screenshot"
+				title: "Title"
+				title_info: "Summarise your screenshot"
+				description: "Description"
+				optional: "optional"
+				none_uploaded: "No screenshots are currently uploaded."
+
+			settings:
+				transfer_ownership: "Transfer ownership"
+				transfer_ownership_info: "You will no longer have access to the management section of this resource. You will have to contact the new owner to be given permissions."
+				new_owner: "New owner"
+				rename_resource: "Rename resource"
+				rename_info_first: "The old resource name becomes available for other people to register. No redirections will be set up."
+				rename_info_second: "Any existing resources that include your resource will still include your resource for download. These resources will need to be updated to include the new name."
+				rename_info_third: "Any newly uploaded resources should have the updated name."
+				rename_name: "Name"
+				rename_button: "Rename resource..."
+				delete: "Delete resource"
+				delete_info: "Deleting your resources removes all comments, screenshots and packages. The resource also becomes available for other people to register."
+				delete_button: "Delete resource..."
+
+				transfer_ownership_confirm: "Are you sure you want to change transfer ownership?"
+				rename_confirm: "Are you sure you want to rename your resource?"
+				delete_confirm: "Are you sure you want to delete this resource? This is permanent."
 
 			errors:
 				resource_already_exists: "Resource already exists"

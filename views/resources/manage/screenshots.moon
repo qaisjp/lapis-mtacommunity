@@ -2,6 +2,7 @@ import Widget from require "lapis.html"
 import ResourceScreenshots from require "models"
 date = require "date"
 db = require "lapis.db"
+i18n = require "i18n"
 
 class MTAResourceManageScreenies extends Widget
 	@include "widgets.utils"
@@ -10,7 +11,8 @@ class MTAResourceManageScreenies extends Widget
 	content: =>
 		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: "false", ["aria-controls"]: "upload", ->
 			i class: "fa fa-chevron-circle-down"
-			text " Upload screenshot"
+			raw " "
+			text i18n "resources.manage.screenshots.upload"
 	
 		div class: "collapse", id: "upload", ->
 			div class: "card card-block", ->
@@ -18,33 +20,33 @@ class MTAResourceManageScreenies extends Widget
 					@write_csrf_input!
 					fieldset class: "form-group", ->
 						label for: "screenieTitle", ->
-							text "Title "
-							small class: "text-muted", "Summarise your screenshot"
+							text "#{i18n 'resources.manage.screenshots.title'} "
+							small class: "text-muted", i18n "resources.manage.screenshots.title_info"
 						input type: "text", class: "form-control", id: "screenieTitle", name: "screenieTitle", required: true
 
 					fieldset class: "form-group", ->
 						label for: "screenieDescription", ->
-							text "Description "
-							small class: "text-muted", "optional"
+							text "#{i18n 'resources.manage.screenshots.description'} "
+							small class: "text-muted", i18n "resources.manage.screenshots.optional"
 						textarea class: "form-control", id: "screenieDescription", name: "screenieDescription", rows: 3
 
 					input type: "file", name: "screenieFile", required: true
 					button type: "submit", class: "btn btn-secondary btn-sm", ->
 						i class: "fa fa-upload"
-						text " Upload screenshot"
+						text " #{i18n 'resources.manage.packages.upload'}"
 
 
 		div class: "card", ->
 			div class: "card-header", ->
-				text "Screenshots"
+				text i18n "resources.manage.tab_screenshots"
 			div class: "card-block", ->
 				screenshots = ResourceScreenshots\select "where resource = ? order by created_at desc", @resource.id, fields: "id, title, created_at"
 				if #screenshots == 0
-					return p "No screenshots are currently uploaded."
+					return p i18n "resources.manage.screenshots.none_uploaded"
 				element "table", class: "table table-hover table-bordered table-href mta-card-table", ->
 					thead ->
-						th "Title"
-						th "Creation Date"
+						th i18n "resources.table.title"
+						th i18n "resources.table.publish_date"
 					tbody ->
 						for screenshot in *screenshots
 							manage_url = @url_for("resources.manage.view_screenshot", resource_slug: @resource, screenie_id: screenshot.id)

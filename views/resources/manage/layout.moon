@@ -1,4 +1,5 @@
 import Widget from require "lapis.html"
+i18n = require "i18n"
 
 class MTAResourceManageLayout extends Widget
 	content: =>
@@ -8,15 +9,14 @@ class MTAResourceManageLayout extends Widget
 
 			div class: "col-md-2", -> a class: "btn btn-secondary", href: @url_for(@resource), ->
 				i class: "fa fa-arrow-left"
-				text " View resource"
+				text " #{i18n 'resources.view_resource'}"
 			
 			div class: "col-md-10", -> ol class: "breadcrumb", ->
-				li "Manage \"#{@resource.name}\""
+				li "#{i18n 'resources.manage.title'} \"#{@resource.name}\""
 				for name in *@tab_names
 					if name == viewWidget.name
-						li name
+						li i18n "resources.manage.tab_#{name\lower!}"
 						break
-				--viewWidget.breadcrumb @ if viewWidget.breadcrumb
 
 		div class: "row", ->
 			div class: "col-md-2", ->
@@ -31,6 +31,6 @@ class MTAResourceManageLayout extends Widget
 										a {
 											class: "nav-link" .. (if name == viewWidget.name then " active" else "")
 											href: @url_for "resources.manage.#{name\lower!}", resource_slug: @resource.slug
-										}, name
+										}, i18n "resources.manage.tab_#{name\lower!}"
 
 			div class: "col-md-10", -> widget viewWidget
