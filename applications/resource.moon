@@ -4,13 +4,14 @@ date  = require "date"
 lfs   = require "lfs"
 i18n  = require "i18n"
 import
+	Comments
+	PackageDependencies
 	Resources
 	ResourcePackages
 	ResourceRatings
+	ResourceReports
 	ResourceScreenshots
-	PackageDependencies
 	Users
-	Comments
 from require "models"
 import
 	error_404
@@ -186,12 +187,24 @@ class ResourceApplication extends lapis.Application
 			yield_error i18n "resources.manage.errors.image_not_served"
 	}
 
+	[report_resource: "/:resource_slug/report"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1]
+		GET: error_405
+		POST: =>
+			assert_error @active_user, i18n "auth.need_logged_in"
+			assert_csrf_token @
+
+			pcall -> ResourceReports\create reported_resource: @resource.id, reporter: @active_user.id
+			redirect_to: @url_for "resources.overview"
+
+	}
+
 	[post_comment: "/:resource_slug/comment"]: capture_errors respond_to {
 		on_error: => error_500 @, @errors[1] or i18n "resources.comment.errors.friendly_create"
 		GET: error_405
 		POST: =>
-			assert_csrf_token @
 			assert_error @active_user, i18n "auth.need_logged_in"
+			assert_csrf_token @
 			assert_valid @params, {
 				{"comment_text", exists: true}
 			}

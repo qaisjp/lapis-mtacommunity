@@ -49,6 +49,10 @@ class MTAResourceLayout extends Widget
 											button type: "submit", name: "vote", value: "up", class: {"btn btn-secondary", active: (rating == true)}, ->
 												i class: "fa fa-thumbs-up"
 									raw " "
+									form method: "POST", action: @url_for("resources.report_resource", resource_slug: @resource), class: "mta-inline-form", ->
+										@write_csrf_input!
+										button type: "submit", class: "btn btn-secondary", -> i class: "fa fa-flag"
+									raw " "
 
 								a class: "btn btn-primary", href: @url_for("resources.get", resource_slug: @resource), ->
 									i class: "fa fa-download"
