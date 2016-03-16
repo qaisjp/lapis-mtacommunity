@@ -2,15 +2,17 @@ import Widget from require "lapis.html"
 import Resources, ResourcePackages from require "models"
 import time_ago_in_words from require "lapis.util"
 date = require "date"
+i18n = require "i18n"
 
 class MTAResourcesOverview extends Widget
 	content: =>
 		h1 ->
-			text "Resources"
+			text i18n "resources.title"
 			if @active_user
 				a href: @url_for("resources.upload"), class: "btn btn-secondary pull-xs-right" , ->
 					i class: "fa fa-upload"
-					text " Upload"
+					raw " "
+					text i18n "resources.manage.packages.upload"
 
 		div class: "container", ->
 			div class: "row", ->
@@ -18,13 +20,13 @@ class MTAResourcesOverview extends Widget
 
 			div class: "row", ->
 				div class: "card", ->
-					div class: "card-header", "Most Downloaded"
+					div class: "card-header", i18n "resources.overview.most_downloaded"
 					div class: "card-block", ->
 						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
-								th "Name"
-								th "Description"
-								th "Downloads"
+								th i18n "resources.table.name"
+								th i18n "resources.table.description"
+								th i18n "resources.table.downloads"
 							tbody ->
 								-- Get the top 15 downloaded resource instances
 								resourceList = Resources\select "ORDER BY downloads DESC LIMIT 15"
@@ -38,13 +40,13 @@ class MTAResourcesOverview extends Widget
 
 			div class: "row", ->
 				div class: "card", ->
-					div class: "card-header", "Best Resources"
+					div class: "card-header", i18n "resources.overview.best_resources"
 					div class: "card-block", ->
 						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
-								th "Name"
-								th "Description"
-								th "Rating"
+								th i18n "resources.table.name"
+								th i18n "resources.table.description"
+								th i18n "resources.table.rating"
 							tbody ->
 								-- Get the top 15 rated resource instances
 								resourceList = Resources\select "ORDER BY rating DESC LIMIT 15"
@@ -58,13 +60,13 @@ class MTAResourcesOverview extends Widget
 
 			div class: "row", ->
 				div class: "card", ->
-					div class: "card-header", "Recently Uploaded"
+					div class: "card-header", i18n "resources.overview.recently_uploaded"
 					div class: "card-block", ->
 						element "table", class: "table table-hover table-href table-bordered mta-card-table", ->
 							thead -> tr ->
-								th "Name"
-								th "Version"
-								th "Date Updated"
+								th i18n "resources.table.name"
+								th i18n "resources.table.version"
+								th i18n "resources.table.date_published"
 							tbody ->
 								-- Get the recent uploaded resource instances
 								packageList = ResourcePackages\select "ORDER BY created_at DESC LIMIT 15"

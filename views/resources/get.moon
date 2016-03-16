@@ -3,31 +3,34 @@ import Resources, ResourcePackages from require "models"
 import var_dump from require "utils2"
 import to_json from require "lapis.util"
 import encode_base64 from require "lapis.util.encoding"
+i18n = require "i18n"
 
 class MTAResourcesGet extends Widget
 	@include require "widgets.utils"
 	content: =>
-		h1 "Downloading #{@resource.longname} v#{@package.version}"
+		h1 i18n "resources.get.h1", name: resource.longname, version: @package.version
 
 		unless @dependencies
-			text "Your download should start momentarily. "
-
+			text i18n "resources.get.momentarily"
+			raw " "
 			form class: "form-inline mta-inline-form", id: "download-form", method: "post", action: "", ->
 				@write_csrf_input!
 				input type: "hidden", name: "download", value: "1", ["aria-hidden"]: "true"
 				label ->
-					text "Please click "
-					button class: "btn btn-link mta-nopadding", type: "submit", "here"
-					text " if the download did not start."
+					text i18n "resource.get.please_click"
+					raw " "
+					button class: "btn btn-link mta-nopadding", type: "submit", i18n "resource.get.here"
+					raw " "
+					text i18n "resources.get.if_not_start"
 
-			p -> strong "Do not give administrator rights to any resource unless you trust it."
+			p -> strong i18n "resources.get.admin_warning"
 
 			-- make the script automatically submit the download form
 			@content_for "post_body_script", -> raw "<script>$('#download-form').submit();</script>"
 			return
 
 
-		p "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"#{@resource.name}\" will be included in your download."
+		p i18n "resources.get.dependency_note", name: @resource.name
 
 		form method: "post", action: "", ->
 			for i, dep in ipairs @dependencies

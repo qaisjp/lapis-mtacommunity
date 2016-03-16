@@ -2,19 +2,23 @@ import Widget from require "lapis.html"
 import Users, Resources, ResourcePackages from require "models"
 import time_ago_in_words from require "lapis.util"
 date = require "date"
+i18n = require "i18n"
 
 class MTAResourcePage extends Widget
 	@include "widgets.utils"
 	content: =>
 		div class: "card-block", ->
-			text "Rating: #{@resource.rating}"
+			text i18n "resources.table.rating"
+			text ": #{@resource.rating}"
 			br!
 			if #@authors == 1
-				text "Author: "
+				text i18n "resources.manage.author.title.one"
+				text ": "
 				author = @authors[1]
 				a href: @url_for(author), author.username
 			else
-				text "Authors: "
+				text i18n "resources.manage.author.title.many"
+				text ": "
 				for i, author in ipairs @authors
 					text ", " unless i == 1
 					a href: @url_for(author), author.username
@@ -26,13 +30,16 @@ class MTAResourcePage extends Widget
 				div class: "row", ->
 					ul class: "nav nav-tabs mta-tablinks", role: "tablist", ->
 						li role: "presentation", class: "nav-item", -> a class: "nav-link active", href: "#comments", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "comments", ->
-							text "Comments "
+							text i18n "comment.title.many"
+							raw " "
 							span class: "label label-pill label-default", @commentsPaginator\total_items!
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#changelog", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "changelog", ->
-							text "Changelog "
+							text i18n "resources.manage.packages.changelog"
+							raw " "
 							span class:"label label-pill label-default", @packagesPaginator\total_items!
 						li role: "presentation", class: "nav-item", -> a class: "nav-link", href: "#screenshots", role: "tab", ["data-toggle"]: "pill", ["aria-controls"]: "screenshots", ->
-							text "Screenshots "
+							text i18n "users.tab_screenshots"
+							raw " "
 							span class:"label label-pill label-default", @screenshotsPaginator\total_items!
 				div class: "row", ->
 					div class: "tab-content", ->
@@ -45,17 +52,15 @@ class MTAResourcePage extends Widget
 
 	write_comments: (paginated) =>
 		comments = paginated\get_page 1
-		text "#{paginated\num_pages!} pages. #{#comments} comments showing."
-
 		if @active_user
 			form action: @url_for("resources.post_comment", resource_slug: @resource), method: "POST", ->
 				@write_csrf_input @
-				label class: "sr-only", ["for"]: "comment_text", "Comment message:"
-				textarea class: "form-control", name: "comment_text", id: "comment_text", required: true, placeholder: "markdown comment..."
+				label class: "sr-only", ["for"]: "comment_text", i18n "comment.sr_parent_message"
+				textarea class: "form-control", name: "comment_text", id: "comment_text", required: true, placeholder: i18n "comment.message_placeholder"
 
-				button class: "btn btn-primary", type: "submit", " Comment"
+				button class: "btn btn-primary", type: "submit", i18n "comment.title.one"
 		else
-			p "Log in to leave a comment"
+			p i18n "comment.login_to"
 
 		CommentWidget = require "widgets.comment"
 		childComments = {}
@@ -74,13 +79,11 @@ class MTAResourcePage extends Widget
 
 	write_changelog: (paginated) =>
 		packages = paginated\get_page 1
-		text "#{paginated\num_pages!} pages. #{#packages} packages showing."
-
 		element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 			thead -> tr ->
-				th "Version"
-				th "Date Published"
-				th "Changes"
+				th i18n "resources.table.version"
+				th i18n "resources.table.date_published"
+				th i18n "resources.table.changes"
 			tbody ->
 				for package in *packages
 					tr ["data-href"]: @url_for("resources.get", resource_slug: @resource, version: package.version), ->
@@ -90,7 +93,6 @@ class MTAResourcePage extends Widget
 
 	write_screenshots: (paginated) =>
 		screenshots = paginated\get_page 1
-		text "#{paginated\num_pages!} pages. #{#screenshots} screenshots showing."
 
 		ScreenshotWidget = require "widgets.screenshot"
 
@@ -110,8 +112,8 @@ class MTAResourcePage extends Widget
 		
 			a class: "left carousel-control", href: "#screenshots-carousel", role: "button", ["data-slide"]: "prev", ->
 				span class: "icon-prev", ["aria-hidden"]: "true"
-				span class: "sr-only", "Previous"
+				span class: "sr-only", i18n "previous"
 
 			a class: "right carousel-control", href: "#screenshots-carousel", role: "button", ["data-slide"]: "next", ->
 				span class: "icon-next", ["aria-hidden"]: "true"
-				span class: "sr-only", "Next"
+				span class: "sr-only", i18n "next"

@@ -6,6 +6,8 @@ en:
 	download: "Download"
 	warning: "Warning!"
 	since: "Since"
+	next: "Next"
+	previous: "Previous"
 
 	layout:
 		logout: "logout"
@@ -14,18 +16,33 @@ en:
 		learn_more: "Learn more"
 		browse_resources: "Browse resources"
 		main:
-			first: [[Multi Theft Auto is a multiplayer modification for Rockstar's Grand Theft Auto game series: a piece of software that adapts the game in such a way, you can play Grand Theft Auto with your friends online and develop your own gamemodes.]],
-			second: [[It was brought into life because of the lacking multiplayer functionality in the Grand Theft Auto series of games, and provides a completely new platform on-top of the original game, allowing for players to play all sorts and types of game-modes anywhere they want, and developers to develop using our very powerful scripting engine.]]
+			first: "Multi Theft Auto is a multiplayer modification for Rockstar's Grand Theft Auto game series: a piece of software that adapts the game in such a way, you can play Grand Theft Auto with your friends online and develop your own gamemodes.",
+			second: "It was brought into life because of the lacking multiplayer functionality in the Grand Theft Auto series of games, and provides a completely new platform on-top of the original game, allowing for players to play all sorts and types of game-modes anywhere they want, and developers to develop using our very powerful scripting engine."
 	
 	resources:
+		title: "Resources"
 		latest_resources: "Latest resources"
 		view_resource: "View resource"
 		type: "Type"
 
+		cast_vote: "Cast vote"
+
 		cards:
 			last_updated: "Last updated"
+
 		overview:
 			most_downloaded: "Most Downloaded"
+			best_resources: "Best Resources"
+			recently_uploaded: "Recently Uploaded"
+
+		upload:
+			title: "Upload a new resource"
+			existing_update_alert: "If you'd like to update an existing resource, visit the manager for the resource."
+			name_info: "The name of the resource file (admin, editor, freeroam, race, hedit, etc.)"
+			description_info: "This will be displayed whenever people visit your resource."
+			publish: "Publish Resource"
+
+
 		
 		table:
 			name: "Name"
@@ -37,6 +54,17 @@ en:
 			changes: "Changes"
 			title: "Title" -- pretty much just for screenshots
 
+		get:
+			h1: "Downloading %{name} v %{version}"
+			momentarily: "Your download should start momentarily."
+
+			please_click: "Please click"
+			here: "here"
+			if_not_start: "if the download did not start."
+
+			admin_warning: "Do not give administrator rights to any resource unless you trust it."
+			dependency_note: "This resource depends on other resources. Please select the resources you would like in your download - you should not need to check resources that you already have. \"%{name}\" will be included in your download."
+
 		manage:
 			title: "Manage"
 			tab_dashboard: "Dashboard"
@@ -47,6 +75,13 @@ en:
 			tab_screenshots: "Screenshots"
 
 			author:
+				title:
+					one: "Author"
+					many: "Authors"
+				moderation_invite: "You have an invite to moderate this resource!"
+				accept_invite: "accept"
+				decline_invite: "decline"
+				
 				delete_self: "If you delete yourself as an author, you won't be able to use this page anymore. Be careful."
 				make_invite: "Invite author"
 				own_permissions: "%{name}'s permissions"
@@ -74,6 +109,7 @@ en:
 				download_count: "Downloads: %{num}"
 
 			details:
+				title: "Details"
 				change_description: "Change description"
 				description: "Description"
 				description_info: "This will be displayed whenever people visit your resource."
@@ -143,6 +179,7 @@ en:
 			many: "Comments"
 		deleted: "deleted"
 		reply_message: "Comment reply message"
+		sr_parent_message: "Comment message:"
 		message_placeholder: "Place your comment here"
 		user_replied: "replied"
 		user_commented: "commented"
@@ -151,6 +188,8 @@ en:
 			friendly_create: "We're sorry we couldn't make that comment for you."
 			parent_missing: "Parent comment not found"
 			cannot_reply_to_reply: "Cannot reply to a comment reply"
+
+		login_to: "Log in to leave a comment"
 
 	screenshots:
 		uploaded_since: "uploaded"
