@@ -126,6 +126,13 @@ en:
 				changelog_info: "What does this update do? What has changed?"
 				upload: "Upload"
 				upload_success: "Resource successfully uploaded."
+				
+				not_including: "This package does not include any other resource."
+				is_including: "This package includes: "
+				include_add: "Add include"
+				include_button: "Add"
+				include_resource: "resource name"
+				include_version: "version?"
 
 
 			screenshots:
