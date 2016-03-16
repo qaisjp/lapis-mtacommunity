@@ -194,7 +194,7 @@ class ResourceApplication extends lapis.Application
 			assert_error @active_user, i18n "auth.need_logged_in"
 			assert_csrf_token @
 
-			pcall -> ResourceReports\create reported_resource: @resource.id, reporter: @active_user.id
+			pcall -> ResourceReports\create resource: @resource.id, reporter: @active_user.id
 			redirect_to: @url_for "resources.overview"
 
 	}

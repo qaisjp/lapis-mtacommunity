@@ -47,6 +47,19 @@ class AdminApplication extends lapis.Application
 		@page = math.max 1, tonumber(@params.page) or 1 -- for pagination
 		render: "admin.layout"
 
+	[reports: "/reports(/:resource_id[%d])"]: capture_errors respond_to {
+		on_error: => error_500 @, @errors[1]
+		GET: => render: "admin.layout"
+		-- POST to retire all reports for resources
+		POST: =>
+			assert_csrf_token @
+			assert_valid @params, {
+				{"resource_id", exists: true, is_integer: true}
+			}
+			db.delete "resource_reports", resource: @params.resource_id
+			render: "admin.layout"
+	}
+
 	[manage_user: "/users/:user_id"]: capture_errors {
 		on_error: => error_500 @, @errors[1]
 		=> 
@@ -97,6 +110,7 @@ class AdminApplication extends lapis.Application
 
 		on_error: => render: "admin.layout"
 		POST: =>
+			assert_csrf_token @
 			assert_valid @params, {
 				{"ban_expiry_date", exists: true}
 				{"ban_expiry_time", exists: true}
@@ -139,7 +153,6 @@ class AdminApplication extends lapis.Application
 		GET: => status: 404
 		POST: =>
 			assert_csrf_token @
-			
 			assert_valid @params, {
 				{"user_id", exists: true, is_integer: true}
 			}
