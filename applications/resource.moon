@@ -69,7 +69,7 @@ class ResourceApplication extends lapis.Application
 				{"resDescription", exists: true }
 			}
 
-			yield_error i18n "errors.max_filesize", max: "20Mb", ours: #@params.resUpload.content if #@params.resUpload.content > 20 * 1000 * 1000
+			assert_error ResourcePackages\check_file_size @params.resUpload
 
 			-- check if the resource already exists
 			name, slug = Resources\is_name_available @params.resName

@@ -8,7 +8,7 @@ i18n = require "i18n"
 class MTAResourcesGet extends Widget
 	@include require "widgets.utils"
 	content: =>
-		h1 i18n "resources.get.h1", name: resource.longname, version: @package.version
+		h1 i18n "resources.get.h1", name: @resource.longname, version: @package.version
 
 		unless @dependencies
 			text i18n "resources.get.momentarily"

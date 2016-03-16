@@ -4,7 +4,10 @@ en:
 	update: "Update"
 	delete: "Delete"
 	download: "Download"
+
 	warning: "Warning!"
+	success: "Success!"
+
 	since: "Since"
 	next: "Next"
 	previous: "Previous"
@@ -122,6 +125,7 @@ en:
 				changelog: "Change log"
 				changelog_info: "What does this update do? What has changed?"
 				upload: "Upload"
+				upload_success: "Resource successfully uploaded."
 
 
 			screenshots:
@@ -156,6 +160,7 @@ en:
 
 				no_package: "That's not your package."
 				not_create_package: "Could not create package"
+				version_exists: "That version already exists."
 
 				no_screenshot: "That screenshot does not exist"
 				invalid_file_type: "Invalid file type"

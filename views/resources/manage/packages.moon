@@ -9,12 +9,22 @@ class MTAResourceManagePackages extends Widget
 
 	name: "Packages"
 	content: =>
-		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: "false", ["aria-controls"]: "upload", ->
+		has_errors = @errors != nil
+		if has_errors and (#@errors == 0)
+			has_errors = nil
+			div class: "alert alert-success", role: "alert", ->
+				strong ->
+					text i18n "success"
+					raw " "
+				text i18n "resources.manage.packages.upload_success"
+
+		p -> button type: "button", class: "btn btn-primary", ["data-toggle"]: "collapse", ["data-target"]: "#upload", ["aria-expanded"]: has_errors, ["aria-controls"]: "upload", ->
 			i class: "fa fa-chevron-circle-down"
 			text " #{i18n 'resources.manage.packages.update_resource'}"
 	
-		div class: "collapse", id: "upload", ->
+		div class: {"collapse", in: has_errors}, id: "upload", ->
 			div class: "card card-block", ->
+				@output_errors!
 				form method: "POST", enctype: "multipart/form-data", ->
 					@write_csrf_input!
 					fieldset class: "form-group", ->
@@ -23,7 +33,7 @@ class MTAResourceManagePackages extends Widget
 							small class: "text-muted", i18n "resources.manage.packages.changelog_info"
 						textarea class: "form-control", id: "uploadChangelog", name: "uploadChangelog", rows: 3, required: true, @params.uploadChangelog
 
-					input type: "file", id: "uploadFile", required: true
+					input type: "file", name: "uploadFile", required: true
 					button type: "submit", class: "btn btn-secondary btn-sm", ->
 						i class: "fa fa-upload"
 						text " #{i18n 'resources.manage.packages.upload'}"

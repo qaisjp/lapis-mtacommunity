@@ -26,7 +26,7 @@ import
 	respond_to
 from require "lapis.application"
 import assert_valid from require "lapis.validate"
-import build_screenshot_filepath from require "helpers.uploads"
+import build_screenshot_filepath, build_package_filepath, check_resource_file from require "helpers.uploads"
 
 class ManageResourceApplication extends lapis.Application
 	path: "/:resource_slug/manage"
@@ -80,7 +80,45 @@ class ManageResourceApplication extends lapis.Application
 
 	[packages: "/packages"]: capture_errors respond_to {
 		before: => @check_tab "packages"
-		on_error: => error_500 @, @errors[1]
+		on_error: => render: "resources.manage.layout" --error_500 @, @errors[1]
+		POST: =>
+			assert_valid @params, {
+				{"uploadFile", is_file: true, exists: true}
+				{"uploadChangelog", exists: true }
+			}
+
+			assert_error ResourcePackages\check_file_size @params.uploadFile
+			
+			filename = os.tmpname!			
+			file = io.open filename, "w"
+			file\write @params.uploadFile.content
+			file\close!
+
+			metaResults, @errors = check_resource_file filename
+			if not metaResults
+				os.remove filename
+				return render: "resources.manage.layout"
+
+			if ResourcePackages\find version: metaResults.version, resource: @resource.id
+				yield_error i18n "resources.manage.errors.version_exists"
+
+			package =
+				version: metaResults.version
+				description: @params.uploadChangelog
+				uploader: @active_user.id
+				resource: @resource.id
+				file: date!\spanseconds!
+
+			package = assert_error ResourcePackages\create(package), i18n "resources.manage.not_create_package"
+
+			_, file = assert_error pcall io.open, build_package_filepath(@resource.id, package.id, package.file), "w"
+
+			file\write @params.uploadFile.content
+			file\close!
+
+			@resource\update longname: metaResults.name, type: Resources.types\for_db metaResults.type
+
+			render: "resources.manage.layout"
 		GET: => render: "resources.manage.layout"
 	}
 
