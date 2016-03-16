@@ -3,12 +3,13 @@ db    = require "lapis.db"
 date  = require "date"
 i18n  = require "i18n"
 import
+	Comments
 	Resources
 	ResourcePackages
 	ResourceScreenshots
 	ResourceAdmins
+	PackageDependencies
 	Users
-	Comments
 from require "models"
 import
 	error_404
@@ -110,6 +111,16 @@ class ManageResourceApplication extends lapis.Application
 				file: date!\spanseconds!
 
 			package = assert_error ResourcePackages\create(package), i18n "resources.manage.not_create_package"
+			
+			-- update all package deps that are on the old resource version
+			db.query [[UPDATE package_dependencies
+				SET package = ?
+				FROM resources, resource_packages
+				WHERE
+				resources.id = ?
+				AND resources.id = resource_packages.resource
+				AND resource_packages.id = package_dependencies.package
+				AND needs_version = false]], package.id, @resource.id
 
 			_, file = assert_error pcall io.open, build_package_filepath(@resource.id, package.id, package.file), "w"
 
@@ -130,8 +141,33 @@ class ManageResourceApplication extends lapis.Application
 		on_error: => error_500 @, @errors[1]
 		POST: =>
 			assert_csrf_token @
-			assert_valid @params, {{"updateDescription", exists: true}}
-			@package\update description: @params.updateDescription
+
+			if @params.updateDescription
+				@package\update description: @params.updateDescription
+			elseif @params.addInclude == "true"
+				assert_valid @params, {
+					{"include_resource", exists: true}
+				}
+				if @params.include_version == ""
+					@params.include_version = nil
+
+				target_resource = assert_error Resources\search(@params.include_resource), i18n "resources.manage.errors.invalid_name"
+
+				local package
+				if ver = @params.include_version
+					package = ResourcePackages\find resource: target_resource.id, version: ver
+					assert_error package, i18n "resources.manage.errors.version_search_fail"
+				else
+					package = (ResourcePackages\select "where resource = ? order by created_at desc limit 1", target_resource.id)[1]
+
+
+				assert_error package, i18n "errors.internal_error"
+				
+				already_exists = nil != PackageDependencies\find source_package: @package.id, package: package.id
+				yield_error i18n "resources.manage.errors.package_already_dep" if already_exists
+
+				PackageDependencies\create source_package: @package.id, package: package.id, needs_version: (@params.include_version != nil)
+
 			render: "resources.manage.layout"
 		GET: =>	render: "resources.manage.layout"
 	}

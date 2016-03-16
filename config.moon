@@ -9,7 +9,7 @@ config "development", ->
 	postgres secrets.postgres
 	logging ->
 		queries false
-		-- requests false
+		requests false
 
 
 config "production", ->

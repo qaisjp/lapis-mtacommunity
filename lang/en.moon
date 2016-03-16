@@ -164,6 +164,8 @@ en:
 			errors:
 				resource_already_exists: "Resource already exists"
 				invalid_name: "Invalid resource name"
+				version_search_fail: "Couldn't find that version with that resource"
+				package_already_dep: "That package is already a dependency"
 
 				no_package: "That's not your package."
 				not_create_package: "Could not create package"
@@ -326,4 +328,6 @@ en:
 		server_error:
 			title: "Oops"
 			h3: "Something went wrong."
+
+		internal_error: "Internal error."
 		internal_error_output: "Internal error. Give the following information to a codemonkey:"

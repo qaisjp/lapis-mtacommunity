@@ -55,6 +55,13 @@ class Resources extends Model
 		@update :name, :slug
 		true
 
+	@search: (name) =>
+		local resource
+		with lowername = name\lower!
+			resource = Resources\find [db.raw "lower(slug)"]: lowername unless resource
+			resource = Resources\find [db.raw "lower(name)"]: lowername unless resource
+		resource
+
 	-- all authors
 	get_authors: (opts = {}) =>
 		Users\select [[
