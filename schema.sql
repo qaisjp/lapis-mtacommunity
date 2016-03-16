@@ -170,63 +170,6 @@ ALTER SEQUENCE bans_id_seq OWNED BY bans.id;
 
 
 --
--- Name: comment_reports; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE comment_reports (
-    id integer NOT NULL,
-    reporter integer NOT NULL,
-    reported_comment integer NOT NULL,
-    created_at timestamp without time zone DEFAULT now() NOT NULL,
-    updated_at timestamp without time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE comment_reports OWNER TO postgres;
-
---
--- Name: comment_reports_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE comment_reports_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE comment_reports_id_seq OWNER TO postgres;
-
---
--- Name: comment_reports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE comment_reports_id_seq OWNED BY comment_reports.id;
-
-
---
--- Name: comment_reports_reporter_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE comment_reports_reporter_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE comment_reports_reporter_seq OWNER TO postgres;
-
---
--- Name: comment_reports_reporter_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE comment_reports_reporter_seq OWNED BY comment_reports.reporter;
-
-
---
 -- Name: comments; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -365,11 +308,76 @@ ALTER SEQUENCE resource_packages_id_seq OWNED BY resource_packages.id;
 CREATE TABLE resource_ratings (
     "user" integer NOT NULL,
     resource integer NOT NULL,
-    rating resource_rating NOT NULL
+    rating boolean NOT NULL
 );
 
 
 ALTER TABLE resource_ratings OWNER TO postgres;
+
+--
+-- Name: COLUMN resource_ratings.rating; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN resource_ratings.rating IS 'true = +1
+false = -1';
+
+
+--
+-- Name: resource_reports; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE resource_reports (
+    id integer NOT NULL,
+    reporter integer NOT NULL,
+    resource integer NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE resource_reports OWNER TO postgres;
+
+--
+-- Name: resource_reports_reporter_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE resource_reports_reporter_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE resource_reports_reporter_seq OWNER TO postgres;
+
+--
+-- Name: resource_reports_reporter_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE resource_reports_reporter_seq OWNED BY resource_reports.reporter;
+
+
+--
+-- Name: resource_rreports_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE resource_rreports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE resource_rreports_id_seq OWNER TO postgres;
+
+--
+-- Name: resource_rreports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE resource_rreports_id_seq OWNED BY resource_reports.id;
+
 
 --
 -- Name: resource_screenshots; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
@@ -549,20 +557,6 @@ ALTER TABLE ONLY bans ALTER COLUMN id SET DEFAULT nextval('bans_id_seq'::regclas
 -- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY comment_reports ALTER COLUMN id SET DEFAULT nextval('comment_reports_id_seq'::regclass);
-
-
---
--- Name: reporter; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY comment_reports ALTER COLUMN reporter SET DEFAULT nextval('comment_reports_reporter_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
@@ -571,6 +565,20 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY resource_packages ALTER COLUMN id SET DEFAULT nextval('resource_packages_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_reports ALTER COLUMN id SET DEFAULT nextval('resource_rreports_id_seq'::regclass);
+
+
+--
+-- Name: reporter; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_reports ALTER COLUMN reporter SET DEFAULT nextval('resource_reports_reporter_seq'::regclass);
 
 
 --
@@ -600,14 +608,6 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 ALTER TABLE ONLY bans
     ADD CONSTRAINT bans_id_pkey PRIMARY KEY (id);
-
-
---
--- Name: comment_reports_id_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY comment_reports
-    ADD CONSTRAINT comment_reports_id_pkey PRIMARY KEY (id);
 
 
 --
@@ -667,6 +667,22 @@ ALTER TABLE ONLY resource_ratings
 
 
 --
+-- Name: resource_reports_id_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY resource_reports
+    ADD CONSTRAINT resource_reports_id_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_reports_reporter_resource_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY resource_reports
+    ADD CONSTRAINT resource_reports_reporter_resource_key UNIQUE (reporter, resource);
+
+
+--
 -- Name: resource_screenshots_id_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -680,6 +696,14 @@ ALTER TABLE ONLY resource_screenshots
 
 ALTER TABLE ONLY resources
     ADD CONSTRAINT resources_id_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY resources
+    ADD CONSTRAINT resources_name_key UNIQUE (name);
 
 
 --
@@ -723,6 +747,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: users_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_slug_key UNIQUE (slug);
+
+
+--
 -- Name: users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -734,14 +766,14 @@ ALTER TABLE ONLY users
 -- Name: fki_comment_reports_reported_comment_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE INDEX fki_comment_reports_reported_comment_fkey ON comment_reports USING btree (reported_comment);
+CREATE INDEX fki_comment_reports_reported_comment_fkey ON resource_reports USING btree (resource);
 
 
 --
 -- Name: fki_comment_reports_reporter_fkey; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE INDEX fki_comment_reports_reporter_fkey ON comment_reports USING btree (reporter);
+CREATE INDEX fki_comment_reports_reporter_fkey ON resource_reports USING btree (reporter);
 
 
 --
@@ -831,22 +863,6 @@ ALTER TABLE ONLY bans
 
 
 --
--- Name: comment_reports_reported_comment_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY comment_reports
-    ADD CONSTRAINT comment_reports_reported_comment_fkey FOREIGN KEY (reported_comment) REFERENCES comments(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: comment_reports_reporter_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY comment_reports
-    ADD CONSTRAINT comment_reports_reporter_fkey FOREIGN KEY (reporter) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: comments_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -932,6 +948,22 @@ ALTER TABLE ONLY resource_ratings
 
 ALTER TABLE ONLY resource_ratings
     ADD CONSTRAINT resource_ratings_user_fkey FOREIGN KEY ("user") REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: resource_reports_reporter_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_reports
+    ADD CONSTRAINT resource_reports_reporter_fkey FOREIGN KEY (reporter) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: resource_reports_resource_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY resource_reports
+    ADD CONSTRAINT resource_reports_resource_fkey FOREIGN KEY (resource) REFERENCES resources(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
