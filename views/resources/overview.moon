@@ -66,7 +66,7 @@ class MTAResourcesOverview extends Widget
 							thead -> tr ->
 								th i18n "resources.table.name"
 								th i18n "resources.table.version"
-								th i18n "resources.table.date_published"
+								th i18n "resources.table.publish_date"
 							tbody ->
 								-- Get the recent uploaded resource instances
 								packageList = ResourcePackages\select "ORDER BY created_at DESC LIMIT 15"
