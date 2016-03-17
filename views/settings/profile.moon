@@ -7,7 +7,7 @@ class MTASettingsProfile extends Widget
 	category: "profile"
 	content: =>
 		div class: "card", ->
-			div class: "card-header", i18n "settings.account"
+			div class: "card-header", i18n "settings.profile"
 			div class: "card-block", ->
 				form method: "POST", ->
 					@write_csrf_input!
