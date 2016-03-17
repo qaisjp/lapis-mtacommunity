@@ -3,6 +3,7 @@ i18n  = require "i18n"
 
 import generate_csrf_token from require "utils"
 import Users from require "models"
+import error_404 from require "utils"
 
 -- We need to update the seed, otherwise math.random will always be the same
 math.randomseed os.time!
@@ -45,6 +46,8 @@ class MTAApp extends lapis.Application
 		locale = languages[@cookies.locale] and @cookies.locale or "en"
 		i18n.loadFile "lang/#{locale}.lua"
 		i18n.setLocale locale
+
+	handle_404: error_404
 
 	-- cookie_attributes: (name, value) =>
 	-- 	base = "Path=/; HttpOnly"

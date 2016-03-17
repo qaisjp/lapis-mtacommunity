@@ -13,17 +13,17 @@ class MTASettingsAccount extends Widget
 				div class: "form-group row", ->
 					label class: "col-sm-2", i18n "settings.changepass_title"
 					div class: "col-sm-10", ->
-						input type: "password", class: "form-control", name: "settingsOldPassword"
+						input type: "password", class: "form-control", name: "settingsOldPassword", required: true
 
 				div class: "form-group row", ->
 					label class: "col-sm-2", i18n "settings.new_pass"
 					div class: "col-sm-10", ->
-						input type: "password", class: "form-control", name: "settingsNewPassword"
+						input type: "password", class: "form-control", name: "settingsNewPassword", required: true
 
 				div class: "form-group row", ->
 					label class: "col-sm-2", i18n "settings.confirm_new_pass"
 					div class: "col-sm-10", ->
-						input type: "password", class: "form-control", name: "settingsNewPasswordConfirm"
+						input type: "password", class: "form-control", name: "settingsNewPasswordConfirm", required: true
 
 				div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->
@@ -38,7 +38,7 @@ class MTASettingsAccount extends Widget
 				div class: "form-group row", ->
 					label class: "col-sm-2", i18n "settings.username"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", name: "settingsNewUsername", value: @active_user.username
+						input type: "text", class: "form-control", name: "settingsNewUsername", value: @active_user.username, required: true
 
 				div class: "form-group row", ->
 					div class: "col-sm-offset-2 col-sm-10", ->
