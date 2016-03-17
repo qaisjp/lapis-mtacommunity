@@ -31,8 +31,9 @@ class CommentWidget extends Widget
 					if can_show_reply
 						a class: "btn btn-secondary btn-sm", onclick:"$('#commentreply-#{@comment.id}').toggle()", i18n "comment.reply"
 					raw " "
-
-					if @active_user and ((@rights and @rights.can_moderate) or @active_user\can_open_admin_panel! or (@comment.author.id == @active_user.id))
+					
+					our_comment = @comment.author and (@comment.author.id == @active_user.id)
+					if @active_user and ((@rights and @rights.can_moderate) or @active_user\can_open_admin_panel! or our_comment)
 						form method: "POST", action: @url_for("resources.delete_comment", resource_slug: @resource, comment: @comment.id), class: "mta-inline-form", ->
 							@write_csrf_input!
 							button type: "submit", class: "btn btn-secondary btn-sm", -> i class: "fa fa-remove"
