@@ -48,5 +48,5 @@ class LoginForm extends Widget
 				
 				div class: "col-md-8", ->
 					div class: "input-group", ->
-						span class: "input-group-addon", -> input type: "checkbox", name: "remember", value: "true"
+						--span class: "input-group-addon", -> input type: "checkbox", name: "remember", value: "true"
 						button type: "submit", class: "form-control btn btn-secondary", i18n "auth.login_button"
