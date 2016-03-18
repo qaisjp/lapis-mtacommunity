@@ -17,9 +17,9 @@ class MTAResourcesGet extends Widget
 				@write_csrf_input!
 				input type: "hidden", name: "download", value: "1", ["aria-hidden"]: "true"
 				label ->
-					text i18n "resource.get.please_click"
+					text i18n "resources.get.please_click"
 					raw " "
-					button class: "btn btn-link mta-nopadding", type: "submit", i18n "resource.get.here"
+					button class: "btn btn-link mta-nopadding", type: "submit", i18n "resources.get.here"
 					raw " "
 					text i18n "resources.get.if_not_start"
 
