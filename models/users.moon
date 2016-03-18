@@ -127,6 +127,7 @@ class Users extends Model
 			user = Users\find [db.raw "lower(username)"]: uname_l
 			user = Users\find [db.raw "lower(slug)"]: uname_l unless user
 			user = Users\find [db.raw "lower(email)"]: uname_l unless user
+		return nil, i18n "users.errors.not_exist" unless user
 		user
 
 	rename: (username) =>
