@@ -304,8 +304,8 @@ pi:
 		confirm_password_placeholder: "confirm"
 		email_placeholder: "email address"
 
-		register_button: "register"
-		login_button: "login"
+		register_button: "Join th' crew"
+		login_button: "Let me in thar"
 
 		register_title: "Register an account"
 		register_success: "Account successfully created. Your account has been automatically activated."
