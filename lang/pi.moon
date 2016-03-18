@@ -25,8 +25,8 @@ pi:
 		learn_more: "Be tellin' me more"
 		browse_resources: "Show me some mor"
 		main:
-			first: "Multi Theft Auto is a multiplayer modification for Rockstar's Grand Theft Auto game series: a piece of software that adapts the game in such a way, you can play Grand Theft Auto with your friends online and develop your own gamemodes.",
-			second: "It was brought into life because of the lacking multiplayer functionality in the Grand Theft Auto series of games, and provides a completely new platform on-top of the original game, allowing for players to play all sorts and types of game-modes anywhere they want, and developers to develop using our very powerful scripting engine."
+			first: "Multi Theft Auto be a multiplayer modification fer Rockstar's Grand Theft Auto battle series: a piece 'o software that adapts th' battle in such a way, ye can fight Grand Theft Auto wit' ye buckos online 'n develop ye own gamemodes.",
+			second: "It was brought into life because 'o th' lackin' multiplayer functionality in th' Grand Theft Auto series 'o games, 'n provides a completely new platform on-top 'o th' original battle, allowin' fer players to fight all sorts 'n types 'o battle-modes anywhere they want, 'n developers to develop usin' our extra powerful scriptin' engine."
 	
 	resources:
 		title: "Resources"
