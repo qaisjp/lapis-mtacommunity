@@ -82,7 +82,7 @@ class MTAResourcePage extends Widget
 		element "table", class: "table table-hover table-href table-bordered mta-resources-table", ->
 			thead -> tr ->
 				th i18n "resources.table.version"
-				th i18n "resources.table.date_published"
+				th i18n "resources.table.publish_date"
 				th i18n "resources.table.changes"
 			tbody ->
 				for package in *packages

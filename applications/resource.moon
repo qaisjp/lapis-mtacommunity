@@ -66,7 +66,7 @@ class ResourceApplication extends lapis.Application
 		POST: =>
 			assert_valid @params, {
 				{"resUpload", is_file: true, exists: true}
-				{"resName", exists: true }
+				{"resName", exists: true, max_length: 255}
 				{"resDescription", exists: true }
 			}
 
@@ -74,7 +74,7 @@ class ResourceApplication extends lapis.Application
 
 			-- check if the resource already exists
 			name, slug = Resources\is_name_available @params.resName
-			yield_error i18n "resources.manage.resource_already_exists" unless name
+			yield_error i18n "resources.manage.errors.resource_already_exists" unless name
 
 			resource = 
 				:name 
@@ -110,7 +110,7 @@ class ResourceApplication extends lapis.Application
 				resource\delete!
 				yield_error err
 
-			package = clean_assert ResourcePackages\create(package), i18n "resources.manage.not_create_package"
+			package = clean_assert ResourcePackages\create(package), i18n "resources.manage.errors.not_create_package"
 
 			-- create folders...
 			clean_assert lfs.mkdir "uploads/#{resource.id}"

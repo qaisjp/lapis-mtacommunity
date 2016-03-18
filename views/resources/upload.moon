@@ -27,7 +27,7 @@ class MTAResourcesUpload extends Widget
 							text i18n "resources.table.name"
 							raw " "
 							small class: "text-muted", i18n "resources.upload.name_info"
-						input type: "text", class: "form-control", id: "resName", name: "resName", value: @params.resName, required: true
+						input type: "text", class: "form-control", id: "resName", name: "resName", value: @params.resName, required: true, maxlength: 255
 						
 					
 					fieldset class: "form-group", ->
