@@ -169,7 +169,7 @@ en:
 
 			errors:
 				comment_not_exist: "Comment does not exist"
-				resource_already_exists: "Resource already exists"
+				already_exists: "Resource already exists"
 				invalid_name: "Invalid resource name"
 				version_search_fail: "Couldn't find that version with that resource"
 				package_already_dep: "That package is already a dependency"
