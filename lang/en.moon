@@ -87,7 +87,7 @@ en:
 				title:
 					one: "Author"
 					many: "Authors"
-				moderation_invite: "You have an invite to moderate this resource!"
+				moderation_invite: "You have an invite to manage this resource!"
 				accept_invite: "accept"
 				decline_invite: "decline"
 				
