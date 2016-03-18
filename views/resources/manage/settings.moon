@@ -33,7 +33,7 @@ class MTAResourceManageSettings extends Widget
 				fieldset class: "form-group row", ->
 					label class: "col-sm-2", for: "settingsNewResourceName", i18n "resources.manage.settings.rename_name"
 					div class: "col-sm-10", ->
-						input type: "text", class: "form-control", name: "settingsNewResourceName", id: "settingsNewResourceName", value: @resource.name, required: true
+						input type: "text", class: "form-control", name: "settingsNewResourceName", id: "settingsNewResourceName", value: @resource.name, required: true, maxlength: 255
 
 				div class: "form-group row", ->
 						div class: "col-sm-offset-2 col-sm-10", ->
