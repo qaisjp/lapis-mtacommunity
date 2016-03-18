@@ -19,7 +19,7 @@ class MTAResourceManageSettings extends Widget
 
 				div class: "form-group row", ->
 					div class: "col-sm-offset-2 col-sm-10", ->
-						button type: "submit", class: "btn btn-secondary", onclick: "return confirm(\"#{i18n 'resources.manage.settings.transfer_ownership_confirm'\")", "#{i18n 'resources.manage.settings.transfer_ownership'}..."
+						button type: "submit", class: "btn btn-secondary", onclick: "return confirm(\"#{i18n 'resources.manage.settings.transfer_ownership_confirm'}\")", "#{i18n 'resources.manage.settings.transfer_ownership'}..."
 
 		div class: "card", ->
 			div class: "card-header", i18n "resources.manage.settings.rename_resource"
