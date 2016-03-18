@@ -293,8 +293,7 @@ class ManageResourceApplication extends lapis.Application
 			}
 
 			-- check if new owner exists
-			new_owner = Users\search @params.settingsNewOwner
-
+			new_owner = assert_error Users\search @params.settingsNewOwner
 			-- future: 
 				-- send email to existing owner
 				-- link in email will send request to new owner
