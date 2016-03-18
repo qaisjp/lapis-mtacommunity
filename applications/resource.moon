@@ -74,7 +74,7 @@ class ResourceApplication extends lapis.Application
 
 			-- check if the resource already exists
 			name, slug = Resources\is_name_available @params.resName
-			yield_error i18n "resources.manage.errors.resource_already_exists" unless name
+			yield_error slug unless name
 
 			resource = 
 				:name 
