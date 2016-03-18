@@ -85,8 +85,8 @@ class Layout extends Widget
 						li class: "nav-item", -> a class: "nav-link", href: @url_for("admin.dashboard"), "admin"
 					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.logout"), i18n "layout.logout"
 				else
-					li class: "nav-item", -> a class: "nav-link", id: "login-btn", href: @url_for("auth.login"), "login"
-					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.register"), "register"
+					li class: "nav-item", -> a class: "nav-link", id: "login-btn", href: @url_for("auth.login"), i18n "auth.login_button"
+					li class: "nav-item", -> a class: "nav-link", href: @url_for("auth.register"), i18n "auth.register_button"
 
 				-- languages!
 				li class: "nav-item form-inline btn-group", ->
