@@ -119,15 +119,15 @@ class Layout extends Widget
 		
 		div class: "col-md-2", ->
 			ul ->
-				li -> a href: "#", ->
+				li -> a href: "https://steamcommunity.com/groups/mta", ->
 					i class: "fa fa-fw fa-steam-square"
 					raw "Steam"
-				li -> a href: "#", ->
+				li -> a href: "https://twitter.com/mtaqa", ->
 					i class: "fa fa-fw fa-twitter-square"
 					raw "Twitter"
-				li -> a href: "#", ->
+				li -> a href: "https://www.facebook.com/multitheftauto/", ->
 					i class: "fa fa-fw fa-facebook-square"
 					raw "Facebook"
-				li -> a href: "#", ->
+				li -> a href: "https://www.youtube.com/user/MTAQA", ->
 					i class: "fa fa-fw fa-youtube-square"
 					raw "YouTube"
