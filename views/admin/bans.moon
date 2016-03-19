@@ -12,7 +12,7 @@ main = class MTAAdminBans extends Widget
 	category: "Bans"
 	content: =>
 		paginated = Bans\paginated "order by created_at desc",
-			per_page: 2
+			per_page: 5
 			prepare_results: (bans) ->
 				Users\include_in bans, "banned_user", as: "banned_user"--, fields: "username"
 				Users\include_in bans, "banner", as: "banner"--, fields: "username"

@@ -11,7 +11,7 @@ main = class MTAAdminUsers extends Widget
 	category: "Users"
 	content: =>
 		paginated = Users\paginated "order by created_at desc",
-			per_page: 3
+			per_page: 5
 
 		element "table", class: "table table-hover table-bordered table-sm table-href", ->
 			thead ->

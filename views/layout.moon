@@ -112,10 +112,10 @@ class Layout extends Widget
 
 		div class: "col-md-2", ->
 			ul ->
-				li -> a href: "#", "Nightlies"
-				li -> a href: "#", "GitHub"
-				li -> a href: "#", "Wiki"
-				li -> a href: "#", "Bug Tracker"
+				li -> a href: "https://nightly.multitheftauto.com", "Nightlies"
+				li -> a href: "https://github.com/multitheftauto", "GitHub"
+				li -> a href: "https://wiki.multitheftauto.com", "Wiki"
+				li -> a href: "https://bugs.multitheftauto.com", "Bug Tracker"
 		
 		div class: "col-md-2", ->
 			ul ->
