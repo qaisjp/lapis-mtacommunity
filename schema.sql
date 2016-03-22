@@ -498,8 +498,9 @@ CREATE TABLE user_tokens (
     id character varying(20) NOT NULL,
     owner integer NOT NULL,
     type integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    expires_at timestamp without time zone
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    expires_at timestamp without time zone,
+    updated_at timestamp without time zone DEFAULT now()
 );
 
 
