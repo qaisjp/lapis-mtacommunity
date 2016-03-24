@@ -1,8 +1,5 @@
 import Model, enum from require "lapis.db.model"
 import trim from require "lapis.util"
-slugify_username = (username) ->
-	import slugify from require "lapis.util"
-	slugify username
 
 bcrypt = require "bcrypt"
 db     = require "lapis.db"
@@ -11,6 +8,11 @@ import
 	Bans
 	UserData
 from require "models"
+
+
+slugify_username = (username) ->
+	import slugify from require "lapis.util"
+	slugify username
 
 class Users extends Model
 	-- Has created_at and modified_at

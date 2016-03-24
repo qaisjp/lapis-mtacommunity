@@ -57,20 +57,9 @@ class AuthApplication extends lapis.Application
 				{ "email", type: "string", exists: true }
 			}
 
-			-- TODO: Fix recaptcha
-			-- Now we need to check the recaptcha
-			-- res = nginx.simple
-			--  method: nginx.methods.post
-			--  url:  "https://www.google.com/recaptcha/api/siteverify"
-			--  vars: 
-			--    secret: captcha_secret
-			--    response: @params["g-recaptcha-response"]
-			-- assert_error res.success == true, "captcha fail"
-
 			-- Create the user
 			user = assert_error Users\register @params.username, @params.password, @params.email
 
-			-- TODO: Add email activation
 			-- In the absence of email activation, lets just activate accounts immediately
 			user\update activated: true
 
@@ -85,6 +74,8 @@ class AuthApplication extends lapis.Application
 	[forgot: "/password_reset(/*)"]: capture_errors respond_to
 		before: =>
 			@title = i18n "auth.reset_title"
+
+			-- check if the token exists
 			@token_type = UserTokens.token_type\for_db "reset_password"
 
 			if @params.splat
@@ -103,6 +94,7 @@ class AuthApplication extends lapis.Application
 			assert_csrf_token @
 
 			if @token
+				-- reset password
 				assert_valid @params, {
 					{"password", exists: true},
 					{"password_confirm", exists: true, equals: @params.password, i18n "users.errors.password_confirm_mismatch"}
@@ -111,6 +103,8 @@ class AuthApplication extends lapis.Application
 				user = Users\find @token.owner
 				user\update_password @params.password
 				return redirect_to: @url_for "home"
+
+			-- send reset email
 
 			assert_valid @params, {
 				{"email", exists: true}
@@ -135,7 +129,7 @@ class AuthApplication extends lapis.Application
 
 			url = @build_url @url_for "auth.forgot", splat: token
 			gunner = Mailgun secrets.mailgun
-			assert_error gunner\send_email
+			assert_error gunner\send_email -- actually send the email now
 			    to: "me@qaisjp.com"
 			    subject: "#{i18n 'email.reset.subject'}"
 			    html: true

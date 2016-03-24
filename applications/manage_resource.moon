@@ -139,7 +139,7 @@ class ManageResourceApplication extends lapis.Application
 			@package = assert_error (ResourcePackages\find resource: @resource.id, id: @params.pkg_id), i18n "resources.manage.errors.no_package"
 
 		on_error: => error_500 @, @errors[1]
-		POST: =>
+		POST: => -- update package details and adding dependencies
 			assert_csrf_token @
 
 			if @params.updateDescription
@@ -176,18 +176,19 @@ class ManageResourceApplication extends lapis.Application
 		before: => @check_tab "screenshots"
 		on_error: => error_500 @, @errors[1]
 		GET: => render: "resources.manage.layout"
-		POST: =>
+		POST: => -- uploading new screesnshots
 			assert_valid @params, {
 				{"screenieFile", is_file: true, exists: true}
 				{"screenieTitle", exists: true }
 			}
 
-			do
+			do -- check extension
 				title = @params.screenieFile.filename\lower!
 				endsWith = (ext) -> title\sub(-#ext) == ext\lower!
 				unless endsWith("jpg") or endsWith("png") or endsWith("jpeg") or endsWith("gif")
 					yield_error i18n "resources.manage.errors.invalid_file_type"
 
+			-- check filesize
 			filesize = #@params.screenieFile.content 
 			yield_error i18n "errors.max_filesize", max: "2Mb", ours: filesize if filesize > 2 * 1000 * 1000
 
@@ -205,6 +206,7 @@ class ManageResourceApplication extends lapis.Application
 				screenshot\delete!
 				yield_error err
 
+			-- try to store the screenshot
 			filename = build_screenshot_filepath @resource.id, screenshot.id, screenshot.file
 			_, file, err  = clean_assert pcall io.open, filename, "w"
 			assert_error file, err

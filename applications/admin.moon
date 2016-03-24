@@ -101,6 +101,7 @@ class AdminApplication extends lapis.Application
 					{"user_id", is_integer: true, exists: true}
 				}
 
+				-- does thw user we want to ban exist?
 				user = Users\find user_id
 				if user
 					@user = user
@@ -117,11 +118,14 @@ class AdminApplication extends lapis.Application
 				{"ban_reason"     , exists: true}
 			}
 
+			-- attempt to read date/time and get the target date
 			success, expiry_date = pcall -> (date @params.ban_expiry_date) + (date @params.ban_expiry_time)
 			yield_error "Date or time is in the incorrect format" unless success
 
+			-- ensure date is in the future
 			assert_error (expiry_date > date!), "Ban must be in the future"
 			
+			-- create the ban
 			ban = Bans\create banner: @active_user.id, banned_user: @user.id, reason: @params.ban_reason, active: true, expires_at: expiry_date\fmt "${http}"
 			assert_error ban, "Failed to create ban"
 			redirect_to: @url_for "admin.view_ban", ban_id: ban.id

@@ -5,6 +5,8 @@ class ResourceScreenshots extends Model
     @timestamp: true
     
     url_params: (reg, ...) => "resources.view_screenshot", { resource_slug: @resource, screenie_id: @id }, ...
+
+    -- get the direct url of this resource (not the page with the title and description, but the raw image data)
     get_direct_url: (context) =>
     	res = @resource
     	if type(res) == "number"

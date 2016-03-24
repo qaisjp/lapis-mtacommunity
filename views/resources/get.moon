@@ -1,6 +1,5 @@
 import Widget from require "lapis.html"
 import Resources, ResourcePackages from require "models"
-import var_dump from require "utils2"
 import to_json from require "lapis.util"
 import encode_base64 from require "lapis.util.encoding"
 i18n = require "i18n"
