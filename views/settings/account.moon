@@ -11,7 +11,7 @@ class MTASettingsAccount extends Widget
 				@write_csrf_input!
 
 				div class: "form-group row", ->
-					label class: "col-sm-2", i18n "settings.changepass_title"
+					label class: "col-sm-2", i18n "settings.old_pass"
 					div class: "col-sm-10", ->
 						input type: "password", class: "form-control", name: "settingsOldPassword", required: true
 

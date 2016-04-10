@@ -139,7 +139,7 @@ class AdminApplication extends lapis.Application
 				if user = Users\search username
 					return redirect_to: @url_for "admin.new_ban", nil, user_id: user.id
 				
-				@errors = {"Could not find user \"username\""}
+				@errors = {"Could not find user \"#{username}\""}
 
 			
 

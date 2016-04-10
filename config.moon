@@ -3,7 +3,7 @@ config = require "lapis.config"
 secrets = require "secrets"
 
 config "development", ->
-	port 8080
+	port 9994
 	secret secrets.secret
 	bcrypt_log_rounds 5
 	postgres secrets.postgres

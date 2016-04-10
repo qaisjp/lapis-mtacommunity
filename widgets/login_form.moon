@@ -16,7 +16,7 @@ class LoginForm extends Widget
 				-- if we don't have to return anywhere...
 				unless route
 					-- if the route we're on is login, go home, or go to the current page
-					route = (@route_name == "auth.login") and (@url_for "home") or @req.parsed_url.path
+					route = (@route_name == "auth.login") and (@url_for "home") or @build_url @req.parsed_url.path
 				
 				input type: "hidden", name: "return_to", value: route, ["aria-hidden"]: "true"
 
